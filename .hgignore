@@ -1,0 +1,11 @@
+syntax:glob
+
+.classpath
+.mymetadata
+.project
+.settings
+.myeclipse
+.*.swp
+target
+
+syntax:regexp
