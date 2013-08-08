@@ -14,6 +14,7 @@ public class Role extends Base {
 	private static final long serialVersionUID = 1426771516880127921L;
 	
 	private String name = ""; // 角色名称
+	private Long   tip  = 0L; // 角色数字标识
 	
 	public Role() {}
 	
@@ -27,6 +28,14 @@ public class Role extends Base {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setTip(Long tip) {
+		this.tip = tip;
+	}
+	
+	public Long getTip() {
+		return tip;
 	}
 	
 //	@Override
