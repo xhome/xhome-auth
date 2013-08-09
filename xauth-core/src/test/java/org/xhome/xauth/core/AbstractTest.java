@@ -3,12 +3,15 @@ package org.xhome.xauth.core;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.xhome.xauth.Role;
-import org.xhome.xauth.User;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.xhome.xauth.AuthLog;
+import org.xhome.xauth.ManageLog;
+import org.xhome.xauth.Role;
+import org.xhome.xauth.User;
 
 /**
  * @project xauth-core
@@ -54,20 +57,42 @@ public abstract class AbstractTest {
 				+ "\tTip:" + role.getTip());
 	}
 	
-//	protected void printLoginLog(List<LoginLog> loginLogs) {
-//		if (loginLogs != null) {
-//			for (LoginLog loginLog : loginLogs) {
-//				printLoginLog(loginLog);
-//			}
-//		}
-//	}
-//	
-//	protected void printLoginLog(LoginLog loginLog) {
-//		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		logger.debug("Id:" + loginLog.getId() + "\tUser:" + loginLog.getUser()
-//				+ "\tLogin:" + format.format(loginLog.getLogin())
-//				+ "\tAddress:" + loginLog.getAddress() + "\tType:"
-//				+ loginLog.getType() + "\tStatus:" + loginLog.getStatus());
-//	}
+	protected void printAuthLog(List<AuthLog> authLogs) {
+		if (authLogs != null) {
+			for (AuthLog authLog : authLogs) {
+				printAuthLog(authLog);
+			}
+		}
+	}
+	
+	protected void printAuthLog(AuthLog authLog) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		logger.debug("Id:" + authLog.getId()
+				+ "\tUser:" + authLog.getUser().getName()
+				+ "\tTime:" + format.format(authLog.getCreated())
+				+ "\tMethod:" + authLog.getMethod()
+				+ "\tAddress:" + authLog.getAddress()
+				+ "\tAgent:" + authLog.getAgent()
+				+ "\tNumber:" + authLog.getNumber()
+				+ "\tStatus:" + authLog.getStatus());
+	}
+	
+	protected void printManageLog(List<ManageLog> manageLogs) {
+		if (manageLogs != null) {
+			for (ManageLog manageLog : manageLogs) {
+				printManageLog(manageLog);
+			}
+		}
+	}
+	
+	protected void printManageLog(ManageLog manageLog) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		logger.debug("Id:" + manageLog.getId()
+				+ "\tAction:" + manageLog.getAction()
+				+ "\tType:" + manageLog.getType()
+				+ "\tObj:" + manageLog.getObj()
+				+ "\tTime:" + format.format(manageLog.getCreated())
+				+ "\tStatus:" + manageLog.getStatus());
+	}
 	
 }

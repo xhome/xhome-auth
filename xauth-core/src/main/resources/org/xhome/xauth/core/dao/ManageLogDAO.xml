@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xauth.core.dao.ManageLogDAO">
+	
+	<cache/>
+	
+	<insert id="addManageLog" parameterType="org.xhome.xauth.ManageLog" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xauth_manage_log (action, type, obj, owner, created, status)
+		VALUES(#{action}, #{type}, #{obj}, #{owner}, #{created}, #{status})
+	</insert>
+	
+	<sql id="restriction_manageLogs">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.action != null">
+					AND action = #{parameters.action}
+				</if>
+				<if test="parameters.type != null">
+					AND type = #{parameters.type}
+				</if>
+				<if test="parameters.obj != null">
+					AND obj = #{parameters.obj}
+				</if>
+				<if test="parameters.owner != null">
+					AND owner = #{parameters.owner}
+				</if>
+				<if test="parameters.created != null">
+					AND created LIKE CONCAT(#{parameters.created},'%')
+				</if>
+				<if test="parameters.status != null">
+					AND status = #{parameters.status}
+				</if>
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryManageLogs" resultType="org.xhome.xauth.ManageLog" parameterType="org.xhome.common.query.QueryBase">
+		SELECT * FROM xhome_xauth_manage_log
+		<include refid="restriction_manageLogs"/>
+		ORDER BY created DESC
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countManageLogs" resultType="long" parameterType="org.xhome.common.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xauth_manage_log
+		<include refid="restriction_manageLogs"/>
+	</select>
+	
+</mapper>

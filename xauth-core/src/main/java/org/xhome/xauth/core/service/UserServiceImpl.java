@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.xhome.common.Status;
+import org.xhome.common.constant.Status;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;

@@ -22,13 +22,11 @@
 			<groupId>org.xhome</groupId>
 			<artifactId>xhome-common</artifactId>
 			<version>${xhome-common.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j-api.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

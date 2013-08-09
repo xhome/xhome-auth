@@ -95,18 +95,39 @@ COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 ALTER TABLE xhome_xauth_user_role COMMENT '用户角色';
 
-DROP TABLE IF EXISTS xhome_xauth_log_user_login;
-CREATE TABLE xhome_xauth_log_user_login(
-    id           BIGINT NOT NULL AUTO_INCREMENT COMMENT '登录日志ID',
+DROP TABLE IF EXISTS xhome_xauth_manage_log;
+CREATE TABLE xhome_xauth_manage_log
+(
+   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+   action               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Add, 1:Update, 2: Remove, 3: Search...',
+   type                 TINYINT UNSIGNED NOT NULL DEFAULT 3 COMMENT '0: 角色, 1: 用户, 2: 用户认证日志, 3: 管理日志',
+   obj                  BIGINT NOT NULL COMMENT '对象ID',
+   owner                BIGINT NOT NULL COMMENT '操作者',
+   created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+   status               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作结果,0:成功,其它：错误状态码',
+   PRIMARY KEY (id)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci
+AUTO_INCREMENT = 1;
+ALTER TABLE xhome_xauth_manage_log COMMENT '管理日志';
+
+
+DROP TABLE IF EXISTS xhome_xauth_auth_log;
+CREATE TABLE xhome_xauth_auth_log(
+    id           BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
     user         VARCHAR(20) NOT NULL COMMENT '用户名',
-    login        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
-    address      VARCHAR(40) NOT NULL COMMENT '登录地址(IPv4/IPv6)',
-    type         TINYINT NOT NULL DEFAULT 0 COMMENT '登录方式,0:HTTP,1:HTTPS,2:COOKIE...',
-	status       TINYINT NOT NULL DEFAULT 0 COMMENT '登录结果,0:登录成功,1:登出,其它：错误状态码',
+    method       VARCHAR(10) NOT NULL DEFAULT 0 COMMENT '认证方式', 
+    address      VARBINARY(16) NOT NULL COMMENT '访问地址(IPv4/IPv6)',
+    agent        TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Other,1:Chrome, 2:Firefox, 3:IE, 4:Android',
+    number       VARCHAR(100) NOT NULL COMMENT '设备编号',
+    created      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '认证时间',
+	status       TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '认证结果,0:认证成功,其它：错误状态码',
     PRIMARY KEY PK_LOG_USER_LOGIN (id)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = UTF8
 COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
-ALTER TABLE xhome_xauth_log_user_login COMMENT '用户登录日志';
+ALTER TABLE xhome_xauth_auth_log COMMENT '用户认证日志';
