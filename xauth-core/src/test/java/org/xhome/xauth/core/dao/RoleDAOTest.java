@@ -39,7 +39,7 @@ public class RoleDAOTest extends AbstractTest {
 		
 		Role role = roleDAO.queryRoleById(2L);
 		printRole(role);
-		role.setVersion(2L);
+		role.setVersion((short)3);
 		
 		roleDAO.updateRole(role);
 		

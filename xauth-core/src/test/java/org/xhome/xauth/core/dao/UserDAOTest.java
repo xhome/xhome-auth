@@ -27,6 +27,7 @@ public class UserDAOTest extends AbstractTest {
 		
 		User user = new User("Tbc", "PASSWD");
 		user.setNick("NICK");
+		user.setMethod("MD5");
 		user.setEmail("cpf624@126.com");
 		user.setOwner(1L);
 		user.setModifier(1L);
@@ -40,7 +41,7 @@ public class UserDAOTest extends AbstractTest {
 		logger.debug("test update User");
 		
 		User user = userDAO.queryUserById(2L);
-		user.setVersion(2L);
+		user.setVersion((short)2);
 		printUser(user);
 		
 		userDAO.updateUser(user);

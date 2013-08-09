@@ -10,6 +10,7 @@
 		<result property="name" column="name"/>
 		<result property="nick" column="nick"/>
 		<result property="password" column="password"/>
+		<result property="method" column="method"/>
 		<result property="email" column="email"/>
 		<result property="owner" column="owner"/>
 		<result property="modifier" column="modifier"/>
@@ -31,13 +32,13 @@
 	</resultMap>
 	
 	<insert id="addUser" parameterType="org.xhome.xauth.User" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO xhome_xauth_user (name, nick, password, email, owner, modifier, created, modified, version, status)
-		VALUES(#{name}, #{nick}, #{password}, #{email}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+		INSERT INTO xhome_xauth_user (name, nick, password, method, email, owner, modifier, created, modified, version, status)
+		VALUES(#{name}, #{nick}, #{password}, #{method}, #{email}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
 	</insert>
 	
 	<update id="updateUser" parameterType="org.xhome.xauth.User">
 		UPDATE xhome_xauth_user
-		SET name = #{name}, nick = #{nick}, password = #{password},
+		SET name = #{name}, nick = #{nick}, password = #{password}, method = #{method},
 			email = #{email}, modifier = #{modifier}, modified = #{modified},
 			version = version + 1, status = #{status}
 		WHERE id = #{id}
@@ -118,6 +119,9 @@
 				</if>
 				<if test="parameters.nick != null">
 					AND u.nick LIKE CONCAT('%',#{parameters.nick},'%')
+				</if>
+				<if test="parameters.method != null">
+					AND u.method LIKE CONCAT('%',#{parameters.method},'%')
 				</if>
 				<if test="parameters.email != null">
 					AND u.email LIKE CONCAT('%',#{parameters.email},'%')

@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @project auth
- * @author xhome
+ * @project xauth-core
+ * @author jhat
  * @email cpf624@126.com
  * @date Jan 3, 20131:16:49 PM
  */

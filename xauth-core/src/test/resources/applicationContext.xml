@@ -31,9 +31,7 @@
 	</bean>
 
     <!-- 自动扫描组建 -->
-	<!-- 
-	<context:component-scan base-package="org.xhome.xauth.service"/>
-	 -->
+	<context:component-scan base-package="org.xhome.xauth.core.service"/>
     
 </beans>
 
