@@ -6,6 +6,7 @@ import org.xhome.common.constant.Action;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.core.AbstractTest;
+import org.xhome.xauth.core.listener.TestManageLogManageListener;
 
 /**
  * @project auth
@@ -20,6 +21,8 @@ public class ManageLogServiceTest extends AbstractTest {
 	public ManageLogServiceTest() {
 		manageLogService = context.getBean(ManageLogServiceImpl.class);
 		oper.setId(104L);
+		
+		((ManageLogServiceImpl)manageLogService).registerManageLogManageListener(new TestManageLogManageListener());
 	}
 	
 	@Test

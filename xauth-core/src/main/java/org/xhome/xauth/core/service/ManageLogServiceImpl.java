@@ -1,7 +1,9 @@
 package org.xhome.xauth.core.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.dao.ManageLogDAO;
+import org.xhome.xauth.core.listener.ManageLogManageListener;
 
 /**
  * @project xauth-core
@@ -26,6 +29,8 @@ public class ManageLogServiceImpl implements ManageLogService {
 	
 	@Autowired
 	private ManageLogDAO	manageLogDAO;
+	private List<ManageLogManageListener> manageLogManageListeners;
+	
 	private Logger		logger;
 	
 	public ManageLogServiceImpl() {
@@ -58,6 +63,16 @@ public class ManageLogServiceImpl implements ManageLogService {
 	
 	@Override
 	public List<ManageLog> getManageLogs(User oper, QueryBase query) {
+		if (!this.beforeManageLogManage(oper, Action.QUERY, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to query manageLogs, but it's blocked");
+			}
+			
+			this.logManage(null, Action.QUERY, null, Status.BLOCKED, oper);
+			this.afterManageLogManage(oper, Action.QUERY, Status.BLOCKED, null, query);
+			return null;
+		}
+		
 		List<ManageLog> manageLogs = manageLogDAO.queryManageLogs(query);
 		if (query != null) {
 			query.setResults(manageLogs);
@@ -74,6 +89,7 @@ public class ManageLogServiceImpl implements ManageLogService {
 		}
 
 		this.logManage(null, Action.QUERY, null, Status.SUCCESS, oper);
+		this.afterManageLogManage(oper, Action.QUERY, Status.SUCCESS, null, query);
 		return manageLogs;
 	}
 	
@@ -84,6 +100,16 @@ public class ManageLogServiceImpl implements ManageLogService {
 	
 	@Override
 	public long countManageLogs(User oper, QueryBase query) {
+		if (!this.beforeManageLogManage(oper, Action.COUNT, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to count manageLogs, but it's blocked");
+			}
+			
+			this.logManage(null, Action.COUNT, null, Status.BLOCKED, oper);
+			this.afterManageLogManage(oper, Action.COUNT, Status.BLOCKED, null, query);
+			return -1;
+		}
+		
 		long c = manageLogDAO.countManageLogs(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
@@ -94,6 +120,7 @@ public class ManageLogServiceImpl implements ManageLogService {
 		}
 		
 		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
+		this.afterManageLogManage(oper, Action.COUNT, Status.SUCCESS, null, query);
 		return c;
 	}
 	
@@ -103,8 +130,46 @@ public class ManageLogServiceImpl implements ManageLogService {
 		this.logManage(manageLog);
 	}
 	
+	private boolean beforeManageLogManage(User oper, short action, ManageLog manageLog, Object ...args) {
+		if (manageLogManageListeners != null) {
+			for (ManageLogManageListener listener : manageLogManageListeners) {
+				if (!listener.beforeManageLogManage(oper, action, manageLog, args)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void afterManageLogManage(User oper, short action, short result, ManageLog manageLog, Object ...args) {
+		if (manageLogManageListeners != null) {
+			for (ManageLogManageListener listener : manageLogManageListeners) {
+				listener.afterManageLogManage(oper, action, result, manageLog, args);
+			}
+		}
+	}
+	
 	public void setManageLogDAO(ManageLogDAO manageLogDAO) {
 		this.manageLogDAO = manageLogDAO;
+	}
+	
+	public ManageLogDAO getManageLogDAO() {
+		return this.manageLogDAO;
+	}
+	
+	public void setManageLogManageListeners(List<ManageLogManageListener> manageLogManageListeners) {
+		this.manageLogManageListeners = manageLogManageListeners;
+	}
+
+	public List<ManageLogManageListener> getManageLogManageListeners() {
+		return manageLogManageListeners;
+	}
+	
+	public void registerManageLogManageListener(ManageLogManageListener manageLogManageListener) {
+		if (manageLogManageListeners == null) {
+			manageLogManageListeners = new ArrayList<ManageLogManageListener>();
+		}
+		manageLogManageListeners.add(manageLogManageListener);
 	}
 	
 }

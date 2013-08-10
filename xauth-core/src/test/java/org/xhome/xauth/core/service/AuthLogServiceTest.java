@@ -9,6 +9,7 @@ import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.AbstractTest;
+import org.xhome.xauth.core.listener.TestAuthLogManageListener;
 
 /**
  * @project auth
@@ -23,6 +24,8 @@ public class AuthLogServiceTest extends AbstractTest {
 	public AuthLogServiceTest() {
 		authLogService = context.getBean(AuthLogServiceImpl.class);
 		oper.setId(103L);
+		
+		((AuthLogServiceImpl)authLogService).registerAuthLogManageListener(new TestAuthLogManageListener());
 	}
 	
 	@Test

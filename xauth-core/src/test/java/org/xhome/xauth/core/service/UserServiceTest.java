@@ -2,12 +2,15 @@ package org.xhome.xauth.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Test;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.AbstractTest;
+import org.xhome.xauth.core.listener.TestUserManageListener;
+import org.xhome.xauth.core.listener.TestUserRoleManageListener;
 
 /**
  * @project xauth-core
@@ -25,6 +28,9 @@ public class UserServiceTest extends AbstractTest {
 		roleService = context.getBean(RoleServiceImpl.class);
 		
 		oper.setId(102L);
+		
+		((UserServiceImpl)userService).registerUserManageListener(new TestUserManageListener());
+		((UserServiceImpl)userService).registerUserRoleManageListener(new TestUserRoleManageListener());
 	}
 	
 	@Test

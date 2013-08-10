@@ -1,8 +1,8 @@
 package org.xhome.xauth.core.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.dao.RoleDAO;
+import org.xhome.xauth.core.listener.RoleManageListener;
 
 /**
  * @project xauth-core
@@ -30,6 +31,7 @@ public class RoleServiceImpl implements RoleService {
 	private RoleDAO	roleDAO;
 	@Autowired
 	private ManageLogService manageLogService;
+	private List<RoleManageListener> roleManageListeners;
 	
 	private Logger	logger;
 	
@@ -41,12 +43,24 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public int addRole(User oper, Role role) {
 		String name = role.getName();
+		
+		if (!this.beforeRoleManage(oper, Action.ADD, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to add role {}, but it's blocked", name);
+			}
+			
+			this.logManage(name, Action.ADD, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.ADD, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
+		
 		if (roleDAO.isRoleExists(role)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("try to add role {}, but it's already exists", name);
 			}
 			
 			this.logManage(name, Action.ADD, null, Status.EXISTS, oper);
+			this.afterRoleManage(oper, Action.ADD, Status.EXISTS, role);
 			return Status.EXISTS;
 		}
 		
@@ -67,15 +81,27 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.ADD, role.getId(), r, oper);
+		this.afterRoleManage(oper, Action.ADD, r, role);
 		return r;
 	}
 	
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int updateRole(User oper, Role role) {
-		Long id = role.getId();
-		Role old = roleDAO.queryRoleById(id);
 		String name = role.getName();
+		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.UPDATE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to update role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.UPDATE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.UPDATE, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
+		
+		Role old = roleDAO.queryRoleById(id);
 		
 		if (old == null) {
 			if (logger.isDebugEnabled()) {
@@ -83,6 +109,7 @@ public class RoleServiceImpl implements RoleService {
 			}
 			
 			this.logManage(name, Action.UPDATE, id, Status.NOT_EXISTS, oper);
+			this.afterRoleManage(oper, Action.UPDATE, Status.NOT_EXISTS, role);
 			return Status.NOT_EXISTS;
 		}
 		
@@ -94,6 +121,7 @@ public class RoleServiceImpl implements RoleService {
 			}
 			
 			this.logManage(oldName, Action.UPDATE, id, Status.VERSION_NOT_MATCH, oper);
+			this.afterRoleManage(oper, Action.UPDATE, Status.VERSION_NOT_MATCH, role);
 			return Status.VERSION_NOT_MATCH;
 		}
 		
@@ -104,6 +132,7 @@ public class RoleServiceImpl implements RoleService {
 			}
 			
 			this.logManage(oldName, Action.UPDATE, id, status, oper);
+			this.afterRoleManage(oper, Action.UPDATE, Status.EXISTS, role);
 			return status;
 		}
 		
@@ -112,6 +141,7 @@ public class RoleServiceImpl implements RoleService {
 				logger.debug("try to update role {}[{}] to {}, but it's exists", oldName, id, name);
 			}
 			this.logManage(oldName, Action.UPDATE, id, Status.EXISTS, oper);
+			this.afterRoleManage(oper, Action.UPDATE, Status.EXISTS, role);
 			return Status.EXISTS;
 		}
 		
@@ -120,12 +150,9 @@ public class RoleServiceImpl implements RoleService {
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		role.setModified(t);
 		
-		int r  = roleDAO.updateRole(role);
-		if (r== 1) {
+		short r  = roleDAO.updateRole(role) == 1 ? Status.SUCCESS : Status.ERROR;
+		if (r == Status.SUCCESS) {
 			role.incrementVersion();
-			r = Status.SUCCESS;
-		} else {
-			r = Status.ERROR;
 		}
 		
 		if (logger.isDebugEnabled()) {
@@ -136,17 +163,29 @@ public class RoleServiceImpl implements RoleService {
 			}
 		}
 
-		this.logManage(oldName, Action.UPDATE, id, (short) r, oper);
+		this.logManage(oldName, Action.UPDATE, id, r, oper);
+		this.afterRoleManage(oper, Action.UPDATE, r, role);
 		return r;
 	}
 	
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int lockRole(User oper, Role role) {
-		short r = roleDAO.lockRole(role) == 1 ? Status.SUCCESS : Status.ERROR;
-		
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.LOCK, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to lock role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.LOCK, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.LOCK, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
+		
+		short r = roleDAO.lockRole(role) == 1 ? Status.SUCCESS : Status.ERROR;
+		
 		if (logger.isDebugEnabled()) {
 			if (r == Status.SUCCESS) {
 				logger.debug("success to lock role {}[{}]", name, id);
@@ -156,16 +195,28 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.LOCK, id, r, oper);
+		this.afterRoleManage(oper, Action.LOCK, r, role);
 		return r;
 	}
 	
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int unlockRole(User oper, Role role) {
-		short r = roleDAO.unlockRole(role) == 1 ? Status.SUCCESS : Status.ERROR;
-		
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.UNLOCK, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to unlock role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.UNLOCK, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.UNLOCK, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
+		
+		short r = roleDAO.unlockRole(role) == 1 ? Status.SUCCESS : Status.ERROR;
+		
 		if (logger.isDebugEnabled()) {
 			if (r == Status.SUCCESS) {
 				logger.debug("success to unlock role {}[{}]", name, id);
@@ -175,6 +226,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.UNLOCK, id, r, oper);
+		this.afterRoleManage(oper, Action.UNLOCK, r, role);
 		return r;
 	}
 	
@@ -183,6 +235,16 @@ public class RoleServiceImpl implements RoleService {
 	public int removeRole(User oper, Role role) {
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.REMOVE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to remove role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.REMOVE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.REMOVE, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
 		
 		short r = Status.SUCCESS;
 		if (roleDAO.isRoleRemoveable(role)) {
@@ -198,6 +260,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(name, Action.REMOVE, id, r, oper);
+		this.afterRoleManage(oper, Action.REMOVE, r, role);
 		return r;
 	}
 	
@@ -206,6 +269,16 @@ public class RoleServiceImpl implements RoleService {
 	public int deleteRole(User oper, Role role) {
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.DELETE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to delete role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.DELETE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.DELETE, Status.BLOCKED, role);
+			return Status.BLOCKED;
+		}
 		
 		short r = Status.SUCCESS;
 		if (roleDAO.isRoleDeleteable(role)) {
@@ -221,14 +294,26 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.DELETE, id, r, oper);
+		this.afterRoleManage(oper, Action.DELETE, r, role);
 		return r;
 	}
 	
 	@Override
 	public boolean isRoleExists(User oper, Role role) {
+		String name = role.getName();
+		
+		if (!this.beforeRoleManage(oper, Action.IS_EXISTS, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to juge exists of role {}, but it's blocked", name);
+			}
+			
+			this.logManage(name, Action.IS_EXISTS, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.IS_EXISTS, Status.BLOCKED, role);
+			return false;
+		}
+		
 		boolean e = roleDAO.isRoleExists(role);
 		
-		String name = role.getName();
 		if (logger.isDebugEnabled()) {
 			if (e) {
 				logger.debug("exists of role {}", name);
@@ -238,15 +323,27 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(name, Action.IS_EXISTS, role.getId(), Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.IS_EXISTS, Status.SUCCESS, role);
 		return e;
 	}
 	
 	@Override
 	public boolean isRoleUpdateable(User oper, Role role) {
-		boolean e = roleDAO.isRoleUpdateable(role);
-
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.IS_UPDATEABLE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to juge updateable of role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.IS_UPDATEABLE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.IS_UPDATEABLE, Status.BLOCKED, role);
+			return false;
+		}
+		
+		boolean e = roleDAO.isRoleUpdateable(role);
+
 		if (logger.isDebugEnabled()) {
 			if (e) {
 				logger.debug("role {}[{}] is updateable", name, id);
@@ -256,15 +353,27 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(name, Action.IS_UPDATEABLE, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.IS_UPDATEABLE, Status.SUCCESS, role);
 		return e;
 	}
 	
 	@Override
 	public boolean isRoleLocked(User oper, Role role) {
-		boolean e = roleDAO.isRoleLocked(role);
-		
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.IS_LOCKED, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to juge locked of role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.IS_LOCKED, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.IS_LOCKED, Status.BLOCKED, role);
+			return false;
+		}
+		
+		boolean e = roleDAO.isRoleLocked(role);
+		
 		if (logger.isDebugEnabled()) {
 			if (e) {
 				logger.debug("role {}[{}] is locked", name, id);
@@ -274,15 +383,27 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.IS_LOCKED, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.IS_LOCKED, Status.SUCCESS, role);
 		return e;
 	}
 	
 	@Override
 	public boolean isRoleRemoveable(User oper, Role role) {
-		boolean e = roleDAO.isRoleRemoveable(role);
-		
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.IS_REMOVEABLE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to juge removeable of role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.IS_REMOVEABLE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.IS_REMOVEABLE, Status.BLOCKED, role);
+			return false;
+		}
+		
+		boolean e = roleDAO.isRoleRemoveable(role);
+		
 		if (logger.isDebugEnabled()) {
 			if (e) {
 				logger.debug("role {}[{}] is removeable", name, id);
@@ -292,15 +413,27 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(name, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS, role);
 		return e;
 	}
 	
 	@Override
 	public boolean isRoleDeleteable(User oper, Role role) {
-		boolean e = roleDAO.isRoleDeleteable(role);
-
 		String name = role.getName();
 		Long id = role.getId();
+		
+		if (!this.beforeRoleManage(oper, Action.IS_DELETEABLE, role)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to juge deleteable of role {}[{}], but it's blocked", name, id);
+			}
+			
+			this.logManage(name, Action.IS_DELETEABLE, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.IS_DELETEABLE, Status.BLOCKED, role);
+			return false;
+		}
+		
+		boolean e = roleDAO.isRoleDeleteable(role);
+
 		if (logger.isDebugEnabled()) {
 			if (e) {
 				logger.debug("role {}[{}] is deleteable", name, id);
@@ -310,11 +443,22 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.IS_DELETEABLE, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.IS_DELETEABLE, Status.SUCCESS, role);
 		return e;
 	}
 	
 	@Override
 	public Role getRole(User oper, long id) {
+		if (!this.beforeRoleManage(oper, Action.GET, null, id)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to get role of id {}, but it's blocked", id);
+			}
+			
+			this.logManage("" + id, Action.GET, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.GET, Status.BLOCKED, null, id);
+			return null;
+		}
+		
 		Role role = roleDAO.queryRoleById(id);
 		
 		String name = null;
@@ -328,11 +472,22 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(name, Action.GET, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.GET, Status.SUCCESS, role, id);
 		return role;
 	}
 	
 	@Override
 	public Role getRole(User oper, String name) {
+		if (!this.beforeRoleManage(oper, Action.GET, null, name)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to get role {}, but it's blocked", name);
+			}
+			
+			this.logManage(name, Action.GET, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.GET, Status.BLOCKED, null, name);
+			return null;
+		}
+		
 		Role role = roleDAO.queryRoleByName(name);
 		
 		Long id = null;
@@ -346,6 +501,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		this.logManage(name, Action.GET, id, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.GET, Status.SUCCESS, role, name);
 		return role;
 	}
 	
@@ -356,6 +512,16 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Override
 	public List<Role> getRoles(User oper, QueryBase query) {
+		if (!this.beforeRoleManage(oper, Action.QUERY, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to query roles, but it's blocked");
+			}
+			
+			this.logManage(null, Action.QUERY, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.QUERY, Status.BLOCKED, null, query);
+			return null;
+		}
+		
 		List<Role> results = roleDAO.queryRoles(query);
 		if (query != null) {
 			query.setResults(results);
@@ -372,6 +538,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(null, Action.QUERY, null, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.QUERY, Status.SUCCESS, null, query);
 		return results;
 	}
 	
@@ -382,6 +549,16 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Override
 	public long countRoles(User oper, QueryBase query) {
+		if (!this.beforeRoleManage(oper, Action.COUNT, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to count roles, but it's blocked");
+			}
+			
+			this.logManage(null, Action.COUNT, null, Status.BLOCKED, oper);
+			this.afterRoleManage(oper, Action.COUNT, Status.BLOCKED, null, query);
+			return -1;
+		}
+		
 		long c = roleDAO.countRoles(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
@@ -392,6 +569,7 @@ public class RoleServiceImpl implements RoleService {
 		}
 		
 		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
+		this.afterRoleManage(oper, Action.COUNT, Status.SUCCESS, null, query);
 		return c;
 	}
 	
@@ -401,12 +579,54 @@ public class RoleServiceImpl implements RoleService {
 		manageLogService.logManage(manageLog);
 	}
 	
+	private boolean beforeRoleManage(User oper, short action, Role role, Object ...args) {
+		if (roleManageListeners != null) {
+			for (RoleManageListener listener : roleManageListeners) {
+				if (!listener.beforeRoleManage(oper, action, role, args)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void afterRoleManage(User oper, short action, short result, Role role, Object ...args) {
+		if (roleManageListeners != null) {
+			for (RoleManageListener listener : roleManageListeners) {
+				listener.afterRoleManage(oper, action, result, role, args);
+			}
+		}
+	}
+	
 	public void setRoleDAO(RoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
+	}
+	
+	public RoleDAO getRoleDAO() {
+		return this.roleDAO;
 	}
 
 	public void setManageLogService(ManageLogService manageLogService) {
 		this.manageLogService = manageLogService;
+	}
+	
+	public ManageLogService getManageLogService() {
+		return this.manageLogService;
+	}
+
+	public void setRoleManageListeners(List<RoleManageListener> roleManageListeners) {
+		this.roleManageListeners = roleManageListeners;
+	}
+
+	public List<RoleManageListener> getRoleManageListeners() {
+		return roleManageListeners;
+	}
+	
+	public void registerRoleManageListener(RoleManageListener roleManageListener) {
+		if (roleManageListeners == null) {
+			roleManageListeners = new ArrayList<RoleManageListener>();
+		}
+		roleManageListeners.add(roleManageListener);
 	}
 	
 }

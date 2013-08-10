@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.core.AbstractTest;
+import org.xhome.xauth.core.listener.TestRoleManageListener;
 
 /**
  * @project xauth-core
@@ -19,6 +20,8 @@ public class RoleServiceTest extends AbstractTest {
 	public RoleServiceTest() {
 		roleService = context.getBean(RoleServiceImpl.class);
 		oper.setId(101L);
+		
+		((RoleServiceImpl)roleService).registerRoleManageListener(new TestRoleManageListener());
 	}
 	
 	@Test

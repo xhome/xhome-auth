@@ -1,7 +1,9 @@
 package org.xhome.xauth.core.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.dao.AuthLogDAO;
+import org.xhome.xauth.core.listener.AuthLogManageListener;
 
 /**
  * @project xauth-core
@@ -29,6 +32,7 @@ public class AuthLogServiceImpl implements AuthLogService {
 	private AuthLogDAO	authLogDAO;
 	@Autowired
 	private ManageLogService manageLogService;
+	private List<AuthLogManageListener> authLogManageListeners;
 	
 	private Logger		logger;
 	
@@ -60,6 +64,16 @@ public class AuthLogServiceImpl implements AuthLogService {
 	
 	@Override
 	public List<AuthLog> getAuthLogs(User oper, QueryBase query) {
+		if (!this.beforeAuthLogManage(oper, Action.QUERY, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to query authLogs, but it's blocked");
+			}
+			
+			this.logManage(null, Action.QUERY, null, Status.BLOCKED, oper);
+			this.afterAuthLogManage(oper, Action.QUERY, Status.BLOCKED, null, query);
+			return null;
+		}
+		
 		List<AuthLog> authLogs = authLogDAO.queryAuthLogs(query);
 		if (query != null) {
 			query.setResults(authLogs);
@@ -76,6 +90,7 @@ public class AuthLogServiceImpl implements AuthLogService {
 		}
 
 		this.logManage(null, Action.QUERY, null, Status.SUCCESS, oper);
+		this.afterAuthLogManage(oper, Action.QUERY, Status.SUCCESS, null, query);
 		return authLogs;
 	}
 	
@@ -86,6 +101,16 @@ public class AuthLogServiceImpl implements AuthLogService {
 	
 	@Override
 	public long countAuthLogs(User oper, QueryBase query) {
+		if (!this.beforeAuthLogManage(oper, Action.COUNT, null, query)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to count authLogs, but it's blocked");
+			}
+			
+			this.logManage(null, Action.COUNT, null, Status.BLOCKED, oper);
+			this.afterAuthLogManage(oper, Action.COUNT, Status.BLOCKED, null, query);
+			return -1;
+		}
+		
 		long c = authLogDAO.countAuthLogs(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
@@ -96,6 +121,7 @@ public class AuthLogServiceImpl implements AuthLogService {
 		}
 
 		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
+		this.afterAuthLogManage(oper, Action.COUNT, Status.SUCCESS, null, query);
 		return c;
 	}
 	
@@ -105,12 +131,54 @@ public class AuthLogServiceImpl implements AuthLogService {
 		manageLogService.logManage(manageLog);
 	}
 	
+	private boolean beforeAuthLogManage(User oper, short action, AuthLog authLog, Object ...args) {
+		if (authLogManageListeners != null) {
+			for (AuthLogManageListener listener : authLogManageListeners) {
+				if (!listener.beforeAuthLogManage(oper, action, authLog, args)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void afterAuthLogManage(User oper, short action, short result, AuthLog authLog, Object ...args) {
+		if (authLogManageListeners != null) {
+			for (AuthLogManageListener listener : authLogManageListeners) {
+				listener.afterAuthLogManage(oper, action, result, authLog, args);
+			}
+		}
+	}
+	
 	public void setAuthLogDAO(AuthLogDAO authLogDAO) {
 		this.authLogDAO = authLogDAO;
+	}
+	
+	public AuthLogDAO getAuthLogDAO() {
+		return this.authLogDAO;
 	}
 
 	public void setManageLogService(ManageLogService manageLogService) {
 		this.manageLogService = manageLogService;
+	}
+	
+	public ManageLogService getManageLogService() {
+		return this.manageLogService;
+	}
+	
+	public void setAuthLogManageListeners(List<AuthLogManageListener> authLogManageListeners) {
+		this.authLogManageListeners = authLogManageListeners;
+	}
+
+	public List<AuthLogManageListener> getAuthLogManageListeners() {
+		return authLogManageListeners;
+	}
+	
+	public void registerAuthLogManageListener(AuthLogManageListener authLogManageListener) {
+		if (authLogManageListeners == null) {
+			authLogManageListeners = new ArrayList<AuthLogManageListener>();
+		}
+		authLogManageListeners.add(authLogManageListener);
 	}
 	
 }
