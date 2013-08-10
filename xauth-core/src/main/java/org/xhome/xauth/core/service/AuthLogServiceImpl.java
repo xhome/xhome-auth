@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthLog;
+import org.xhome.xauth.ManageLog;
+import org.xhome.xauth.User;
 import org.xhome.xauth.core.dao.AuthLogDAO;
 
 /**
@@ -24,6 +27,9 @@ public class AuthLogServiceImpl implements AuthLogService {
 	
 	@Autowired
 	private AuthLogDAO	authLogDAO;
+	@Autowired
+	private ManageLogService manageLogService;
+	
 	private Logger		logger;
 	
 	public AuthLogServiceImpl() {
@@ -48,12 +54,12 @@ public class AuthLogServiceImpl implements AuthLogService {
 	}
 	
 	@Override
-	public List<AuthLog> getAuthLogs() {
-		return getAuthLogs(null);
+	public List<AuthLog> getAuthLogs(User oper) {
+		return getAuthLogs(oper, null);
 	}
 	
 	@Override
-	public List<AuthLog> getAuthLogs(QueryBase query) {
+	public List<AuthLog> getAuthLogs(User oper, QueryBase query) {
 		List<AuthLog> authLogs = authLogDAO.queryAuthLogs(query);
 		if (query != null) {
 			query.setResults(authLogs);
@@ -68,17 +74,18 @@ public class AuthLogServiceImpl implements AuthLogService {
 				logger.debug("query user auth logs");
 			}
 		}
-		
+
+		this.logManage(null, Action.QUERY, null, Status.SUCCESS, oper);
 		return authLogs;
 	}
 	
 	@Override
-	public long countAuthLogs() {
-		return countAuthLogs(null);
+	public long countAuthLogs(User oper) {
+		return countAuthLogs(oper, null);
 	}
 	
 	@Override
-	public long countAuthLogs(QueryBase query) {
+	public long countAuthLogs(User oper, QueryBase query) {
 		long c = authLogDAO.countAuthLogs(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
@@ -87,11 +94,23 @@ public class AuthLogServiceImpl implements AuthLogService {
 				logger.debug("count user auth logs of {}", c);
 			}
 		}
+
+		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
 		return c;
+	}
+	
+	private void logManage(String content, Short action, Long obj, Short status, User oper) {
+		ManageLog manageLog = new ManageLog(content, action, ManageLog.TYPE_AUTH_LOG, obj, oper == null ? null : oper.getId());
+		manageLog.setStatus(status);
+		manageLogService.logManage(manageLog);
 	}
 	
 	public void setAuthLogDAO(AuthLogDAO authLogDAO) {
 		this.authLogDAO = authLogDAO;
+	}
+
+	public void setManageLogService(ManageLogService manageLogService) {
+		this.manageLogService = manageLogService;
 	}
 	
 }

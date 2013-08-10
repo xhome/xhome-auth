@@ -6,13 +6,16 @@
 	<cache/>
 	
 	<insert id="addManageLog" parameterType="org.xhome.xauth.ManageLog" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO xhome_xauth_manage_log (action, type, obj, owner, created, status)
-		VALUES(#{action}, #{type}, #{obj}, #{owner}, #{created}, #{status})
+		INSERT INTO xhome_xauth_manage_log (content, action, type, obj, owner, created, status)
+		VALUES(#{content}, #{action}, #{type}, #{obj}, #{owner}, #{created}, #{status})
 	</insert>
 	
 	<sql id="restriction_manageLogs">
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters != null">
+				<if test="parameters.content != null">
+					AND content LIKE CONCAT('%', #{parameters.content}, '%')
+				</if>
 				<if test="parameters.action != null">
 					AND action = #{parameters.action}
 				</if>
@@ -26,7 +29,7 @@
 					AND owner = #{parameters.owner}
 				</if>
 				<if test="parameters.created != null">
-					AND created LIKE CONCAT(#{parameters.created},'%')
+					AND created LIKE CONCAT(#{parameters.created}, '%')
 				</if>
 				<if test="parameters.status != null">
 					AND status = #{parameters.status}

@@ -22,6 +22,7 @@ public class AuthLogServiceTest extends AbstractTest {
 	
 	public AuthLogServiceTest() {
 		authLogService = context.getBean(AuthLogServiceImpl.class);
+		oper.setId(103L);
 	}
 	
 	@Test
@@ -34,7 +35,7 @@ public class AuthLogServiceTest extends AbstractTest {
 	
 	@Test
 	public void testGetAuthLogs() {
-		List<AuthLog> authLogs = authLogService.getAuthLogs();
+		List<AuthLog> authLogs = authLogService.getAuthLogs(oper);
 		printAuthLog(authLogs);
 		
 		QueryBase query = new QueryBase();
@@ -43,7 +44,7 @@ public class AuthLogServiceTest extends AbstractTest {
 		query.addParameter("address", "192");
 		query.addParameter("type", "0");
 		query.addParameter("status", "0");
-		authLogs = authLogService.getAuthLogs(query);
+		authLogs = authLogService.getAuthLogs(oper, query);
 		printAuthLog(authLogs);
 	}
 	

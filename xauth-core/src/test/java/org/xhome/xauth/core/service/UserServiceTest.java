@@ -23,12 +23,14 @@ public class UserServiceTest extends AbstractTest {
 	public UserServiceTest() {
 		userService = context.getBean(UserServiceImpl.class);
 		roleService = context.getBean(RoleServiceImpl.class);
+		
+		oper.setId(102L);
 	}
 	
 	@Test
 	public void testAddUser() {
 		try {
-			User user = new User("jhatb", "abcdef");
+			User user = new User("jhata", "abcdef");
 			user.setNick("Jhat");
 			user.setMethod("SHA");
 			user.setEmail("cpf624@126.com");
@@ -43,7 +45,7 @@ public class UserServiceTest extends AbstractTest {
 			roles.add(role);
 			
 			user.setRoles(roles);
-			userService.addUser(user);
+			userService.addUser(oper, user);
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
 		}
@@ -61,10 +63,10 @@ public class UserServiceTest extends AbstractTest {
 	
 	@Test
 	public void testGetUser() {
-		User user = userService.getUser(1L);
+		User user = userService.getUser(oper, 1L);
 		printUser(user);
 		
-		user = userService.getUser("jhat");
+		user = userService.getUser(oper, "jhat");
 		printUser(user);
 	}
 	
@@ -75,104 +77,104 @@ public class UserServiceTest extends AbstractTest {
 //		query.addParameter("role_id", 1);
 //		query.addParameter("role_name", "ADMIN");
 		
-		List<User> users = userService.getUsers(query);
+		List<User> users = userService.getUsers(oper, query);
 		printUser(users);
 		
-		logger.info("{}", userService.countUsers(query));
+		logger.info("{}", userService.countUsers(oper, query));
 	}
 	
 	@Test
 	public void testIsUserUpdateable(){
-		User user = userService.getUser(1L);
-		logger.info("{}", userService.isUserUpdateable(user));
+		User user = userService.getUser(oper, 1L);
+		logger.info("{}", userService.isUserUpdateable(oper, user));
 	}
 	
 	@Test
 	public void testIsUserDeleteable(){
-		User user = userService.getUser(1L);
-		logger.info("{}", userService.isUserDeleteable(user));
+		User user = userService.getUser(oper, 1L);
+		logger.info("{}", userService.isUserDeleteable(oper, user));
 	}
 	
 	@Test
 	public void testIsUserLocked(){
-		User user = userService.getUser(1L);
-		logger.info("{}", userService.isUserLocked(user));
+		User user = userService.getUser(oper, 1L);
+		logger.info("{}", userService.isUserLocked(oper, user));
 	}
 	
 	@Test
 	public void testLockUser(){
-		User user = userService.getUser(1L);
-		userService.lockUser(user);
+		User user = userService.getUser(oper, 1L);
+		userService.lockUser(oper, user);
 	}
 	
 	@Test
 	public void testUnlockUser(){
-		User user = userService.getUser(1L);
-		userService.unlockUser(user);
+		User user = userService.getUser(oper, 1L);
+		userService.unlockUser(oper, user);
 	}
 	
 	@Test
 	public void testAddUserRole() throws AuthException {
-		User user = userService.getUser("jhata");
-		Role role = roleService.getRole("TestRole");
-		logger.debug("{}", userService.addUserRole(user, role));
+		User user = userService.getUser(oper, "jhata");
+		Role role = roleService.getRole(oper, "TestRole");
+		logger.debug("{}", userService.addUserRole(oper, user, role));
 	}
 	
 	@Test
 	public void testHasUserRole() {
-		User user = userService.getUser("jhata");
-		Role role = roleService.getRole("TestRole");
-		logger.debug("{}", userService.hasUserRole(user, role));
+		User user = userService.getUser(oper, "jhata");
+		Role role = roleService.getRole(oper, "TestRole");
+		logger.debug("{}", userService.hasUserRole(oper, user, role));
 	}
 	
 	@Test
 	public void testIsRoleUpdateable(){
-		User user = userService.getUser(1L);
-		Role role = roleService.getRole(1L);
-		logger.info("{}", userService.isUserRoleUpdateable(user, role));
+		User user = userService.getUser(oper, 1L);
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", userService.isUserRoleUpdateable(oper, user, role));
 	}
 	
 	@Test
 	public void testIsRoleDeleteable(){
-		User user = userService.getUser(1L);
-		Role role = roleService.getRole(1L);
-		logger.info("{}", userService.isUserRoleDeleteable(user, role));
+		User user = userService.getUser(oper, 1L);
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", userService.isUserRoleDeleteable(oper, user, role));
 	}
 	
 	@Test
 	public void testIsRoleLocked(){
-		User user = userService.getUser(1L);
-		Role role = roleService.getRole(1L);
-		logger.info("{}", userService.isUserRoleLocked(user, role));
+		User user = userService.getUser(oper, 1L);
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", userService.isUserRoleLocked(oper, user, role));
 	}
 	
 	@Test
 	public void testLockRole(){
-		User user = userService.getUser(1L);
-		Role role = roleService.getRole(1L);
-		userService.lockUserRole(user, role);
+		User user = userService.getUser(oper, 1L);
+		Role role = roleService.getRole(oper, 1L);
+		userService.lockUserRole(oper, user, role);
 	}
 	
 	@Test
 	public void testUnlockRole(){
-		User user = userService.getUser(1L);
-		Role role = roleService.getRole(1L);
-		userService.unlockUserRole(user, role);
+		User user = userService.getUser(oper, 1L);
+		Role role = roleService.getRole(oper, 1L);
+		userService.unlockUserRole(oper, user, role);
 	}
 	
 	@Test
 	public void testRemoveUserRole() {
-		User user = userService.getUser("jhata");
-		Role role = roleService.getRole("TestRole");
+		User user = userService.getUser(oper, "jhata");
+		Role role = roleService.getRole(oper, "TestRole");
 		// logger.debug(userService.removeRole(user, role));
-		userService.deleteUserRole(user, role);
+		userService.deleteUserRole(oper, user, role);
 	}
 	
 	@Test
 	public void testRemoveUser() {
-		User user = userService.getUser("jhata");
+		User user = userService.getUser(oper, "jhata");
 		// userService.removeUser(user);
-		userService.deleteUser(user);
+		userService.deleteUser(oper, user);
 	}
 	
 }

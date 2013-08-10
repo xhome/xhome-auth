@@ -23,9 +23,11 @@ public abstract class AbstractTest {
 	
 	protected ApplicationContext	context	= null;
 	protected Logger				logger	= LoggerFactory.getLogger(this.getClass());
+	protected User oper;
 	
 	public AbstractTest() {
 		context = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+		oper = new User("jhat");
 	}
 	
 	protected void printUser(List<User> users) {
@@ -37,6 +39,9 @@ public abstract class AbstractTest {
 	}
 	
 	protected void printUser(User user) {
+		if (user == null) {
+			return;
+		}
 		logger.debug("Id:" + user.getId() + "\tName:" + user.getName()
 				+ "\tNick:" + user.getNick() + "\tEmail:" + user.getEmail()
 				+ "\tStatus:" + user.getStatus());
@@ -53,6 +58,9 @@ public abstract class AbstractTest {
 	}
 	
 	protected void printRole(Role role) {
+		if (role == null) {
+			return;
+		}
 		logger.debug("Id:" + role.getId() + "\tName:" + role.getName()
 				+ "\tTip:" + role.getTip());
 	}
@@ -66,6 +74,9 @@ public abstract class AbstractTest {
 	}
 	
 	protected void printAuthLog(AuthLog authLog) {
+		if (authLog== null) {
+			return;
+		}
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		logger.debug("Id:" + authLog.getId()
 				+ "\tUser:" + authLog.getUser().getName()
@@ -86,6 +97,9 @@ public abstract class AbstractTest {
 	}
 	
 	protected void printManageLog(ManageLog manageLog) {
+		if (manageLog == null) {
+			return;
+		}
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		logger.debug("Id:" + manageLog.getId()
 				+ "\tAction:" + manageLog.getAction()

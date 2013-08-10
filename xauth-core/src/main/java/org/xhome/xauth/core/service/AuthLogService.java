@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthLog;
+import org.xhome.xauth.User;
 
 /**
  * @project xauth-core
@@ -17,12 +18,12 @@ public interface AuthLogService {
 	
 	public int logAuth(AuthLog authLog);
 	
-	public List<AuthLog> getAuthLogs();
+	public List<AuthLog> getAuthLogs(User oper);
 	
-	public List<AuthLog> getAuthLogs(QueryBase query);
+	public List<AuthLog> getAuthLogs(User oper, QueryBase query);
 	
-	public long countAuthLogs();
+	public long countAuthLogs(User oper);
 	
-	public long countAuthLogs(QueryBase query);
+	public long countAuthLogs(User oper, QueryBase query);
 	
 }

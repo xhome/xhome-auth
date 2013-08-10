@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.ManageLog;
+import org.xhome.xauth.User;
 import org.xhome.xauth.core.dao.ManageLogDAO;
 
 /**
@@ -50,12 +52,12 @@ public class ManageLogServiceImpl implements ManageLogService {
 	}
 	
 	@Override
-	public List<ManageLog> getManageLogs() {
-		return getManageLogs(null);
+	public List<ManageLog> getManageLogs(User oper) {
+		return getManageLogs(oper, null);
 	}
 	
 	@Override
-	public List<ManageLog> getManageLogs(QueryBase query) {
+	public List<ManageLog> getManageLogs(User oper, QueryBase query) {
 		List<ManageLog> manageLogs = manageLogDAO.queryManageLogs(query);
 		if (query != null) {
 			query.setResults(manageLogs);
@@ -70,17 +72,18 @@ public class ManageLogServiceImpl implements ManageLogService {
 				logger.debug("query user manage logs");
 			}
 		}
-		
+
+		this.logManage(null, Action.QUERY, null, Status.SUCCESS, oper);
 		return manageLogs;
 	}
 	
 	@Override
-	public long countManageLogs() {
-		return countManageLogs(null);
+	public long countManageLogs(User oper) {
+		return countManageLogs(oper, null);
 	}
 	
 	@Override
-	public long countManageLogs(QueryBase query) {
+	public long countManageLogs(User oper, QueryBase query) {
 		long c = manageLogDAO.countManageLogs(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
@@ -89,7 +92,15 @@ public class ManageLogServiceImpl implements ManageLogService {
 				logger.debug("count user manage logs of {}", c);
 			}
 		}
+		
+		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
 		return c;
+	}
+	
+	private void logManage(String content, Short action, Long obj, Short status, User oper) {
+		ManageLog manageLog = new ManageLog(content, action, ManageLog.TYPE_MANAGE_LOG, obj, oper == null ? null : oper.getId());
+		manageLog.setStatus(status);
+		this.logManage(manageLog);
 	}
 	
 	public void setManageLogDAO(ManageLogDAO manageLogDAO) {

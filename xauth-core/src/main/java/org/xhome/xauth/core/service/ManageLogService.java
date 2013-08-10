@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.ManageLog;
+import org.xhome.xauth.User;
 
 /**
  * @project xauth-core
@@ -17,12 +18,12 @@ public interface ManageLogService {
 	
 	public int logManage(ManageLog manageLog);
 	
-	public List<ManageLog> getManageLogs();
+	public List<ManageLog> getManageLogs(User oper);
 	
-	public List<ManageLog> getManageLogs(QueryBase query);
+	public List<ManageLog> getManageLogs(User oper, QueryBase query);
 	
-	public long countManageLogs();
+	public long countManageLogs(User oper);
 	
-	public long countManageLogs(QueryBase query);
+	public long countManageLogs(User oper, QueryBase query);
 	
 }

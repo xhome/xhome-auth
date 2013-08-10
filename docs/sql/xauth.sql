@@ -6,7 +6,7 @@
 	created      TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
 	modified     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	version      TINYINT NOT NULL DEFAULT 0 COMMENT '数据版本',
-	status       TINYINT NOT NULL DEFAULT 1 COMMENT '状态标记。1:可正常使用的数据,2:不允许删除的数据(允许修),不允许修改的数据(不允许删除),锁定数据,标记删除',
+	status       TINYINT NOT NULL DEFAULT 1 COMMENT '状态标记'
 */
 
 /*创建数据库*/
@@ -28,7 +28,7 @@ CREATE TABLE xhome_xauth_role
 	created      TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
 	modified     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
 	version      TINYINT NOT NULL DEFAULT 0 COMMENT '数据版本',
-	status       TINYINT NOT NULL DEFAULT 1 COMMENT '状态标记',
+    status       TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态标记',
 	PRIMARY KEY PK_ROLE (id),
     -- UNIQUE UN_ROLE (name),
     INDEX IN_ROLE (name)
@@ -99,10 +99,11 @@ DROP TABLE IF EXISTS xhome_xauth_manage_log;
 CREATE TABLE xhome_xauth_manage_log
 (
    id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+   content              VARCHAR(50) COMMENT '内容描述',
    action               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Add, 1:Update, 2: Remove, 3: Search...',
-   type                 TINYINT UNSIGNED NOT NULL DEFAULT 3 COMMENT '0: 角色, 1: 用户, 2: 用户认证日志, 3: 管理日志',
-   obj                  BIGINT NOT NULL COMMENT '对象ID',
-   owner                BIGINT NOT NULL COMMENT '操作者',
+   type                 TINYINT UNSIGNED NOT NULL DEFAULT 4 COMMENT '1: 角色, 2: 用户, 3: 用户角色, 4: 用户认证日志, 5: 管理日志',
+   obj                  BIGINT COMMENT '对象ID,NULL表示未知',
+   owner                BIGINT COMMENT '创建者,NULL表示匿名用户',
    created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
    status               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作结果,0:成功,其它：错误状态码',
    PRIMARY KEY (id)

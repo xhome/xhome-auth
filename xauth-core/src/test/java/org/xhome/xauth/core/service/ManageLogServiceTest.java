@@ -19,6 +19,7 @@ public class ManageLogServiceTest extends AbstractTest {
 	
 	public ManageLogServiceTest() {
 		manageLogService = context.getBean(ManageLogServiceImpl.class);
+		oper.setId(104L);
 	}
 	
 	@Test
@@ -29,12 +30,12 @@ public class ManageLogServiceTest extends AbstractTest {
 	
 	@Test
 	public void testGetManageLogs() {
-		List<ManageLog> manageLogs = manageLogService.getManageLogs();
+		List<ManageLog> manageLogs = manageLogService.getManageLogs(oper);
 		printManageLog(manageLogs);
 		
 		QueryBase query = new QueryBase();
 //		query.addParameter("status", "0");
-		manageLogs = manageLogService.getManageLogs(query);
+		manageLogs = manageLogService.getManageLogs(oper, query);
 		printManageLog(manageLogs);
 	}
 	

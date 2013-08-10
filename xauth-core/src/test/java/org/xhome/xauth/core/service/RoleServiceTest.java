@@ -1,7 +1,6 @@
 package org.xhome.xauth.core.service;
 
 import java.util.List;
-
 import org.junit.Test;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.Role;
@@ -19,6 +18,7 @@ public class RoleServiceTest extends AbstractTest {
 	
 	public RoleServiceTest() {
 		roleService = context.getBean(RoleServiceImpl.class);
+		oper.setId(101L);
 	}
 	
 	@Test
@@ -26,88 +26,88 @@ public class RoleServiceTest extends AbstractTest {
 		Role role = new Role("TestRole");
 		role.setOwner(1L);
 		role.setModifier(1L);
-		roleService.addRole(role);
+		roleService.addRole(oper, role);
 	}
 	
 	@Test
 	public void testGetRole() {
-		Role role = roleService.getRole(1L);
+		Role role = roleService.getRole(oper, 1L);
 		printRole(role);
 		
-		role = roleService.getRole("TestRole");
+		role = roleService.getRole(oper, "TestRole");
 		printRole(role);
 	}
 	
 	@Test
 	public void testCountRoles() {
-		logger.info("{}", roleService.countRoles());
+		logger.info("{}", roleService.countRoles(oper));
 		
 		QueryBase query = new QueryBase();
 		query.addParameter("name", "test");
-		logger.info("{}", roleService.countRoles(query));
+		logger.info("{}", roleService.countRoles(oper, query));
 	}
 	
 	@Test
 	public void testGetRoles() {
-		List<Role> roles = roleService.getRoles();
+		List<Role> roles = roleService.getRoles(oper);
 		printRole(roles);
 		
 		QueryBase query = new QueryBase();
 		query.addParameter("name", "test");
-		roles = roleService.getRoles(query);
+		roles = roleService.getRoles(oper, query);
 		printRole(roles);
 	}
 	
 	@Test
 	public void testIsRoleUpdateable(){
-		Role role = roleService.getRole(1L);
-		logger.info("{}", roleService.isRoleUpdateable(role));
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", roleService.isRoleUpdateable(oper, role));
 	}
 	
 	@Test
 	public void testIsRoleDeleteable(){
-		Role role = roleService.getRole(1L);
-		logger.info("{}", roleService.isRoleDeleteable(role));
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", roleService.isRoleDeleteable(oper, role));
 	}
 	
 	@Test
 	public void testIsRoleLocked(){
-		Role role = roleService.getRole(1L);
-		logger.info("{}", roleService.isRoleLocked(role));
+		Role role = roleService.getRole(oper, 1L);
+		logger.info("{}", roleService.isRoleLocked(oper, role));
 	}
 	
 	@Test
 	public void testLockRole(){
-		Role role = roleService.getRole(1L);
-		roleService.lockRole(role);
+		Role role = roleService.getRole(oper, 1L);
+		roleService.lockRole(oper, role);
 	}
 	
 	@Test
 	public void testUnlockRole(){
-		Role role = roleService.getRole(1L);
-		roleService.unlockRole(role);
+		Role role = roleService.getRole(oper, 1L);
+		roleService.unlockRole(oper, role);
 	}
 	
 	@Test
 	public void testUpdateRole() {
-		Role role = roleService.getRole("TestRole");
+		Role role = roleService.getRole(oper, "TestRole");
 		role.setTip(1L);
 		role.setId(100L);
 		// role.setVersion(11);
-		int r = roleService.updateRole(role);
+		int r = roleService.updateRole(oper, role);
 		logger.info("result:" + r);
 	}
 	
 	@Test
 	public void testIsRoleExists() {
-		logger.info("{}", roleService.isRoleExists(new Role("TestRole")));
+		logger.info("{}", roleService.isRoleExists(oper, new Role("TestRole")));
 	}
 	
 	@Test
 	public void testRemoveRole() {
-		Role role = roleService.getRole("TestRole");
-		roleService.removeRole(role);
-		roleService.deleteRole(role);
+		Role role = roleService.getRole(oper, "TestRole");
+		roleService.removeRole(oper, role);
+		roleService.deleteRole(oper, role);
 	}
 	
 }
