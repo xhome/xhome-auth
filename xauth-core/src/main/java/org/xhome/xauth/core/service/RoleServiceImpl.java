@@ -27,10 +27,11 @@ import org.xhome.xauth.core.listener.RoleManageListener;
 @Service
 public class RoleServiceImpl implements RoleService {
 	
-	@Autowired
+	@Autowired(required = false)
 	private RoleDAO	roleDAO;
-	@Autowired
+	@Autowired(required = false)
 	private ManageLogService manageLogService;
+	@Autowired(required = false)
 	private List<RoleManageListener> roleManageListeners;
 	
 	private Logger	logger;

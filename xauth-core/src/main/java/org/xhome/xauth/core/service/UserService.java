@@ -15,7 +15,7 @@ import org.xhome.xauth.User;
  */
 public interface UserService {
 
-	public User login(User user) throws AuthException;
+	public User auth(User user, String address, short agent, String number) throws AuthException;
 	
 	public int addUser(User oper, User user) throws AuthException;
 	

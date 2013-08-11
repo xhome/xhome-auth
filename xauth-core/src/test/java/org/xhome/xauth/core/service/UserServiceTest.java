@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.xhome.common.constant.Agent;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.AbstractTest;
+import org.xhome.xauth.core.listener.TestUserAuthListener;
 import org.xhome.xauth.core.listener.TestUserManageListener;
 import org.xhome.xauth.core.listener.TestUserRoleManageListener;
 
@@ -31,6 +33,8 @@ public class UserServiceTest extends AbstractTest {
 		
 		((UserServiceImpl)userService).registerUserManageListener(new TestUserManageListener());
 		((UserServiceImpl)userService).registerUserRoleManageListener(new TestUserRoleManageListener());
+		((UserServiceImpl)userService).registerUserAuthListener(new TestUserAuthListener());
+		((UserServiceImpl)userService).registerUserAuth("test", new TestUserAuth());
 	}
 	
 	@Test
@@ -58,12 +62,13 @@ public class UserServiceTest extends AbstractTest {
 	}
 	
 	@Test
-	public void testLogin() {
+	public void testAuth() {
 		User user = new User("jhata", "abcdef");
 		try {
-			userService.login(user);
+//			user.setMethod("test");
+			userService.auth(user, "localhost", Agent.CHROME, "XXXXXXXXX");
 		} catch (AuthException e) {
-			logger.info("{}", e.getStatus());
+			logger.info("{} {}", e.getStatus(), e.getMessage());
 		}
 	}
 	

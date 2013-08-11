@@ -27,8 +27,9 @@ import org.xhome.xauth.core.listener.ManageLogManageListener;
 @Service
 public class ManageLogServiceImpl implements ManageLogService {
 	
-	@Autowired
+	@Autowired(required = false)
 	private ManageLogDAO	manageLogDAO;
+	@Autowired(required = false)
 	private List<ManageLogManageListener> manageLogManageListeners;
 	
 	private Logger		logger;

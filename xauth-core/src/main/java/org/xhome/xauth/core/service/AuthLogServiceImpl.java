@@ -28,10 +28,11 @@ import org.xhome.xauth.core.listener.AuthLogManageListener;
 @Service
 public class AuthLogServiceImpl implements AuthLogService {
 	
-	@Autowired
+	@Autowired(required = false)
 	private AuthLogDAO	authLogDAO;
-	@Autowired
+	@Autowired(required = false)
 	private ManageLogService manageLogService;
+	@Autowired(required = false)
 	private List<AuthLogManageListener> authLogManageListeners;
 	
 	private Logger		logger;

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -13,15 +16,16 @@ import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
 import org.xhome.common.query.QueryBase;
 import org.xhome.xauth.AuthException;
-import org.xhome.xauth.User;
+import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.Role;
+import org.xhome.xauth.User;
+import org.xhome.xauth.core.auth.UserAuth;
 import org.xhome.xauth.core.dao.RoleDAO;
 import org.xhome.xauth.core.dao.UserDAO;
+import org.xhome.xauth.core.listener.UserAuthListener;
 import org.xhome.xauth.core.listener.UserManageListener;
 import org.xhome.xauth.core.listener.UserRoleManageListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @project xauth-core
@@ -32,14 +36,25 @@ import org.slf4j.LoggerFactory;
 @Service
 public class UserServiceImpl implements UserService {
 	
-	@Autowired
+	@Autowired(required = false)
 	private UserDAO	userDAO;
-	@Autowired
+	@Autowired(required = false)
 	private RoleDAO	roleDAO;
-	@Autowired
+	@Autowired(required = false)
 	private ManageLogService manageLogService;
+	@Autowired(required = false)
+	private AuthLogService authLogService;
+	@Autowired(required = false)
+	private UserCryptoService userCryptoService;
+	@Autowired(required = false)
+	private Map<String, UserAuth> userAuthMaps;
+	
+	@Autowired(required = false)
 	private List<UserManageListener> userManageListeners;
+	@Autowired(required = false)
 	private List<UserRoleManageListener> userRoleManageListeners;
+	@Autowired(required = false)
+	private List<UserAuthListener> userAuthListeners;
 	
 	private Logger  logger;
 	
@@ -48,34 +63,82 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User login(User user) throws AuthException {
+	public User auth(User user, String address, short agent, String number) throws AuthException {
 		String name = user.getName();
+		
+		if (!this.beforeUserAuth(user)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to auth user {}, but it's blocked", name);
+			}
+			
+			this.logAuth(user, address, agent, number, Status.BLOCKED);
+			this.afterUserAuth(user, user, Status.BLOCKED);
+			throw new AuthException(Status.BLOCKED, "禁止认证");
+		}
+		
+		UserAuth userAuth = null;
+		String method = user.getMethod();
+		if (userAuthMaps != null) {
+			userAuth = userAuthMaps.get(method);
+		}
+		if (userAuth != null) {
+			try {
+				User u = userAuth.auth(user);
+				
+				if (logger.isDebugEnabled()) {
+					logger.debug("success auth user {} with {} method", name, method);
+				}
+				this.logAuth(user, address, agent, number, Status.SUCCESS);
+				this.afterUserAuth(user, u, Status.SUCCESS);
+				return u;
+			} catch (AuthException ae) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("failed auth user {} with {} method", name, method);
+				}
+				
+				this.logAuth(user, address, agent, number, Status.ERROR);
+				this.afterUserAuth(user, user, Status.ERROR);
+				throw ae;
+			}
+		}
+		
+		// 采用默认方法进行认证
+		user.setMethod("DEFAULT");
 		User u = userDAO.queryUserByName(name);
 		if (u == null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("user {} try to login, but it's not exists", name);
+				logger.debug("try to auth user {}, but it's not exists", name);
 			}
-			throw new AuthException(Status.NOT_EXISTS, "用户" + name + "不存在");
+			this.logAuth(user, address, agent, number, Status.NOT_EXISTS);
+			this.afterUserAuth(user, user, Status.NOT_EXISTS);
+			throw new AuthException(Status.NOT_EXISTS, "用户不存在");
 		}
 		
 		short status = u.getStatus();
 		if (status == Status.LOCK) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("user {} try to login, but it's locked", name);
+				logger.debug("try to auth user {}, but it's locked", name);
 			}
-			throw new AuthException(status, "用户" + name + "已锁定，不能登录");
+			this.logAuth(user, address, agent, number, Status.LOCK);
+			this.afterUserAuth(user, u, Status.LOCK);
+			throw new AuthException(status, "用户已锁定");
 		}
 		
-		String ep = this.encrypt(user.getPassword());
-		if (ep.equals(u.getPassword())) {
+		userCryptoService.crypto(user);
+		if (u.getPassword().equals(user.getPassword())) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("user {} login", name);
+				logger.debug("success auth user {}", name);
 			}
+			
+			this.logAuth(user, address, agent, number, Status.SUCCESS);
+			this.afterUserAuth(user, u, Status.SUCCESS);
 			return u;
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("user {} try to login, but password debug", name);
+				logger.debug("try to auth user {}, but password error", name);
 			}
+			this.logAuth(user, address, agent, number, Status.PASSWD_NOT_MATCH);
+			this.afterUserAuth(user, u, Status.PASSWD_NOT_MATCH);
 			throw new AuthException(Status.PASSWD_NOT_MATCH, "密码错误");
 		}
 	}
@@ -105,9 +168,9 @@ public class UserServiceImpl implements UserService {
 			return Status.EXISTS;
 		}
 		
+		userCryptoService.crypto(user);
 		user.setStatus(Status.OK);
 		user.setVersion((short)0);
-		user.setPassword(this.encrypt(user.getPassword()));
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		user.setCreated(t);
 		user.setModified(t);
@@ -263,8 +326,8 @@ public class UserServiceImpl implements UserService {
 			return status;
 		}
 		
-		String oldPassword = this.encrypt(user.getPassword());
-		if (!oldPassword.equals(old.getPassword())) {
+		userCryptoService.crypto(user);
+		if (!old.getPassword().equals(user.getPassword())) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("try to change password for user {}[{}], but old password not match", oldName, id);
 			}
@@ -274,9 +337,9 @@ public class UserServiceImpl implements UserService {
 			return Status.PASSWD_NOT_MATCH;
 		}
 		
-		newPassword = this.encrypt(newPassword);
 		user.setPassword(newPassword);
-		old.setPassword(newPassword);
+		userCryptoService.crypto(user);
+		old.setPassword(user.getPassword());
 		user.setOwner(old.getOwner());
 		user.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
@@ -1203,11 +1266,6 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
-	private String encrypt(String data) {
-//		return new MD5().encrypt(new SHA1().encrypt(data));
-		return data;
-	}
-	
 	private void logManageUser(String content, Short action, Long obj, Short status, User oper) {
 		this.logManage(content, action, ManageLog.TYPE_USER, obj, status, oper);
 	}
@@ -1220,6 +1278,12 @@ public class UserServiceImpl implements UserService {
 		ManageLog manageLog = new ManageLog(content, action, type, obj, oper == null ? null : oper.getId());
 		manageLog.setStatus(status);
 		manageLogService.logManage(manageLog);
+	}
+	
+	private void logAuth(User user, String address, short agent, String number, Short status) {
+		AuthLog authLog = new AuthLog(user, user.getMethod(), address, agent, number);
+		authLog.setStatus(status);
+		authLogService.logAuth(authLog);
 	}
 	
 	private boolean beforeUserManage(User oper, short action, User user, Object ...args) {
@@ -1260,6 +1324,25 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	private boolean beforeUserAuth(User user) {
+		if (userAuthListeners != null) {
+			for (UserAuthListener listener : userAuthListeners) {
+				if (!listener.beforeUserAuth(user)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private void afterUserAuth(User before, User after, short result) {
+		if (userAuthListeners != null) {
+			for (UserAuthListener listener : userAuthListeners) {
+				listener.afterUserAuth(before, after, result);
+			}
+		}
+	}
+	
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
@@ -1284,6 +1367,41 @@ public class UserServiceImpl implements UserService {
 		return this.manageLogService;
 	}
 	
+	public void setAuthLogService(AuthLogService authLogService) {
+		this.authLogService = authLogService;
+	}
+
+	public AuthLogService getAuthLogService() {
+		return authLogService;
+	}
+	
+	public void setUserCryptoService(UserCryptoService userCryptoService) {
+		this.userCryptoService = userCryptoService;
+	}
+
+	public UserCryptoService getUserCryptoService() {
+		return userCryptoService;
+	}
+	
+	public void setUserAuthMaps(Map<String, UserAuth> userAuthMaps) {
+		this.userAuthMaps = userAuthMaps;
+	}
+	
+	public Map<String, UserAuth> getUserAuthMaps() {
+		return this.userAuthMaps;
+	}
+	
+	public void registerUserAuth(String method, UserAuth userAuth) {
+		if (userAuthMaps == null) {
+			synchronized (this) {
+				if (userAuthMaps == null) {
+					userAuthMaps = new HashMap<String, UserAuth>();
+				}
+			}
+		}
+		userAuthMaps.put(method, userAuth);
+	}
+	
 	public void setUserManageListeners(List<UserManageListener> userManageListeners) {
 		this.userManageListeners = userManageListeners;
 	}
@@ -1294,7 +1412,11 @@ public class UserServiceImpl implements UserService {
 	
 	public void registerUserManageListener(UserManageListener userManageListener) {
 		if (userManageListeners == null) {
-			userManageListeners = new ArrayList<UserManageListener>();
+			synchronized (this) {
+				if (userManageListeners == null) {
+					userManageListeners = new ArrayList<UserManageListener>();
+				}
+			}
 		}
 		userManageListeners.add(userManageListener);
 	}
@@ -1309,9 +1431,32 @@ public class UserServiceImpl implements UserService {
 	
 	public void registerUserRoleManageListener(UserRoleManageListener userRoleManageListener) {
 		if (userRoleManageListeners == null) {
-			userRoleManageListeners = new ArrayList<UserRoleManageListener>();
+			synchronized (this) {
+				if (userRoleManageListeners == null) {
+					userRoleManageListeners = new ArrayList<UserRoleManageListener>();
+				}
+			}
 		}
 		userRoleManageListeners.add(userRoleManageListener);
+	}
+	
+	public void setUserAuthListeners(List<UserAuthListener> userAuthListeners) {
+		this.userAuthListeners = userAuthListeners;
+	}
+
+	public List<UserAuthListener> getUserAuthListeners() {
+		return userAuthListeners;
+	}
+	
+	public void registerUserAuthListener(UserAuthListener userAuthListener) {
+		if (userAuthListeners == null) {
+			synchronized (this) {
+				if (userAuthListeners == null) {
+					userAuthListeners = new ArrayList<UserAuthListener>();
+				}
+			}
+		}
+		userAuthListeners.add(userAuthListener);
 	}
 
 }
