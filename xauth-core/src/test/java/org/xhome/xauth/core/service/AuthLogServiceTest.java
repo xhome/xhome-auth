@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.xhome.common.constant.Agent;
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.AbstractTest;

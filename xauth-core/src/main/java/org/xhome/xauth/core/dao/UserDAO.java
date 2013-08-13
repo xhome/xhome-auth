@@ -2,8 +2,7 @@ package org.xhome.xauth.core.dao;
 
 import java.util.List;
 import java.util.Map;
-
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.User;
 
 /**

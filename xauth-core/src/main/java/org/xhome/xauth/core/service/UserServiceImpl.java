@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.ManageLog;

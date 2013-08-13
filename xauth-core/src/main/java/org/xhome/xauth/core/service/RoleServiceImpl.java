@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.xhome.common.constant.Action;
 import org.xhome.common.constant.Status;
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;

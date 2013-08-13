@@ -3,7 +3,7 @@ package org.xhome.xauth.core.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.User;
 

@@ -1,8 +1,7 @@
 package org.xhome.xauth.core.service;
 
 import java.util.List;
-
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;

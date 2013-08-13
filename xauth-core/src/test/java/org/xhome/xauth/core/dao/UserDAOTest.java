@@ -4,7 +4,7 @@ import java.util.List;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.AbstractTest;
 import org.xhome.xauth.core.dao.UserDAO;
-import org.xhome.common.query.QueryBase;
+import org.xhome.db.query.QueryBase;
 import org.junit.Test;
 
 /**

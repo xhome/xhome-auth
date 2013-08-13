@@ -8,8 +8,7 @@
 	<name>xauth-web</name>
 
 	<properties>
-		<xhome-common.version>1.0</xhome-common.version>
-		<xauth-bean.version>1.0</xauth-bean.version>
+		<xauth-core.version>1.0</xauth-core.version>
 		<slf4j-api.version>1.7.5</slf4j-api.version>
 		<junit.version>4.11</junit.version>
 		<javax.servlet.version>2.5</javax.servlet.version>
@@ -21,20 +20,18 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.xhome</groupId>
-			<artifactId>xauth-bean</artifactId>
-			<version>${xauth-bean.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xhome-common</artifactId>
-			<version>${xhome-common.version}</version>
-			<scope>compile</scope>
+			<artifactId>xauth-core</artifactId>
+			<version>${xauth-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${javax.servlet.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

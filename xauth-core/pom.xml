@@ -9,6 +9,7 @@
 
 	<properties>
 		<xhome-crypto.version>1.0</xhome-crypto.version>
+		<xhome-db.version>1.0</xhome-db.version>
 		<xauth-bean.version>1.0</xauth-bean.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<spring.version>3.1.3.RELEASE</spring.version>
@@ -28,6 +29,11 @@
 			<groupId>org.xhome</groupId>
 			<artifactId>xhome-crypto</artifactId>
 			<version>${xhome-crypto.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xhome</groupId>
+			<artifactId>xhome-db</artifactId>
+			<version>${xhome-db.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xhome</groupId>
