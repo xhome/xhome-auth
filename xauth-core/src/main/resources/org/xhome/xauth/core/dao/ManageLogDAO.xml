@@ -38,7 +38,7 @@
 		</trim>
 	</sql>
 	
-	<select id="queryManageLogs" resultType="org.xhome.xauth.ManageLog" parameterType="org.xhome.common.query.QueryBase">
+	<select id="queryManageLogs" resultType="org.xhome.xauth.ManageLog" parameterType="org.xhome.db.query.QueryBase">
 		SELECT * FROM xhome_xauth_manage_log
 		<include refid="restriction_manageLogs"/>
 		ORDER BY created DESC
@@ -47,7 +47,7 @@
 		</if>
 	</select>
 	
-	<select id="countManageLogs" resultType="long" parameterType="org.xhome.common.query.QueryBase">
+	<select id="countManageLogs" resultType="long" parameterType="org.xhome.db.query.QueryBase">
 		SELECT COUNT(*) FROM xhome_xauth_manage_log
 		<include refid="restriction_manageLogs"/>
 	</select>

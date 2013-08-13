@@ -86,7 +86,7 @@
 		</trim>
 	</sql>
 	
-	<select id="queryRoles" resultType="org.xhome.xauth.Role" parameterType="org.xhome.common.query.QueryBase">
+	<select id="queryRoles" resultType="org.xhome.xauth.Role" parameterType="org.xhome.db.query.QueryBase">
 		SELECT * FROM xhome_xauth_role
 		<include refid="restriction_roles"/>
 		ORDER BY name
@@ -95,7 +95,7 @@
 		</if>
 	</select>
 	
-	<select id="countRoles" resultType="long" parameterType="org.xhome.common.query.QueryBase">
+	<select id="countRoles" resultType="long" parameterType="org.xhome.db.query.QueryBase">
 		SELECT COUNT(*) FROM xhome_xauth_role
 		<include refid="restriction_roles"/>
 	</select>

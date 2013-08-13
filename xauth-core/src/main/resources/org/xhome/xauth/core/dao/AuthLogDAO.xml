@@ -51,7 +51,7 @@
 		</trim>
 	</sql>
 	
-	<select id="queryAuthLogs" resultMap="authLogResultMap" parameterType="org.xhome.common.query.QueryBase">
+	<select id="queryAuthLogs" resultMap="authLogResultMap" parameterType="org.xhome.db.query.QueryBase">
 		SELECT * FROM xhome_xauth_auth_log
 		<include refid="restriction_authLogs"/>
 		ORDER BY created DESC
@@ -60,7 +60,7 @@
 		</if>
 	</select>
 	
-	<select id="countAuthLogs" resultType="long" parameterType="org.xhome.common.query.QueryBase">
+	<select id="countAuthLogs" resultType="long" parameterType="org.xhome.db.query.QueryBase">
 		SELECT COUNT(*) FROM xhome_xauth_auth_log
 		<include refid="restriction_authLogs"/>
 	</select>

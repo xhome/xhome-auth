@@ -8,6 +8,7 @@
 	<name>xauth-web</name>
 
 	<properties>
+		<xhome-http.version>1.0</xhome-http.version>
 		<xauth-core.version>1.0</xauth-core.version>
 		<slf4j-api.version>1.7.5</slf4j-api.version>
 		<junit.version>4.11</junit.version>
@@ -18,6 +19,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.xhome</groupId>
+			<artifactId>xhome-http</artifactId>
+			<version>${xhome-http.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.xhome</groupId>
 			<artifactId>xauth-core</artifactId>

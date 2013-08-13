@@ -146,7 +146,7 @@
 		GROUP BY u.id
 	</sql>
 	
-	<select id="queryUsers" resultMap="userResultMap" parameterType="org.xhome.common.query.QueryBase">
+	<select id="queryUsers" resultMap="userResultMap" parameterType="org.xhome.db.query.QueryBase">
 		<include refid="queryUser"/>
 		WHERE u.id IN (
 			<include refid="queryUserId"/>
@@ -157,7 +157,7 @@
 		</if>
 	</select>
 	
-	<select id="countUsers" resultType="long" parameterType="org.xhome.common.query.QueryBase">
+	<select id="countUsers" resultType="long" parameterType="org.xhome.db.query.QueryBase">
 		SELECT COUNT(*) FROM (
 			<include refid="queryUserId"/>
 		) AS t
