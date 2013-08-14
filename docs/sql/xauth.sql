@@ -46,7 +46,7 @@ CREATE TABLE xhome_xauth_user
     name         VARCHAR(20) NOT NULL COMMENT '用户名',
     nick         VARCHAR(20) NOT NULL COMMENT '用户昵称',
     password     CHAR(32) NOT NULL COMMENT '密码',
-    method       VARCHAR(10) NOT NULL COMMENT '认证方式',
+    method       VARCHAR(10) NOT NULL DEFAULT 'DEFAULT' COMMENT '认证方式',
     email        VARCHAR(50) NOT NULL COMMENT '用户邮箱',
     owner        BIGINT NOT NULL COMMENT '创建者',
     modifier     BIGINT NOT NULL COMMENT '修改者',

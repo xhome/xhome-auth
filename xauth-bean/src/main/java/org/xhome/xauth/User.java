@@ -20,7 +20,7 @@ public class User extends Base {
 	private String		nick; // 昵称
 	private String		email; // 邮箱
 	private String		password; // 密码
-	private String		method; // 认证方式
+	private String		method = "DEFAULT"; // 认证方式
 	private List<Role>	roles; // 用户角色
 	
 	public User() {}
@@ -36,6 +36,9 @@ public class User extends Base {
 	
 	public void setName(String name) {
 		this.name = name;
+		if (this.nick == null) {
+			this.setNick(name);
+		}
 	}
 	
 	public String getName() {
