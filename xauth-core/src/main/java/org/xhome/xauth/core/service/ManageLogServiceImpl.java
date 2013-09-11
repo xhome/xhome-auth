@@ -83,9 +83,9 @@ public class ManageLogServiceImpl implements ManageLogService {
 		
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
-				logger.debug("query user manage logs with parameters {}", query.getParameters());
+				logger.debug("query blog manage logs with parameters {}", query.getParameters());
 			} else {
-				logger.debug("query user manage logs");
+				logger.debug("query blog manage logs");
 			}
 		}
 
@@ -114,9 +114,9 @@ public class ManageLogServiceImpl implements ManageLogService {
 		long c = manageLogDAO.countManageLogs(query);
 		if (logger.isDebugEnabled()) {
 			if (query != null) {
-				logger.debug("count user manage logs with parameters {} of {}", query.getParameters(), c);
+				logger.debug("count blog manage logs with parameters {} of {}", query.getParameters(), c);
 			} else {
-				logger.debug("count user manage logs of {}", c);
+				logger.debug("count blog manage logs of {}", c);
 			}
 		}
 		

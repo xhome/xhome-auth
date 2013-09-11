@@ -63,7 +63,7 @@
 	</update>
 	
 	<delete id="deleteUser" parameterType="org.xhome.xauth.User">
-		DELETE FROM xhome_xauth_user WHERE id = #{id} AND status != 0
+		DELETE FROM xhome_xauth_user WHERE id = #{id}
 	</delete>
 	
 	<select id="isUserExists" resultType="boolean" parameterType="org.xhome.xauth.User">
@@ -187,7 +187,7 @@
 	</update>
 	
 	<delete id="deleteUserRole" parameterType="Map">
-		DELETE FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id}
+		DELETE FROM xhome_xauth_user_role WHERE user = #{user.id} AND role = #{role.id}
 	</delete>
 	
 	<select id="hasUserRole" resultType="boolean" parameterType="Map">

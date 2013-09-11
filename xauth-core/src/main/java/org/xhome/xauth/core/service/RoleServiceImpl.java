@@ -284,12 +284,12 @@ public class RoleServiceImpl implements RoleService {
 		short r = Status.SUCCESS;
 		if (roleDAO.isRoleDeleteable(role)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("delete role {}[{}]", role.getName(), role.getId());
+				logger.debug("delete role {}[{}]", name, id);
 			}
 			roleDAO.deleteRole(role);
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("role {}[{}] isn't deleteable", role.getName(), role.getId());
+				logger.debug("role {}[{}] isn't deleteable", name, id);
 			}
 			r = Status.NO_DELETE;
 		}
