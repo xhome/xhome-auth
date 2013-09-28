@@ -23,11 +23,11 @@ import org.xhome.xauth.web.validator.UserRolesValidator;
  * @author jhat
  * @email cpf624@126.com
  * @date Aug 14, 20139:37:50 PM
- * @description 
+ * @description code 0 ~ 100 are reversed for xauth-web
  */
 public class ValidatorUtils {
 
-private	final static Map<String, Short> codes;
+	protected final static Map<String, Short> codes;
 	
 	static {
 		codes = new HashMap<String, Short>();

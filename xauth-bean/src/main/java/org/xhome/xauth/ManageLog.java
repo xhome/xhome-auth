@@ -7,7 +7,7 @@ import org.xhome.common.Base;
  * @author jhat
  * @email cpf624@126.com
  * @date Aug 9, 201311:12:25 PM
- * @description 
+ * @description type 0 ~ 100 are reversed for xauth
  */
 public class ManageLog extends Base {
 
