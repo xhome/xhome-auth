@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.xhome.common.constant.Agent;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
 import org.xhome.http.response.Result;
@@ -119,7 +119,9 @@ public class UserAction {
 			r = re;
 		} else {
 			try {
-				User u = userService.auth(user, RequestUtils.getRequestAddress(request), Agent.CHROME, "20.12.01");
+				User u = userService.auth(user, RequestUtils.getRequestAddress(request),
+						RequestUtils.getRequestAgent(request),
+						request.getHeader("User-Agent"));
 				AuthUtils.setCurrentUser(request, u);
 				status = Status.SUCCESS;
 				msg = "用户" + user.getName() + "登录成功";
@@ -146,7 +148,7 @@ public class UserAction {
 		
 		short status = Status.SUCCESS;
 		
-		logger.info("[" + status + "]" + msg);
+		logger.info("[{}] 用户{}退出登录", status, uname);
 		
 		return new Result(status, msg);
 	}
