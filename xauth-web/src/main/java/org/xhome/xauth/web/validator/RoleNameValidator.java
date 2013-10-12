@@ -44,6 +44,5 @@ public class RoleNameValidator extends Validator {
 		}
 		return false;
 	}
-
 	
 }

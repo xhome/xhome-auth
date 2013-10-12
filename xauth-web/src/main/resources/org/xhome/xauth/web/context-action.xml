@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+  
+  <import resource="classpath*:org/xhome/xauth/core/context-service.xml"/>
+  
+  <bean id="authLogAction" class="org.xhome.xauth.web.action.AuthLogAction" scope="singleton">
+  	<property name="authLogService" ref="authLogService"/>
+  </bean>
+  
+  <bean id="manageLogAction" class="org.xhome.xauth.web.action.ManageLogAction" scope="singleton">
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="roleAction" class="org.xhome.xauth.web.action.RoleAction" scope="singleton">
+  	<property name="roleService" ref="roleService"/>
+  </bean>
+  
+  <bean id="userAction" class="org.xhome.xauth.web.action.UserAction" scope="singleton">
+  	<property name="userService" ref="userService"/>
+  </bean>
+  
+</beans>

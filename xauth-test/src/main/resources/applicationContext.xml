@@ -13,36 +13,22 @@
 		http://www.springframework.org/schema/mvc
 		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 	
-	<!-- 加载mysql配置 -->
-    <context:property-placeholder location="classpath:mysql.properties"/>
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${db.driver}"/>
-		<property name="url" value="${db.url}"/>
-		<property name="username" value="${db.username}"/>
-		<property name="password" value="${db.password}"/>
-	</bean>	
-
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:sqlmap_config.xml"/>
-		<property name="dataSource" ref="dataSource"/>
-		<!-- 自动适配TypeAliases -->
-		<!-- 
-		<property name="typeAliasesPackage" value="org.xhome.xauth.test"/>
-		 -->
-	</bean>
-	
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
+	<!-- 
+	<import resource="classpath:context-db.xml"/>
+	 -->
+	<import resource="classpath*:org/xhome/xauth/web/context-action.xml"/>
 	
 	<!-- 自动适配Mapper -->
+	<!-- 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
   		<property name="basePackage" value="org.xhome.xauth.core.dao"/>
 	</bean>
+	 -->
 
     <!-- 自动扫描组建 -->
+	<!-- 
 	<context:component-scan base-package="org.xhome.xauth.core.service; org.xhome.xauth.web.action"/>
+	 -->
     
     <tx:annotation-driven/>
     <mvc:annotation-driven/>

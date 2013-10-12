@@ -5,4 +5,4 @@ package:clean
 clean:
 	mvn clean
 deploy:
-	mvn javadoc:jar source:jar deploy -Dmaven.test.skip=true
+	mvn deploy -Dmaven.test.skip=true

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
+  
+  <import resource="classpath*:org/xhome/xauth/core/context-dao.xml"/>
+  
+  <bean id="manageLogService" class="org.xhome.xauth.core.service.ManageLogServiceImpl" scope="singleton">
+  	<property name="manageLogDAO" ref="manageLogDAO"/>
+  </bean>
+  
+  <bean id="authLogService" class="org.xhome.xauth.core.service.AuthLogServiceImpl" scope="singleton">
+  	<property name="authLogDAO" ref="authLogDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="roleService" class="org.xhome.xauth.core.service.RoleServiceImpl" scope="singleton">
+  	<property name="roleDAO" ref="roleDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="userCryptoService" class="org.xhome.xauth.core.service.UserCryptoServiceImpl" scope="singleton"/>
+  
+  <bean id="userService" class="org.xhome.xauth.core.service.UserServiceImpl" scope="singleton">
+  	<property name="userDAO" ref="userDAO"/>
+  	<property name="roleDAO" ref="roleDAO"/>
+  	
+  	<property name="manageLogService" ref="manageLogService"/>
+  	<property name="authLogService" ref="authLogService"/>
+  	<property name="userCryptoService" ref="userCryptoService"/>
+  </bean>
+  
+</beans>
