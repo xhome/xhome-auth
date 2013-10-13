@@ -40,6 +40,8 @@
     
     <bean id="servletHandlerAdapter" class="org.springframework.web.servlet.handler.SimpleServletHandlerAdapter"/>
     
-    <bean id="testServlet" name="/test.do" class="org.xhome.xauth.test.TestServlet"/>
+    <bean id="testServlet" name="/test.do" class="org.xhome.xauth.test.TestServlet">
+    	<property name="roleService" ref="roleService"/>
+    </bean>
 	
 </beans>

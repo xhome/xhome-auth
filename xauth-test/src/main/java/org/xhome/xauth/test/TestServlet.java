@@ -43,4 +43,8 @@ public class TestServlet extends HttpServlet {
 		data.put("role", role);
 		ResponseUtils.responseJSON(response, "Test Servlet", data);
 	}
+	
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
+	}
 }

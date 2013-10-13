@@ -8,27 +8,76 @@
 	<name>xauth-test Maven Webapp</name>
 
 	<properties>
-		<jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
-		<validation-api.version>1.0.0.GA</validation-api.version>
-		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
 		<xauth-web.version>1.0</xauth-web.version>
-		<spring.version>3.1.3.RELEASE</spring.version>
-		<mybatis.version>3.1.1</mybatis.version>
-		<mybatis-spring.version>1.1.1</mybatis-spring.version>
+        <xhome-validator.version>1.0</xhome-validator.version>
+        <xhome-http.version>1.0</xhome-http.version>
+        <xhome-crypto.version>1.0</xhome-crypto.version>
+        <xhome-util.version>1.0</xhome-util.version>
+        <xhome-db.version>1.0</xhome-db.version>
+        <xhome-common.version>1.0</xhome-common.version>
+        <spring-mvc-extend.version>1.0</spring-mvc-extend.version>
+		<jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
+		<validation-api.version>1.1.0.Final</validation-api.version>
+		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
+		<spring.version>3.2.4.RELEASE</spring.version>
+		<mybatis.version>3.2.3</mybatis.version>
+		<mybatis-spring.version>1.2.1</mybatis-spring.version>
 		<logback.version>1.0.13</logback.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<mysql.jdbc.version>5.1.22</mysql.jdbc.version>
+		<mysql.jdbc.version>5.1.26</mysql.jdbc.version>
 		<junit.version>4.11</junit.version>
-		<jstl.version>1.2</jstl.version>
-		<javax.servlet.version>2.5</javax.servlet.version>
+		<jstl.version>1.2.1</jstl.version>
+		<javax.servlet.version>3.1.0</javax.servlet.version>
 		<jetty.version>6.1.26</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<java.encoding>UTF-8</java.encoding>
 	</properties>
 
 	<dependencies>
 		<dependency>
+			<groupId>org.xhome</groupId>
+			<artifactId>xauth-web</artifactId>
+			<version>${xauth-web.version}</version>
+		</dependency>
+
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-validator</artifactId>
+            <version>${xhome-validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-http</artifactId>
+            <version>${xhome-http.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-crypto</artifactId>
+            <version>${xhome-crypto.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-util</artifactId>
+            <version>${xhome-util.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-db</artifactId>
+            <version>${xhome-db.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xhome</groupId>
+            <artifactId>xhome-common</artifactId>
+            <version>${xhome-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jhat</groupId>
+            <artifactId>spring-mvc-extend</artifactId>
+            <version>${spring-mvc-extend.version}</version>
+        </dependency>
+		
+        <dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson-mapper-asl.version}</version>
@@ -47,12 +96,6 @@
 		</dependency>
 		<!-- End Validation -->
 		
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xauth-web</artifactId>
-			<version>${xauth-web.version}</version>
-		</dependency>
-
 		<!-- Start MyBatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -109,6 +152,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+        <!--
 		<dependency>
 			<groupId>javax.servlet.jsp.jstl</groupId>
 			<artifactId>jstl-api</artifactId>
@@ -139,9 +183,10 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
+		-->
+        <dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<artifactId>javax.servlet-api</artifactId>
 			<version>${javax.servlet.version}</version>
 			<scope>compile</scope>
 		</dependency>
