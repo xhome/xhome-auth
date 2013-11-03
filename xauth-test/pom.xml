@@ -1,266 +1,94 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.xhome</groupId>
-	<artifactId>xauth-test</artifactId>
-	<packaging>war</packaging>
-	<version>1.0</version>
-	<name>xauth-test Maven Webapp</name>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.xhome</groupId>
+    <artifactId>xauth-test</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+    <name>xauth-test</name>
 
-	<properties>
-		<xauth-web.version>1.0</xauth-web.version>
-        <xhome-validator.version>1.0</xhome-validator.version>
-        <xhome-http.version>1.0</xhome-http.version>
-        <xhome-crypto.version>1.0</xhome-crypto.version>
-        <xhome-util.version>1.0</xhome-util.version>
-        <xhome-db.version>1.0</xhome-db.version>
-        <xhome-common.version>1.0</xhome-common.version>
-        <spring-mvc-extend.version>1.0</spring-mvc-extend.version>
-		<jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
-		<validation-api.version>1.1.0.Final</validation-api.version>
-		<hibernate-validator.version>5.0.1.Final</hibernate-validator.version>
-		<spring.version>3.2.4.RELEASE</spring.version>
-		<mybatis.version>3.2.3</mybatis.version>
-		<mybatis-spring.version>1.2.1</mybatis-spring.version>
-		<logback.version>1.0.13</logback.version>
-		<slf4j.version>1.7.5</slf4j.version>
-		<mysql.jdbc.version>5.1.26</mysql.jdbc.version>
-		<junit.version>4.11</junit.version>
-		<jstl.version>1.2.1</jstl.version>
-		<javax.servlet.version>3.1.0</javax.servlet.version>
-		<jetty.version>6.1.26</jetty.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.7</java.version>
-		<java.encoding>UTF-8</java.encoding>
-	</properties>
+    <properties>
+        <xhome-libs.version>1.0</xhome-libs.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <junit.version>4.11</junit.version>
+        <tomcat7-maven-plugin.version>2.1</tomcat7-maven-plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.7</java.version>
+        <java.encoding>UTF-8</java.encoding>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.xhome</groupId>
-			<artifactId>xauth-web</artifactId>
-			<version>${xauth-web.version}</version>
-		</dependency>
-
+    <dependencies>
         <dependency>
             <groupId>org.xhome</groupId>
-            <artifactId>xhome-validator</artifactId>
-            <version>${xhome-validator.version}</version>
+            <artifactId>xhome-libs</artifactId>
+            <version>${xhome-libs.version}</version>
         </dependency>
+        
         <dependency>
-            <groupId>org.xhome</groupId>
-            <artifactId>xhome-http</artifactId>
-            <version>${xhome-http.version}</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
+        
         <dependency>
-            <groupId>org.xhome</groupId>
-            <artifactId>xhome-crypto</artifactId>
-            <version>${xhome-crypto.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.xhome</groupId>
-            <artifactId>xhome-util</artifactId>
-            <version>${xhome-util.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xhome</groupId>
-            <artifactId>xhome-db</artifactId>
-            <version>${xhome-db.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xhome</groupId>
-            <artifactId>xhome-common</artifactId>
-            <version>${xhome-common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jhat</groupId>
-            <artifactId>spring-mvc-extend</artifactId>
-            <version>${spring-mvc-extend.version}</version>
-        </dependency>
-		
-        <dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson-mapper-asl.version}</version>
-		</dependency>
+    </dependencies>
 
-		<!-- Start Validation -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${validation-api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-		</dependency>
-		<!-- End Validation -->
-		
-		<!-- Start MyBatis -->
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>${mybatis-spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>${mybatis.version}</version>
-		</dependency>
-		<!-- End MyBatis -->
-
-		<!-- Start Spring -->
-		<dependency>
-	  		<groupId>org.springframework</groupId>
-	  		<artifactId>spring-jdbc</artifactId>
-	  		<version>${spring.version}</version>
-	  	</dependency>
-	    <dependency>
-	  		<groupId>org.springframework</groupId>
-	  		<artifactId>spring-tx</artifactId>
-	  		<version>${spring.version}</version>
-	  	</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<!-- End Spring -->
-		
-		<!-- Start Log -->
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<!-- End Log -->
-		
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.jdbc.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-        <!--
-		<dependency>
-			<groupId>javax.servlet.jsp.jstl</groupId>
-			<artifactId>jstl-api</artifactId>
-			<version>${jstl.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.servlet.jsp</groupId>
-					<artifactId>jsp-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jstl-impl</artifactId>
-			<version>${jstl.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.servlet.jsp</groupId>
-					<artifactId>jsp-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		-->
-        <dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${javax.servlet.version}</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<finalName>xauth-test-${project.version}</finalName>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>maven-jetty-plugin</artifactId>
-					<configuration>
-						<contextPath>/${project.artifactId}</contextPath>
-						<webDefaultXml>webdefault.xml</webDefaultXml>
-						<connectors>
-							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-								<port>8081</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
-						<requestLog implementation="org.mortbay.jetty.NCSARequestLog">
-							<filename>target/request_access.log</filename>
-							<retainDays>90</retainDays>
-							<append>false</append>
-							<extended>false</extended>
-							<logTimeZone>GMT+8:00</logTimeZone>
-						</requestLog>
-						<systemProperties>
-							<systemProperty>
-								<name>productionMode</name>
-								<value>false</value>
-							</systemProperty>
-						</systemProperties>
-					</configuration>
-					<version>${jetty.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<additionalClasspathElements>
-							<additionalClasspathElement>src/main/resources</additionalClasspathElement>
-						</additionalClasspathElements>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<!--
-					<configuration>
-						<webResources>
-							<resource>
-								<directory>src/main/webapp/</directory>
-								<filtering>true</filtering>
-								<excludes>
-									<exclude>index.html</exclude>
-								</excludes>
-							</resource>
-						</webResources>
-						<packagingExcludes>ex.html</packagingExcludes>
-					</configuration>
-					-->
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+    <build>
+        <finalName>xauth-test-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>${tomcat7-maven-plugin.version}</version>
+                    <configuration>
+                        <url>http://localhost:8080/manager/text</url>
+                        <server>tomcat</server>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <additionalClasspathElements>
+                            <additionalClasspathElement>src/main/resources</additionalClasspathElement>
+                        </additionalClasspathElements>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <!--
+                    <configuration>
+                        <webResources>
+                            <resource>
+                                <directory>src/main/webapp/</directory>
+                                <filtering>true</filtering>
+                                <excludes>
+                                    <exclude>index.html</exclude>
+                                </excludes>
+                            </resource>
+                        </webResources>
+                        <packagingExcludes>ex.html</packagingExcludes>
+                    </configuration>
+                    -->
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 
