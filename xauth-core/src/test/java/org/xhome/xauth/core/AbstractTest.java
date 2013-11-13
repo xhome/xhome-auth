@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.xhome.xauth.AuthLog;
+import org.xhome.xauth.Config;
 import org.xhome.xauth.ManageLog;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
@@ -63,6 +64,23 @@ public abstract class AbstractTest {
 		}
 		logger.debug("Id:" + role.getId() + "\tName:" + role.getName()
 				+ "\tTip:" + role.getTip());
+	}
+	
+	protected void printConfig(List<Config> configs) {
+		if (configs != null) {
+			for (Config config : configs) {
+				printConfig(config);
+			}
+		}
+	}
+	
+	protected void printConfig(Config config) {
+		if (config == null) {
+			return;
+		}
+		logger.debug("Id:" + config.getId() + "\tCategory:" + config.getCategory()
+				+ "\tItem:" + config.getItem() + "\tDisplay:" + config.getDisplay()
+				+ "\tValue:" + config.getValue());
 	}
 	
 	protected void printAuthLog(List<AuthLog> authLogs) {

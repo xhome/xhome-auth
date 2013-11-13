@@ -25,5 +25,10 @@
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
     <property name="mapperInterface" value="org.xhome.xauth.core.dao.UserDAO"/> 
   </bean>
+  
+  <bean id="configDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" scope="singleton"> 
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>  
+    <property name="mapperInterface" value="org.xhome.xauth.core.dao.ConfigDAO"/> 
+  </bean>
     
 </beans>

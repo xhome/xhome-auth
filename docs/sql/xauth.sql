@@ -95,18 +95,40 @@ COLLATE = utf8_general_ci
 AUTO_INCREMENT = 1;
 ALTER TABLE xhome_xauth_user_role COMMENT '用户角色';
 
+CREATE TABLE xhome_xauth_config
+(
+    id          INTEGER NOT NULL AUTO_INCREMENT COMMENT '配置信息ID',
+    category    INTEGER NOT NULL DEFAULT 0 COMMENT '配置分类',
+    item        VARCHAR(30) NOT NULL COMMENT '配置项',
+    display     VARCHAR(30) NOT NULL COMMENT '显示名称',
+    value       VARCHAR(1000) NOT NULL COMMENT '配置值',
+    owner       BIGINT NOT NULL COMMENT '创建者',
+    modifier    BIGINT NOT NULL COMMENT '修改者',
+    created     TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+    modified    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    version     TINYINT NOT NULL DEFAULT 0 COMMENT '数据版本',
+    status      TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态标记',
+    PRIMARY KEY (id)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = UTF8
+COLLATE = utf8_general_ci
+AUTO_INCREMENT = 1;
+ALTER TABLE xhome_xauth_config COMMENT '配置信息';
+
 DROP TABLE IF EXISTS xhome_xauth_manage_log;
 CREATE TABLE xhome_xauth_manage_log
 (
-   id                   BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
-   content              VARCHAR(50) COMMENT '内容描述',
-   action               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Add, 1:Update, 2: Remove, 3: Search...',
-   type                 TINYINT UNSIGNED NOT NULL DEFAULT 4 COMMENT '1: 角色, 2: 用户, 3: 用户角色, 4: 用户认证日志, 5: 管理日志',
-   obj                  BIGINT COMMENT '对象ID,NULL表示未知',
-   owner                BIGINT COMMENT '创建者,NULL表示匿名用户',
-   created              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
-   status               TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作结果,0:成功,其它：错误状态码',
-   PRIMARY KEY (id)
+    id           BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    category     INTEGER NOT NULL DEFAULT 0 COMMENT '配置分类',
+    content      VARCHAR(50) COMMENT '内容描述',
+    action       TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Add, 1:Update, 2: Remove, 3: Search...',
+    type         TINYINT UNSIGNED NOT NULL DEFAULT 4 COMMENT '1: 角色, 2: 用户, 3: 用户角色, 4: 用户认证日志, 5: 管理日志',
+    obj          BIGINT COMMENT '对象ID,NULL表示未知',
+    owner        BIGINT COMMENT '创建者,NULL表示匿名用户',
+    created      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+    status       TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作结果,0:成功,其它：错误状态码',
+    PRIMARY KEY (id)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8

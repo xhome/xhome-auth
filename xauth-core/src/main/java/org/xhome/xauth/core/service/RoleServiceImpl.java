@@ -575,7 +575,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	private void logManage(String content, Short action, Long obj, Short status, User oper) {
-		ManageLog manageLog = new ManageLog(content, action, ManageLog.TYPE_ROLE, obj, oper == null ? null : oper.getId());
+		ManageLog manageLog = new ManageLog(ManageLog.MANAGE_LOG_XAUTH, content, action, ManageLog.TYPE_ROLE, obj, oper == null ? null : oper.getId());
 		manageLog.setStatus(status);
 		manageLogService.logManage(manageLog);
 	}

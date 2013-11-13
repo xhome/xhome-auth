@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xhome.xauth.core.dao.ConfigDAO">
+	
+	<cache/>
+	
+	<insert id="addConfig" parameterType="org.xhome.xauth.Config" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO xhome_xauth_config (category, item, display, value, owner, modifier, created, modified, version, status)
+		VALUES(#{category}, #{item}, #{display}, #{value}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+	</insert>
+	
+	<update id="updateConfig" parameterType="org.xhome.xauth.Config">
+		UPDATE xhome_xauth_config
+		SET category = #{category}, item = #{item}, item = #{item},
+			display = #{display}, value = #{value}, modifier = #{modifier}, 
+			modified = #{modified}, version = version + 1, status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="lockConfig" parameterType="org.xhome.xauth.Config">
+		UPDATE xhome_xauth_config
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 5
+		WHERE id = #{id}
+	</update>
+	
+	<update id="unlockConfig" parameterType="org.xhome.xauth.Config">
+		UPDATE xhome_xauth_config
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
+		WHERE id = #{id}
+	</update>
+	
+	<update id="removeConfig" parameterType="org.xhome.xauth.Config">
+		UPDATE xhome_xauth_config
+		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteConfig" parameterType="org.xhome.xauth.Config">
+		DELETE FROM xhome_xauth_config WHERE id = #{id}
+	</delete>
+	
+	<select id="isConfigExists" resultType="boolean" parameterType="org.xhome.xauth.Config">
+		SELECT COUNT(*) FROM xhome_xauth_config WHERE item = #{item} AND status != 0
+	</select>
+	
+	<select id="isConfigUpdateable" resultType="boolean" parameterType="org.xhome.xauth.Config">
+		SELECT COUNT(*) FROM xhome_xauth_config WHERE id = #{id} AND status != 0 AND status != 4
+	</select>
+	
+	<select id="isConfigLocked" resultType="boolean" parameterType="org.xhome.xauth.Config">
+		SELECT COUNT(*) FROM xhome_xauth_config WHERE id = #{id} AND status != 0 AND status = 5
+	</select>
+	
+	<select id="isConfigRemoveable" resultType="boolean" parameterType="org.xhome.xauth.Config">
+		SELECT COUNT(*) FROM xhome_xauth_config WHERE id = #{id} AND status != 2 AND status != 4
+	</select>
+	
+	<select id="isConfigDeleteable" resultType="boolean" parameterType="org.xhome.xauth.Config">
+		SELECT COUNT(*) FROM xhome_xauth_config WHERE id = #{id} AND status != 3 AND status != 4
+	</select>
+	
+	<select id="queryConfigById" resultType="org.xhome.xauth.Config" parameterType="long">
+		SELECT * FROM xhome_xauth_config WHERE id = #{id} LIMIT 1
+	</select>
+	
+	<select id="queryConfigByItem" resultType="org.xhome.xauth.Config" parameterType="String">
+		SELECT * FROM xhome_xauth_config WHERE item = #{item} AND status != 0 LIMIT 1
+	</select>
+	
+	<sql id="restriction_configs">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="parameters != null">
+				<if test="parameters.category != null">
+					AND category = #{parameters.category}
+				</if>
+				<if test="parameters.item != null">
+					AND item LIKE CONCAT('%',#{parameters.item},'%')
+				</if>
+				<if test="parameters.status != null">
+					AND status = #{parameters.status}
+				</if>
+			</if>
+			<if test="parameters == null or parameters.status == null">
+				AND status != 0
+			</if>
+		</trim>
+	</sql>
+	
+	<select id="queryConfigs" resultType="org.xhome.xauth.Config" parameterType="org.xhome.db.query.QueryBase">
+		SELECT * FROM xhome_xauth_config
+		<include refid="restriction_configs"/>
+		ORDER BY category, item
+		<if test="_parameter != null">
+			LIMIT #{firstRow}, #{maxRow}
+		</if>
+	</select>
+	
+	<select id="countConfigs" resultType="long" parameterType="org.xhome.db.query.QueryBase">
+		SELECT COUNT(*) FROM xhome_xauth_config
+		<include refid="restriction_configs"/>
+	</select>
+	
+</mapper>

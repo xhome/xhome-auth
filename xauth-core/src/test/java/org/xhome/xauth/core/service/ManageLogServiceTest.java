@@ -27,7 +27,7 @@ public class ManageLogServiceTest extends AbstractTest {
 	
 	@Test
 	public void testAddManageLog() {
-		ManageLog manageLog = new ManageLog(Action.ADD, ManageLog.TYPE_AUTH_LOG, 10L, 1L);
+		ManageLog manageLog = new ManageLog(ManageLog.MANAGE_LOG_XAUTH, Action.ADD, ManageLog.TYPE_AUTH_LOG, 10L, 1L);
 		manageLogService.logManage(manageLog);
 	}
 	

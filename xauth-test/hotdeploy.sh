@@ -11,7 +11,8 @@ project_version='1.0'
 # 运行端口
 run_port='8080'
 # 监听路径
-listen_path='src/main/webapp'
+# listen_path='src/main/webapp'
+listen_path='../xauth-web/src/main/resources/META-INF/resources'
 # 热部署路径
 dest_path="target/$project_name-$project_version"
 # 端口检查开始时间(s)

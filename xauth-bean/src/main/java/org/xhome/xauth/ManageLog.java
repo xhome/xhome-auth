@@ -12,11 +12,18 @@ import org.xhome.common.Base;
 public class ManageLog extends Base {
 
 	private static final long	serialVersionUID	= -1195041078734813285L;
-	private String  content; // 内容描述
+	private int	    category; // 管理日志分类
+	private String  content;  // 内容描述
 	private Short 	action;   // 动作 0:Add, 1:Update, 2: Remove, 3: Search...
 	private Short 	type; 	  // 类型 0: 角色, 1: 用户, 2: 用户认证日志, 3: 管理日志
 	private Long 	obj; 	  // 操作对象
 	
+	public final static int MANAGE_LOG_XAUTH = 1;
+	public final static int MANAGE_LOG_XBLOG = 2;
+	public final static int MANAGE_LOG_XSMS = 3;
+	public final static int MANAGE_LOG_XSTATISTICS = 4;
+	
+	public final static short TYPE_CONFIG = 0; // 配置项目管理
 	public final static short TYPE_ROLE = 1;
 	public final static short TYPE_USER = 2;
 	public final static short TYPE_USER_ROLE = 3;
@@ -25,19 +32,29 @@ public class ManageLog extends Base {
 	
 	public ManageLog () {}
 	
-	public ManageLog (Short action, Short type, Long obj, Long user) {
+	public ManageLog (int category, Short action, Short type, Long obj, Long user) {
+		this.setCategory(category);
 		this.setAction(action);
 		this.setType(type);
 		this.setObj(obj);
 		this.setOwner(user);
 	}
 	
-	public ManageLog (String content, Short action, Short type, Long obj, Long user) {
+	public ManageLog (int category, String content, Short action, Short type, Long obj, Long user) {
+		this.setCategory(category);
 		this.setContent(content);
 		this.setAction(action);
 		this.setType(type);
 		this.setObj(obj);
 		this.setOwner(user);
+	}
+	
+	public int getCategory() {
+		return category;
+	}
+	
+	public void setCategory(int category) {
+		this.category = category;
 	}
 	
 	public void setContent(String content) {

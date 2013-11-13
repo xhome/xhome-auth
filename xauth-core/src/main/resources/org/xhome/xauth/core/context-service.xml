@@ -31,4 +31,9 @@
   	<property name="userCryptoService" ref="userCryptoService"/>
   </bean>
   
+  <bean id="configService" class="org.xhome.xauth.core.service.ConfigServiceImpl" scope="singleton">
+  	<property name="configDAO" ref="configDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
 </beans>

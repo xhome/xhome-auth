@@ -1274,7 +1274,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private void logManage(String content, Short action, Short type, Long obj, Short status, User oper) {
-		ManageLog manageLog = new ManageLog(content, action, type, obj, oper == null ? null : oper.getId());
+		ManageLog manageLog = new ManageLog(ManageLog.MANAGE_LOG_XAUTH, content, action, type, obj, oper == null ? null : oper.getId());
 		manageLog.setStatus(status);
 		manageLogService.logManage(manageLog);
 	}
