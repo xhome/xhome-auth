@@ -49,7 +49,11 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>springmvc</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>*.json</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>testServlet</servlet-name>
@@ -59,4 +63,5 @@
 		<servlet-name>testServlet</servlet-name>
 		<url-pattern>/t.do</url-pattern>
 	</servlet-mapping>
+	
 </web-app>

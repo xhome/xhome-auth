@@ -16,6 +16,7 @@
         <xhome-db.version>1.0</xhome-db.version>
         <xhome-common.version>1.0</xhome-common.version>
         <spring-mvc-extend.version>1.0</spring-mvc-extend.version>
+        <freemarker.version>2.3.20</freemarker.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
         <junit.version>4.11</junit.version>
@@ -74,6 +75,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
         <!-- Start Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

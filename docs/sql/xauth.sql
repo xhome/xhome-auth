@@ -144,7 +144,7 @@ CREATE TABLE xhome_xauth_auth_log(
     method       VARCHAR(10) NOT NULL DEFAULT 0 COMMENT '认证方式', 
     address      VARBINARY(16) NOT NULL COMMENT '访问地址(IPv4/IPv6)',
     agent        TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:Other,1:Chrome, 2:Firefox, 3:IE, 4:Android',
-    number       VARCHAR(100) NOT NULL COMMENT '设备编号',
+    number       VARCHAR(150) NOT NULL COMMENT '设备编号',
     created      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '认证时间',
     status       TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '认证结果,0:认证成功,其它：错误状态码',
     PRIMARY KEY PK_LOG_USER_LOGIN (id)

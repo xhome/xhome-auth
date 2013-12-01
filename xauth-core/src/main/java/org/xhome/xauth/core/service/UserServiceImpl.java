@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,20 +62,63 @@ public class UserServiceImpl implements UserService {
 		logger = LoggerFactory.getLogger(UserService.class);
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#authFailureDetect(org.xhome.xauth.User)
+	 */
+	@Override
+	public long authFailureDetect(User user) {
+		long current = System.currentTimeMillis();
+		Timestamp time = new Timestamp(current - 1800000);
+		return this.authFailureDetect(user, time);
+	}
+	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#authFailureDetect(org.xhome.xauth.User, java.sql.Timestamp)
+	 */
+	@Override
+	public long authFailureDetect(User user, Timestamp time) {
+		AuthLog authLog = new AuthLog();
+		authLog.setUser(user);
+		authLog.setCreated(time);
+		long c = authLogService.countFailureAuth(authLog);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("detect user {} auth failure {} from {}", user.getName(), c, time);
+		}
+		
+		return c;
+	}
+	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#auth(org.xhome.xauth.User, java.lang.String, short, java.lang.String)
+	 */
 	@Override
 	public User auth(User user, String address, short agent, String number) throws AuthException {
 		String name = user.getName();
 		
+		// 认证前通知各已注册的用户认证监听器
 		if (!this.beforeUserAuth(user)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("try to auth user {}, but it's blocked", name);
 			}
-			
 			this.logAuth(user, address, agent, number, Status.BLOCKED);
 			this.afterUserAuth(user, user, Status.BLOCKED);
 			throw new AuthException(Status.BLOCKED, "禁止认证");
 		}
 		
+		// 检查用户认证失败次数，
+		// 如果半个小时内认证失败3次以上，将无法进行认证
+		long failureDetect = this.authFailureDetect(user);
+		if (failureDetect >= 3) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("try to auth user {}, but it's failed {}", name, failureDetect);
+			}
+			this.logAuth(user, address, agent, number, Status.BLOCKED);
+			this.afterUserAuth(user, user, Status.BLOCKED);
+			throw new AuthException(Status.BLOCKED, "认证尝失败次数过多，将被锁定半小时");
+		}
+		
+		// 查询认证方法，如果有，则按指定的认证方法对用户进行认证，否则使用默认的方法的用户进行认证
 		UserAuth userAuth = null;
 		String method = user.getMethod();
 		if (userAuthMaps != null) {
@@ -142,6 +186,9 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#addUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int addUser(User oper, User user)  throws AuthException {
@@ -196,6 +243,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#updateUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int updateUser(User oper, User user) {
@@ -274,6 +324,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#changePassword(org.xhome.xauth.User, org.xhome.xauth.User, java.lang.String)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int changePassword(User oper, User user, String newPassword) {
@@ -367,6 +420,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#lockUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int lockUser(User oper, User user) {
@@ -398,6 +454,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#unlockUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int unlockUser(User oper, User user) {
@@ -429,6 +488,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#removeUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int removeUser(User oper, User user) {
@@ -463,6 +525,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#deleteUser(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int deleteUser(User oper, User user) {
@@ -497,6 +562,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserExists(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Override
 	public boolean isUserExists(User oper, User user) {
 		String name = user.getName();
@@ -526,6 +594,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserUpdateable(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Override
 	public boolean isUserUpdateable(User oper, User user) {
 		String name = user.getName();
@@ -556,6 +627,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserLocked(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Override
 	public boolean isUserLocked(User oper, User user) {
 		String name = user.getName();
@@ -586,6 +660,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserRemoveable(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Override
 	public boolean isUserRemoveable(User oper, User user) {
 		String name = user.getName();
@@ -616,6 +693,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserDeleteable(org.xhome.xauth.User, org.xhome.xauth.User)
+	 */
 	@Override
 	public boolean isUserDeleteable(User oper, User user) {
 		String name = user.getName();
@@ -646,6 +726,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#getUser(org.xhome.xauth.User, long)
+	 */
 	@Override
 	public User getUser(User oper, long id) {
 		if (!this.beforeUserManage(oper, Action.GET, null, id)) {
@@ -675,6 +758,9 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#getUser(org.xhome.xauth.User, java.lang.String)
+	 */
 	@Override
 	public User getUser(User oper, String name) {
 		if (!this.beforeUserManage(oper, Action.GET, null, name)) {
@@ -704,11 +790,17 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#getUsers(org.xhome.xauth.User)
+	 */
 	@Override
 	public List<User> getUsers(User oper) {
 		return this.getUsers(oper, null);
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#getUsers(org.xhome.xauth.User, org.xhome.db.query.QueryBase)
+	 */
 	@Override
 	public List<User> getUsers(User oper, QueryBase query) {
 		if (!this.beforeUserManage(oper, Action.QUERY, null, query)) {
@@ -741,11 +833,17 @@ public class UserServiceImpl implements UserService {
 		return users;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#countUsers(org.xhome.xauth.User)
+	 */
 	@Override
 	public long countUsers(User oper) {
 		return this.countUsers(oper, null);
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#countUsers(org.xhome.xauth.User, org.xhome.db.query.QueryBase)
+	 */
 	@Override
 	public long countUsers(User oper, QueryBase query) {
 		if (!this.beforeUserManage(oper, Action.COUNT, null, query)) {
@@ -772,6 +870,13 @@ public class UserServiceImpl implements UserService {
 		return c;
 	}
 	
+	/**
+	 * @param oper
+	 * @param user
+	 * @param role
+	 * @return
+	 * @throws AuthException
+	 */
 	private int doAddRole(User oper, User user, Role role)  throws AuthException {
 		Long roleId = role.getId(), userId = user.getId();
 		String roleName = role.getName(), userName = user.getName();
@@ -830,6 +935,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#addUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int addUserRole(User oper, User user, Role role)  throws AuthException {
@@ -845,6 +953,9 @@ public class UserServiceImpl implements UserService {
 		return this.doAddRole(oper, user, role);
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#addUserRole(org.xhome.xauth.User, org.xhome.xauth.User, java.util.List)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int addUserRole(User oper, User user, List<Role> roles)  throws AuthException {
@@ -874,6 +985,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#lockUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int lockUserRole(User oper, User user, Role role) {
@@ -910,6 +1024,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#lockUserRole(org.xhome.xauth.User, org.xhome.xauth.User, java.util.List)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int lockUserRole(User oper, User user, List<Role> roles) {
@@ -928,6 +1045,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#unlockUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int unlockUserRole(User oper, User user, Role role) {
@@ -964,6 +1084,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#unlockUserRole(org.xhome.xauth.User, org.xhome.xauth.User, java.util.List)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int unlockUserRole(User oper, User user, List<Role> roles) {
@@ -982,6 +1105,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#removeUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int removeUserRole(User oper, User user, Role role) {
@@ -1021,6 +1147,9 @@ public class UserServiceImpl implements UserService {
 		return r;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#removeUserRole(org.xhome.xauth.User, org.xhome.xauth.User, java.util.List)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int removeUserRole(User oper, User user, List<Role> roles) {
@@ -1039,6 +1168,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#deleteUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int deleteUserRole(User oper, User user, Role role) {
@@ -1077,6 +1209,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#deleteUserRole(org.xhome.xauth.User, org.xhome.xauth.User, java.util.List)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int deleteUserRole(User oper, User user, List<Role> roles) {
@@ -1095,6 +1230,9 @@ public class UserServiceImpl implements UserService {
 		return Status.SUCCESS;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#hasUserRole(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Override
 	public boolean hasUserRole(User oper, User user, Role role) {
 		Long roleId = role.getId(), userId = user.getId();
@@ -1129,6 +1267,9 @@ public class UserServiceImpl implements UserService {
 		return h;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserRoleUpdateable(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Override
 	public boolean isUserRoleUpdateable(User oper, User user, Role role) {
 		Long roleId = role.getId(), userId = user.getId();
@@ -1163,6 +1304,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserRoleLocked(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Override
 	public boolean isUserRoleLocked(User oper, User user, Role role) {
 		Long roleId = role.getId(), userId = user.getId();
@@ -1197,6 +1341,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserRoleRemoveable(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Override
 	public boolean isUserRoleRemoveable(User oper, User user, Role role) {
 		Long roleId = role.getId(), userId = user.getId();
@@ -1231,6 +1378,9 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#isUserRoleDeleteable(org.xhome.xauth.User, org.xhome.xauth.User, org.xhome.xauth.Role)
+	 */
 	@Override
 	public boolean isUserRoleDeleteable(User oper, User user, Role role) {
 		Long roleId = role.getId(), userId = user.getId();
@@ -1265,10 +1415,25 @@ public class UserServiceImpl implements UserService {
 		return e;
 	}
 	
+	/**
+	 * @param content
+	 * @param action
+	 * @param obj
+	 * @param status
+	 * @param oper
+	 */
 	private void logManageUser(String content, Short action, Long obj, Short status, User oper) {
 		this.logManage(content, action, ManageLog.TYPE_USER, obj, status, oper);
 	}
 	
+	/**
+	 * 
+	 * @param content
+	 * @param action
+	 * @param obj
+	 * @param status
+	 * @param oper
+	 */
 	private void logManageUserRole(String content, Short action, Long obj, Short status, User oper) {
 		this.logManage(content, action, ManageLog.TYPE_USER_ROLE, obj, status, oper);
 	}
@@ -1279,12 +1444,28 @@ public class UserServiceImpl implements UserService {
 		manageLogService.logManage(manageLog);
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @param address
+	 * @param agent
+	 * @param number
+	 * @param status
+	 */
 	private void logAuth(User user, String address, short agent, String number, Short status) {
 		AuthLog authLog = new AuthLog(user, user.getMethod(), address, agent, number);
 		authLog.setStatus(status);
 		authLogService.logAuth(authLog);
 	}
 	
+	/**
+	 * 
+	 * @param oper
+	 * @param action
+	 * @param user
+	 * @param args
+	 * @return
+	 */
 	private boolean beforeUserManage(User oper, short action, User user, Object ...args) {
 		if (userManageListeners != null) {
 			for (UserManageListener listener : userManageListeners) {
@@ -1296,6 +1477,14 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param oper
+	 * @param action
+	 * @param result
+	 * @param user
+	 * @param args
+	 */
 	private void afterUserManage(User oper, short action, short result, User user, Object ...args) {
 		if (userManageListeners != null) {
 			for (UserManageListener listener : userManageListeners) {
@@ -1304,6 +1493,15 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param oper
+	 * @param action
+	 * @param user
+	 * @param role
+	 * @param args
+	 * @return
+	 */
 	private boolean beforeUserRoleManage(User oper, short action, User user, Role role, Object ...args) {
 		if (userRoleManageListeners != null) {
 			for (UserRoleManageListener listener : userRoleManageListeners) {
@@ -1315,6 +1513,15 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @param oper
+	 * @param action
+	 * @param result
+	 * @param user
+	 * @param role
+	 * @param args
+	 */
 	private void afterUserRoleManage(User oper, short action, short result, User user, Role role, Object ...args) {
 		if (userRoleManageListeners != null) {
 			for (UserRoleManageListener listener : userRoleManageListeners) {
@@ -1323,6 +1530,11 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
+	/**
+	 * 用户认证前依次通知已注册的监听器，将根据注册顺序依次调用，如果某个监听器返回false，后续的监听器将会被忽略
+	 * @param user 待认证的用户信息
+	 * @return True 允许对用户进行认证， False 禁止对用户进行认证
+	 */
 	private boolean beforeUserAuth(User user) {
 		if (userAuthListeners != null) {
 			for (UserAuthListener listener : userAuthListeners) {
@@ -1334,6 +1546,12 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 	
+	/**
+	 * 用户认证后依次通知已注册的监听器，将根据注册顺序依次调用
+	 * @param before 待认证的用户信息
+	 * @param after 认证后的用户信息
+	 * @param result 认证结果
+	 */
 	private void afterUserAuth(User before, User after, short result) {
 		if (userAuthListeners != null) {
 			for (UserAuthListener listener : userAuthListeners) {
@@ -1382,14 +1600,27 @@ public class UserServiceImpl implements UserService {
 		return userCryptoService;
 	}
 	
+	/**
+	 * 设置用户认证表
+	 * @param userAuthMaps 用户认证表
+	 */
 	public void setUserAuthMaps(Map<String, UserAuth> userAuthMaps) {
 		this.userAuthMaps = userAuthMaps;
 	}
 	
+	/**
+	 * 获取所有用户认证方法
+	 * @return
+	 */
 	public Map<String, UserAuth> getUserAuthMaps() {
 		return this.userAuthMaps;
 	}
 	
+	/**
+	 * 注册用户认证方法
+	 * @param method 用户认证方法名；如果方法名重名，后注册的将覆盖先注册的
+	 * @param userAuth 用户认证实现
+	 */
 	public void registerUserAuth(String method, UserAuth userAuth) {
 		if (userAuthMaps == null) {
 			synchronized (this) {
@@ -1401,14 +1632,26 @@ public class UserServiceImpl implements UserService {
 		userAuthMaps.put(method, userAuth);
 	}
 	
+	/**
+	 * 设置用户管理监听器列表
+	 * @param userManageListeners 用户管理监听器列表
+	 */
 	public void setUserManageListeners(List<UserManageListener> userManageListeners) {
 		this.userManageListeners = userManageListeners;
 	}
 
+	/**
+	 * 获取所有用户管理监听器
+	 * @return
+	 */
 	public List<UserManageListener> getUserManageListeners() {
 		return userManageListeners;
 	}
 	
+	/**
+	 * 注册用户管理监听器，将根据注册顺序依次调用
+	 * @param userManageListener 用户管理监听器
+	 */
 	public void registerUserManageListener(UserManageListener userManageListener) {
 		if (userManageListeners == null) {
 			synchronized (this) {
@@ -1420,14 +1663,26 @@ public class UserServiceImpl implements UserService {
 		userManageListeners.add(userManageListener);
 	}
 
+	/**
+	 * 设置用户角色管理监听器列表
+	 * @param userRoleManageListeners 用户角色管理监听器列表
+	 */
 	public void setUserRoleManageListeners(List<UserRoleManageListener> userRoleManageListeners) {
 		this.userRoleManageListeners = userRoleManageListeners;
 	}
 
+	/**
+	 * 获取所有用户角色管理监听器
+	 * @return
+	 */
 	public List<UserRoleManageListener> getUserRoleManageListeners() {
 		return userRoleManageListeners;
 	}
 	
+	/**
+	 * 注册用户角色管理监听器，将根据注册顺序依次调用
+	 * @param userRoleManageListener 用户角色管理监听器 
+	 */
 	public void registerUserRoleManageListener(UserRoleManageListener userRoleManageListener) {
 		if (userRoleManageListeners == null) {
 			synchronized (this) {
@@ -1439,14 +1694,26 @@ public class UserServiceImpl implements UserService {
 		userRoleManageListeners.add(userRoleManageListener);
 	}
 	
+	/**
+	 * 设置用户认证监听器列表
+	 * @param userAuthListeners 用户认证监听器列表 
+	 */
 	public void setUserAuthListeners(List<UserAuthListener> userAuthListeners) {
 		this.userAuthListeners = userAuthListeners;
 	}
 
+	/**
+	 * 获取所有认证监听器
+	 * @return
+	 */
 	public List<UserAuthListener> getUserAuthListeners() {
 		return userAuthListeners;
 	}
 	
+	/**
+	 * 注册用户认证监听器，将根据注册顺序依次调用
+	 * @param userAuthListener 用户认证监听器
+	 */
 	public void registerUserAuthListener(UserAuthListener userAuthListener) {
 		if (userAuthListeners == null) {
 			synchronized (this) {

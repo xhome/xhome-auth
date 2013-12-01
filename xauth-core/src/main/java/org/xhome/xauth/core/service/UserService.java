@@ -1,6 +1,9 @@
 package org.xhome.xauth.core.service;
 
+import java.sql.Timestamp;
 import java.util.List;
+
+import org.xhome.common.constant.Agent;
 import org.xhome.db.query.QueryBase;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
@@ -14,6 +17,30 @@ import org.xhome.xauth.User;
  */
 public interface UserService {
 
+	/**
+	 * 查询用户半个小时内的认证失败次数
+	 * @param user 待查询的用户信息
+	 * @return 返回认证失败次数
+	 */
+	public long authFailureDetect(User user);
+	
+	/**
+	 * 查询用户从指定时间到现在的认证失败次数
+	 * @param user 待查询的用户信息
+	 * @param time 指定的查询时间
+	 * @return 返回认证失败次数
+	 */
+	public long authFailureDetect(User user, Timestamp time);
+	
+	/**
+	 * 用户认证
+	 * @param user 待认证的用户信息
+	 * @param address 用户访问地址（IP地址）
+	 * @param agent 用户访问设备，设备类型参见{@link Agent}
+	 * @param number 用户访问设备编号（浏览器访问为浏览器全称User-Agent；移动设备访问为设备序号）
+	 * @return
+	 * @throws AuthException
+	 */
 	public User auth(User user, String address, short agent, String number) throws AuthException;
 	
 	public int addUser(User oper, User user) throws AuthException;

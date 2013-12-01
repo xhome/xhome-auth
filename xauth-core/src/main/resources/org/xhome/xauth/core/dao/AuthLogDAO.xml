@@ -65,4 +65,9 @@
 		<include refid="restriction_authLogs"/>
 	</select>
 	
+	<select id="countFailureAuth" resultType="long" parameterType="org.xhome.xauth.AuthLog">
+		SELECT COUNT(*) FROM xhome_xauth_auth_log
+		WHERE user = #{user.name} AND status != 0 AND created > #{created}
+	</select>
+	
 </mapper>
