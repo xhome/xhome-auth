@@ -54,9 +54,11 @@ public class UserAction {
 	private CommonValidator commonValidator = new CommonValidator();
 	private ValidatorMapping validatorMapping = ValidatorMapping.getInstance();
 
+
 	public final static String RM_USER_AUTH_CODE = "xauth/user/authcode";
 	public final static String RM_USER_LOGIN = "xauth/user/login";
 	public final static String RM_USER_LOGOUT = "xauth/user/logout";
+	public final static String RM_USER_DASHBOARD = "xauth/user/dashboard";
 
 	public final static String RM_USER_ADD = "xauth/user/add";
 	public final static String RM_USER_UPDATE = "xauth/user/update";
@@ -184,6 +186,15 @@ public class UserAction {
 		logger.info("[{}] 用户{}退出登录", status, uname);
 
 		return new Result(status, msg, user);
+	}
+	
+	/**
+	 * 用户后台管理界面
+	 * @return
+	 */
+	@RequestMapping(value = RM_USER_DASHBOARD, method = RequestMethod.GET)
+	public Object dashboard() {
+		return RM_USER_DASHBOARD;
 	}
 
 	@RequestMapping(value = RM_USER_ADD, method = RequestMethod.POST)
