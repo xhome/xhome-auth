@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.xhome.common.Base;
-import org.xhome.http.util.SessionUtils;
+import org.xhome.web.util.SessionUtils;
 import org.xhome.xauth.User;
 
 /**

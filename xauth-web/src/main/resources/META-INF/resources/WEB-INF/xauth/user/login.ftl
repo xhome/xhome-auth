@@ -30,7 +30,7 @@ body {
             <div id="error_msg" class="alert alert-danger" style="display: none;">
             </div>
         </#if>
-        <form id="login_form" action="" method="POST" role="form">
+        <form id="login_form" action="${xauth.base_url}xauth/user/login.htm?next=${xauth.base_url}xauth/user/dashboard.htm" method="POST" role="form">
             <div class="input-group input-group-lg">
                 <span class="glyphicon glyphicon-user input-group-addon"></span>
                 <input id="name" name="name" type="text" class="form-control" placeholder="用户名" maxlength="20">

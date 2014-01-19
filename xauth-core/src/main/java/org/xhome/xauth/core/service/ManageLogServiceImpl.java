@@ -78,7 +78,7 @@ public class ManageLogServiceImpl implements ManageLogService {
 		if (query != null) {
 			query.setResults(manageLogs);
 			long total = manageLogDAO.countManageLogs(query);
-			query.setTotalRow(total);
+			query.setTotal(total);
 		}
 		
 		if (logger.isDebugEnabled()) {

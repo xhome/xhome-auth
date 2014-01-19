@@ -10,7 +10,7 @@
     <properties>
         <xauth-core.version>1.0</xauth-core.version>
         <xhome-validator.version>1.0</xhome-validator.version>
-        <xhome-http.version>1.0</xhome-http.version>
+        <xhome-web.version>1.0</xhome-web.version>
         <xhome-crypto.version>1.0</xhome-crypto.version>
         <xhome-util.version>1.0</xhome-util.version>
         <xhome-db.version>1.0</xhome-db.version>
@@ -19,8 +19,8 @@
         <freemarker.version>2.3.20</freemarker.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <slf4j-api.version>1.7.5</slf4j-api.version>
-        <junit.version>4.11</junit.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
+        <junit.version>4.11</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
         <java.encoding>UTF-8</java.encoding>
@@ -40,8 +40,8 @@
         </dependency>
         <dependency>
             <groupId>org.xhome</groupId>
-            <artifactId>xhome-http</artifactId>
-            <version>${xhome-http.version}</version>
+            <artifactId>xhome-web</artifactId>
+            <version>${xhome-web.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -115,6 +115,7 @@
             <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

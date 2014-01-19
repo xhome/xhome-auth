@@ -56,7 +56,7 @@
 		<include refid="restriction_authLogs"/>
 		ORDER BY created DESC
 		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
+			LIMIT #{start}, #{limit}
 		</if>
 	</select>
 	

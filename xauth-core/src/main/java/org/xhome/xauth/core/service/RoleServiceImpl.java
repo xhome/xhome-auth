@@ -3,6 +3,7 @@ package org.xhome.xauth.core.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,6 +268,19 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
+	public int removeRoles(User oper, List<Role> roles) {
+		int r = Status.SUCCESS;
+		for (Role role : roles) {
+			r = this.removeRole(oper, role);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to remove role [" + role.getId() + "]" + role.getName());
+			}
+		}
+		return r;
+	}
+	
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
 	public int deleteRole(User oper, Role role) {
 		String name = role.getName();
 		Long id = role.getId();
@@ -296,6 +310,19 @@ public class RoleServiceImpl implements RoleService {
 
 		this.logManage(name, Action.DELETE, id, r, oper);
 		this.afterRoleManage(oper, Action.DELETE, r, role);
+		return r;
+	}
+	
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int deleteRoles(User oper, List<Role> roles) {
+		int r = Status.SUCCESS;
+		for (Role role : roles) {
+			r = this.deleteRole(oper, role);
+			if (r != Status.SUCCESS) {
+				throw new RuntimeException("fail to delete role [" + role.getId() + "]" + role.getName());
+			}
+		}
 		return r;
 	}
 	
@@ -527,7 +554,7 @@ public class RoleServiceImpl implements RoleService {
 		if (query != null) {
 			query.setResults(results);
 			long total = roleDAO.countRoles(query);
-			query.setTotalRow(total);
+			query.setTotal(total);
 		}
 
 		if (logger.isDebugEnabled()) {

@@ -529,7 +529,7 @@ public class ConfigServiceImpl implements ConfigService {
 		if (query != null) {
 			query.setResults(results);
 			long total = configDAO.countConfigs(query);
-			query.setTotalRow(total);
+			query.setTotal(total);
 		}
 
 		if (logger.isDebugEnabled()) {

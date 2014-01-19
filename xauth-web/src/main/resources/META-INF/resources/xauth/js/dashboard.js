@@ -11,31 +11,33 @@ Ext.onReady(function() {
     // 生成界面
     new XHome.Dashboard({
         logoConfig: {
-            html: '<h1>XHome XAuth Dashboard</h1>',
+            // html: '<h1>XHome XAuth Dashboard</h1>',
         },
         navigationConfig: { // 导航菜单配置
-            title: '导航菜单1',
+            title: '导航菜单',
             root: {
                 children: [{
-                    text: '系统管理',
-                    leaf: true,
-                    iconCls: 'icon-test', // 重置默认图标
-                    showClass: 'Ext.Panel', // 显示面板类
-                    showConfig: { // 显示面板配置
-                        id: 'abcdef',
-                        html: 'Good Job',
-                    }
-                }, {
-                    text: '用户管理',
-                    leaf: false,
+                    id: 'mxauth',
+                    text: '认证管理',
+                    iconCls: 'icon-nav-user',
                     children: [{
+                        id: 'mxauth_role',
                         text: '角色管理',
                         leaf: true,
-                        showClass: 'Ext.Panel',
-                        showConfig: {
-                            html: 'Hello World'
-                        }
+                        iconCls: 'icon-nav-user-role',
+                        showScript: 'xauth/js/manage/role.js',
+                        showClass: 'XHome.XAuth.Manage.Role'
+                    },{
+                        id: 'mxauth_user',
+                        text: '用户管理',
+                        leaf: true,
+                        iconCls: 'icon-nav-user-user',
+                        showScript: 'xauth/js/manage/user.js',
+                        showClass: 'XHome.XAuth.Manage.User'
                     }]
+                }, {
+                    text: '系统管理',
+                    iconCls: 'icon-nav-sys',
                 }]
             },
         },

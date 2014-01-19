@@ -92,7 +92,7 @@
 		<include refid="restriction_configs"/>
 		ORDER BY category, item
 		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
+			LIMIT #{start}, #{limit}
 		</if>
 	</select>
 	

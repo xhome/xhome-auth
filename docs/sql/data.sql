@@ -1,8 +1,8 @@
 USE xauth;
 
 DELETE FROM xhome_xauth_role;
-INSERT INTO xhome_xauth_role VALUES(1, "ADMIN", 1, 1, 1, NOW(), NOW(), 0, 2);
-INSERT INTO xhome_xauth_role VALUES(2, "MEMBER", 2, 1, 1, NOW(), NOW(), 0, 2);
+INSERT INTO xhome_xauth_role VALUES(1, "ADMIN", 1, 1, NOW(), NOW(), 0, 2);
+INSERT INTO xhome_xauth_role VALUES(2, "MEMBER", 1, 1, NOW(), NOW(), 0, 2);
 
 DELETE FROM xhome_xauth_user;
 /* 密码为：xhome_admin */

@@ -94,7 +94,6 @@ public class RoleServiceTest extends AbstractTest {
 	@Test
 	public void testUpdateRole() {
 		Role role = roleService.getRole(oper, "TestRole");
-		role.setTip(1L);
 		role.setId(100L);
 		// role.setVersion(11);
 		int r = roleService.updateRole(oper, role);

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.xhome.http.util.ResponseUtils;
+import org.xhome.web.util.ResponseUtils;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.service.RoleService;

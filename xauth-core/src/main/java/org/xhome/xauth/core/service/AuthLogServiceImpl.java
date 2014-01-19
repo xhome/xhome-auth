@@ -88,7 +88,7 @@ public class AuthLogServiceImpl implements AuthLogService {
 		if (query != null) {
 			query.setResults(authLogs);
 			long total = authLogDAO.countAuthLogs(query);
-			query.setTotalRow(total);
+			query.setTotal(total);
 		}
 		
 		if (logger.isDebugEnabled()) {

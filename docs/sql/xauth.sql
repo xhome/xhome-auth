@@ -22,7 +22,6 @@ CREATE TABLE xhome_xauth_role
 (
     id           INTEGER NOT NULL AUTO_INCREMENT COMMENT '角色ID',
     name         VARCHAR(20) NOT NULL COMMENT '角色名称',
-    tip          INTEGER NOT NULL DEFAULT 0 COMMENT '角色数字标识',
     owner        BIGINT NOT NULL COMMENT '创建者',
     modifier     BIGINT NOT NULL COMMENT '修改者',
     created      TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',

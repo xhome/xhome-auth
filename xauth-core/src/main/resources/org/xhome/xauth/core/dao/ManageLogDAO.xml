@@ -46,7 +46,7 @@
 		<include refid="restriction_manageLogs"/>
 		ORDER BY created DESC, category, type, action
 		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
+			LIMIT #{start}, #{limit}
 		</if>
 	</select>
 	

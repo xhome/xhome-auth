@@ -24,7 +24,11 @@ public interface RoleService {
 
 	public int removeRole(User oper, Role role);
 	
+	public int removeRoles(User oper, List<Role> roles);
+	
 	public int deleteRole(User oper, Role role);
+	
+	public int deleteRoles(User oper, List<Role> roles);
 	
 	public boolean isRoleExists(User oper, Role role);
 	

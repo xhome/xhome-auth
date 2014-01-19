@@ -6,13 +6,13 @@
 	<cache/>
 	
 	<insert id="addRole" parameterType="org.xhome.xauth.Role" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO xhome_xauth_role (name, tip, owner, modifier, created, modified, version, status)
-		VALUES(#{name}, #{tip}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
+		INSERT INTO xhome_xauth_role (name, owner, modifier, created, modified, version, status)
+		VALUES(#{name}, #{owner}, #{modifier}, #{created}, #{modified}, #{version}, #{status})
 	</insert>
 	
 	<update id="updateRole" parameterType="org.xhome.xauth.Role">
 		UPDATE xhome_xauth_role
-		SET name = #{name}, tip = #{tip}, modifier = #{modifier}, 
+		SET name = #{name}, modifier = #{modifier}, 
 			modified = #{modified}, version = version + 1, status = #{status}
 		WHERE id = #{id}
 	</update>
@@ -73,9 +73,6 @@
 				<if test="parameters.name != null">
 					AND name LIKE CONCAT('%',#{parameters.name},'%')
 				</if>
-				<if test="parameters.tip != null">
-					AND tip = #{parameters.tip}
-				</if>
 				<if test="parameters.status != null">
 					AND status = #{parameters.status}
 				</if>
@@ -91,7 +88,7 @@
 		<include refid="restriction_roles"/>
 		ORDER BY name
 		<if test="_parameter != null">
-			LIMIT #{firstRow}, #{maxRow}
+			LIMIT #{start}, #{limit}
 		</if>
 	</select>
 	

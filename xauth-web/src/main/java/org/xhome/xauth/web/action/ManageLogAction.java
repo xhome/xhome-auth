@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.xhome.common.constant.Status;
 import org.xhome.db.query.QueryBase;
-import org.xhome.http.response.Result;
 import org.xhome.validator.CommonValidator;
 import org.xhome.validator.ValidatorMapping;
+import org.xhome.web.response.CommonResult;
+import org.xhome.web.response.DataResult;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.service.ManageLogService;
 import org.xhome.xauth.web.util.AuthUtils;
@@ -68,7 +69,7 @@ public class ManageLogAction {
 		String msg = "条件查询管理日志";
 		short status = Status.SUCCESS;
 		
-		Result r = new Result(status, msg, query);
+		DataResult r = new DataResult(status, msg, query);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + uname + msg);
@@ -95,7 +96,7 @@ public class ManageLogAction {
 		String msg = "条件统计管理日志，共" + count;
 		short status = Status.SUCCESS;
 		
-		Result r = new Result(status, msg, count);
+		CommonResult r = new CommonResult(status, msg, count);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + uname + msg);

@@ -11,7 +11,7 @@
         <xhome-libs.version>1.0</xhome-libs.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <junit.version>4.11</junit.version>
-        <tomcat7-maven-plugin.version>2.1</tomcat7-maven-plugin.version>
+        <jetty.version>9.1.0.RC2</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
         <java.encoding>UTF-8</java.encoding>
@@ -44,13 +44,19 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>${tomcat7-maven-plugin.version}</version>
-                    <configuration>
-                        <url>http://localhost:8080/manager/text</url>
-                        <server>tomcat</server>
-                    </configuration>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+        			<configuration>
+        				<!-- 热部署检测间隔时间 -->
+                        <scanIntervalSeconds>10</scanIntervalSeconds>
+                        <webApp>
+                            <contextPath>/${project.artifactId}</contextPath>
+                        </webApp>
+                        <httpConnector>
+                            <port>8081</port>
+                        </httpConnector>
+        			</configuration>
+                    <version>${jetty.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

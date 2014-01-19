@@ -817,7 +817,7 @@ public class UserServiceImpl implements UserService {
 		if (query != null) {
 			query.setResults(users);
 			long total = userDAO.countUsers(query);
-			query.setTotalRow(total);
+			query.setTotal(total);
 		}
 		
 		if (logger.isDebugEnabled()) {

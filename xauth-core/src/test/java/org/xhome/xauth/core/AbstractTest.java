@@ -62,8 +62,7 @@ public abstract class AbstractTest {
 		if (role == null) {
 			return;
 		}
-		logger.debug("Id:" + role.getId() + "\tName:" + role.getName()
-				+ "\tTip:" + role.getTip());
+		logger.debug("Id:" + role.getId() + "\tName:" + role.getName());
 	}
 	
 	protected void printConfig(List<Config> configs) {
