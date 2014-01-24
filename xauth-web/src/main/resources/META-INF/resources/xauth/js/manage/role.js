@@ -27,7 +27,8 @@ Ext.define('XHome.XAuth.Manage.Role', {
             columns: [{
                 text: '编号',
                 dataIndex: 'id',
-            },{
+                width: 10,
+            }, {
                 text: '名称',
                 dataIndex: 'name',
             }, {

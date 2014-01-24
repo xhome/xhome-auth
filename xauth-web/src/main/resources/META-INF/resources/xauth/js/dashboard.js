@@ -17,27 +17,36 @@ Ext.onReady(function() {
             title: '导航菜单',
             root: {
                 children: [{
-                    id: 'mxauth',
+                    id: 'xauth_manage',
                     text: '认证管理',
-                    iconCls: 'icon-nav-user',
+                    iconCls: 'icon-nav-manage',
                     children: [{
-                        id: 'mxauth_role',
+                        id: 'xauth_manage-role',
                         text: '角色管理',
                         leaf: true,
-                        iconCls: 'icon-nav-user-role',
+                        iconCls: 'icon-nav-manage-role',
                         showScript: 'xauth/js/manage/role.js',
                         showClass: 'XHome.XAuth.Manage.Role'
                     },{
-                        id: 'mxauth_user',
+                        id: 'xauth_manage-user',
                         text: '用户管理',
                         leaf: true,
-                        iconCls: 'icon-nav-user-user',
+                        iconCls: 'icon-nav-manage-user',
                         showScript: 'xauth/js/manage/user.js',
                         showClass: 'XHome.XAuth.Manage.User'
                     }]
                 }, {
+                    id: 'xauth_system',
                     text: '系统管理',
-                    iconCls: 'icon-nav-sys',
+                    iconCls: 'icon-nav-system',
+                    children: [{
+                        id: 'xauth_system-config',
+                        text: '系统配置',
+                        leaf: true,
+                        iconCls: 'icon-nav-system-config',
+                        showScript: 'xauth/js/system/config.js',
+                        showClass: 'XHome.XAuth.System.Config',
+                    }]
                 }]
             },
         },

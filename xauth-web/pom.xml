@@ -69,7 +69,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jhat</groupId>
+            <groupId>org.xhome</groupId>
             <artifactId>spring-mvc-extend</artifactId>
             <version>${spring-mvc-extend.version}</version>
             <scope>provided</scope>

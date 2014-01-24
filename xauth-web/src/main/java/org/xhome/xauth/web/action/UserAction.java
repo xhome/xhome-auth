@@ -43,10 +43,10 @@ public class UserAction extends AbstractAction {
 	@Autowired
 	private UserService userService;
 
+	public final static String RM_USER_DASHBOARD = "xauth/dashboard";
 	public final static String RM_USER_AUTH_CODE = "xauth/user/authcode";
 	public final static String RM_USER_LOGIN = "xauth/user/login";
 	public final static String RM_USER_LOGOUT = "xauth/user/logout";
-	public final static String RM_USER_DASHBOARD = "xauth/user/dashboard";
 
 	public final static String RM_USER_ADD = "xauth/user/add";
 	public final static String RM_USER_UPDATE = "xauth/user/update";

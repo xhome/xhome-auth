@@ -21,7 +21,6 @@
 		<collection property="roles" ofType="org.xhome.xauth.Role" columnPrefix="role_">
 			<id property="id" column="id"/>
 			<result property="name" column="name"/>
-			<result property="tip" column="tip"/>
 			<result property="owner" column="owner"/>
 			<result property="modifier" column="modifier"/>
 			<result property="created" column="created"/>
@@ -93,7 +92,7 @@
 	</sql>
 	
 	<sql id="queryUser">
-		SELECT u.*, r.id AS role_id, r.name AS role_name, r.tip AS role_tip, r.owner AS role_owner,
+		SELECT u.*, r.id AS role_id, r.name AS role_name, r.owner AS role_owner,
 			r.modifier AS role_modifier, r.created AS role_created, r.modified AS role_modified,
 			r.version AS role_version, r.status AS role_status
 		<include refid="fromUser"/>
@@ -134,9 +133,6 @@
 				</if>
 				<if test="parameters.role_name != null">
 					AND r.name LIKE CONCAT('%',#{parameters.role_name},'%')
-				</if>
-				<if test="parameters.role_tip != null">
-					AND r.tip = #{parameters.role_tip}
 				</if>
 			</if>
 			<if test="parameters == null or parameters.status == null">

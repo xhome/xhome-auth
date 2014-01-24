@@ -22,4 +22,8 @@
   	<property name="userService" ref="userService"/>
   </bean>
   
+  <bean id="configAction" class="org.xhome.xauth.web.action.ConfigAction" scope="singleton">
+  	<property name="configService" ref="configService"/>
+  </bean>
+  
 </beans>
