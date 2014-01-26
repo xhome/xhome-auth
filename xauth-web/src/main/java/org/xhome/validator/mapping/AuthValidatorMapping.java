@@ -9,12 +9,15 @@ import org.xhome.validator.VersionValidator;
 import org.xhome.xauth.web.action.ConfigAction;
 import org.xhome.xauth.web.action.RoleAction;
 import org.xhome.xauth.web.action.UserAction;
+import org.xhome.xauth.web.validator.ConfigDisplayValidator;
+import org.xhome.xauth.web.validator.ConfigItemValidator;
 import org.xhome.xauth.web.validator.ConfigValueValidator;
 import org.xhome.xauth.web.validator.RoleNameValidator;
 import org.xhome.xauth.web.validator.UserEmailValidator;
 import org.xhome.xauth.web.validator.UserMethodValidator;
 import org.xhome.xauth.web.validator.UserNameValidator;
 import org.xhome.xauth.web.validator.UserNickValidator;
+import org.xhome.xauth.web.validator.UserPasswordNotEmptyValidator;
 import org.xhome.xauth.web.validator.UserPasswordValidator;
 import org.xhome.xauth.web.validator.UserRolesValidator;
 
@@ -52,22 +55,28 @@ public class AuthValidatorMapping implements Mapping {
 		mappings.put(RoleAction.RM_ROLE_REMOVEABLE, roleIdNameValidator);
 		mappings.put(RoleAction.RM_ROLE_DELETEABLE, roleIdNameValidator);
 
-		String userNameValidator = UserNameValidator.class.getName(), userPasswordValidator = UserPasswordValidator.class
-				.getName(), userMethodValidator = UserMethodValidator.class
-				.getName(), userNickValidator = UserNickValidator.class
-				.getName(), userEmailValidator = UserEmailValidator.class
-				.getName(), userRolesValidator = UserRolesValidator.class
-				.getName(), userNamePasswordValidator = userNameValidator + ","
-				+ userPasswordValidator, userIdNameValidator = idValidator
-				+ "," + userNameValidator, userNickEmailValidator = userNickValidator
-				+ "," + userEmailValidator, userValidator = userNamePasswordValidator
-				+ "," + userNickEmailValidator;
+		String userNameValidator = UserNameValidator.class.getName();
+		String userPasswordValidator = UserPasswordValidator.class.getName();
+		String userPasswordNotEmptyValidator = UserPasswordNotEmptyValidator.class
+				.getName();
+		String userMethodValidator = UserMethodValidator.class.getName();
+		String userNickValidator = UserNickValidator.class.getName();
+		String userEmailValidator = UserEmailValidator.class.getName();
+		String userRolesValidator = UserRolesValidator.class.getName();
+		String userNamePasswordValidator = userNameValidator + ","
+				+ userPasswordNotEmptyValidator;
+		String userIdNameValidator = idValidator + "," + userNameValidator;
+		String userNickEmailValidator = userNickValidator + ","
+				+ userEmailValidator;
+		String userValidator = userNickEmailValidator + ","
+				+ userRolesValidator + "," + userMethodValidator;
 		mappings.put(UserAction.RM_USER_LOGIN, userNamePasswordValidator);
-		mappings.put(UserAction.RM_USER_ADD, userValidator + ","
-				+ userRolesValidator + "," + userMethodValidator);
+		mappings.put(UserAction.RM_USER_ADD, userNamePasswordValidator + ","
+				+ userValidator);
 		mappings.put(UserAction.RM_USER_UPDATE, baseValidator + ","
-				+ userValidator + "," + userMethodValidator);
-		mappings.put(UserAction.RM_USER_CHPASSWD, userPasswordValidator);
+				+ userNameValidator + "," + userPasswordValidator + ","
+				+ userValidator);
+		mappings.put(UserAction.RM_USER_CHPASSWD, userPasswordNotEmptyValidator);
 		mappings.put(UserAction.RM_USER_LOCK, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_UNLOCK, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_REMOVE, userIdNameValidator);
@@ -92,6 +101,8 @@ public class AuthValidatorMapping implements Mapping {
 		mappings.put(UserAction.RM_USER_ROLE_DELETEABLE, userRoleValidator);
 
 		String configValidator = baseValidator + ","
+				+ ConfigItemValidator.class.getName() + ","
+				+ ConfigDisplayValidator.class.getName() + ","
 				+ ConfigValueValidator.class.getName();
 		mappings.put(ConfigAction.RM_CONFIG_UPDATE, configValidator);
 
@@ -117,13 +128,21 @@ public class AuthValidatorMapping implements Mapping {
 		codes.put(UserNameValidator.CODE_NAME_PATTERN, (short) 18);
 		codes.put(UserNickValidator.CODE_NICK_EMPTY, (short) 19);
 		codes.put(UserNickValidator.CODE_NICK_SIZE, (short) 20);
-		codes.put(UserPasswordValidator.CODE_PASSWORD_EMPTY, (short) 21);
-		codes.put(UserPasswordValidator.CODE_PASSWORD_SIZE, (short) 22);
-		codes.put(UserPasswordValidator.CODE_PASSWORD_PATTERN, (short) 23);
+		codes.put(UserPasswordNotEmptyValidator.CODE_PASSWORD_EMPTY, (short) 21);
+		codes.put(UserPasswordNotEmptyValidator.CODE_PASSWORD_SIZE, (short) 22);
+		codes.put(UserPasswordNotEmptyValidator.CODE_PASSWORD_PATTERN,
+				(short) 23);
 		codes.put(UserEmailValidator.CODE_EMAIL_EMPTY, (short) 24);
 		codes.put(UserEmailValidator.CODE_EMAIL_SIZE, (short) 25);
 		codes.put(UserEmailValidator.CODE_EMAIL_PATTERN, (short) 26);
 		codes.put(UserRolesValidator.CODE_ROLES_EMPTY, (short) 27);
+
+		codes.put(ConfigItemValidator.CODE_ITEM_EMPTY, (short) 28);
+		codes.put(ConfigItemValidator.CODE_ITEM_SIZE, (short) 29);
+		codes.put(ConfigDisplayValidator.CODE_DISPLAY_EMPTY, (short) 30);
+		codes.put(ConfigDisplayValidator.CODE_DISPLAY_SIZE, (short) 31);
+		codes.put(ConfigValueValidator.CODE_VALUE_EMPTY, (short) 32);
+		codes.put(ConfigValueValidator.CODE_VALUE_SIZE, (short) 33);
 		return codes;
 	}
 

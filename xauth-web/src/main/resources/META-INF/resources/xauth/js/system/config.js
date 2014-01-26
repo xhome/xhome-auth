@@ -20,6 +20,10 @@ Ext.define('XHome.XAuth.System.Config', {
                 labelWidth: 40,
                 maxLength: 50,
                 regex: /^\w*$/,
+            }, {
+                name: 'parameters["category"]',
+                hidden: true,
+                value: 0,
             }],
         });
 
@@ -38,7 +42,8 @@ Ext.define('XHome.XAuth.System.Config', {
             }],
             store: Ext.create('XHome.data.JsonStore', {
                 fields: ['id', 'category', 'item', 'display', 'value',
-                    'createdStr', 'modifiedStr', 'owner', 'modifier', 'version', 'status'],
+                    'createdStr', 'modifiedStr',
+                    'owner', 'modifier', 'version', 'status'],
                 url: 'xauth/config/query.json',
             }),
 

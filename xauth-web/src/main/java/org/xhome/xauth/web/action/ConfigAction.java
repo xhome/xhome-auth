@@ -44,7 +44,6 @@ public class ConfigAction extends AbstractAction {
 	public Object updateConfig(
 			@Validated @RequestAttribute("config") Config config,
 			HttpServletRequest request) {
-		Object r = null;
 		short status = 0;
 		String msg = null;
 
@@ -53,17 +52,15 @@ public class ConfigAction extends AbstractAction {
 		status = (short) configService.updateConfig(user, config);
 		if (status == Status.SUCCESS) {
 			msg = "更新配置项[" + config.getDisplay() + "]成功";
-			r = new CommonResult(status, msg, config);
 		} else {
 			msg = "更新配置项[" + config.getDisplay() + "]失败";
-			r = new CommonResult(status, msg);
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + user.getName() + msg);
 		}
 
-		return r;
+		return new CommonResult(status, msg, config);
 	}
 
 	@RequestMapping(value = RM_CONFIG_GET, method = RequestMethod.GET)
@@ -91,13 +88,12 @@ public class ConfigAction extends AbstractAction {
 			status = Status.ERROR;
 			msg = "配置项查询失败";
 		}
-		CommonResult r = new CommonResult(status, msg, config);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + uname + msg);
 		}
 
-		return r;
+		return new CommonResult(status, msg, config);
 	}
 
 	@RequestMapping(value = RM_CONFIG_QUERY, method = RequestMethod.GET)
@@ -119,13 +115,11 @@ public class ConfigAction extends AbstractAction {
 		String msg = "条件查询配置项信息";
 		short status = Status.SUCCESS;
 
-		DataResult r = new DataResult(status, msg, query);
-
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + uname + msg);
 		}
 
-		return r;
+		return new DataResult(status, msg, query);
 	}
 
 	@RequestMapping(value = RM_CONFIG_COUNT, method = RequestMethod.GET)
@@ -146,13 +140,11 @@ public class ConfigAction extends AbstractAction {
 		String msg = "条件统计配置项信息，共" + count;
 		short status = Status.SUCCESS;
 
-		CommonResult r = new CommonResult(status, msg, count);
-
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + uname + msg);
 		}
 
-		return r;
+		return new CommonResult(status, msg, count);
 	}
 
 	public void setConfigService(ConfigService configService) {

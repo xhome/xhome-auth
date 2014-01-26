@@ -22,23 +22,23 @@ body {
 <div id="form-wapper" class="panel panel-primary">
     <div class="panel-heading">用户登录</div>
     <div class="panel-body">
-        <#if result??>
+        <#if commonResult??>
             <div id="error_msg" class="alert alert-danger">
-                ${result.message}
+                ${commonResult.message}
             </div>
         <#else>
             <div id="error_msg" class="alert alert-danger" style="display: none;">
             </div>
         </#if>
-        <form id="login_form" action="${xauth.base_url}xauth/user/login.htm?next=${xauth.base_url}xauth/user/dashboard.htm" method="POST" role="form">
+        <form id="login_form" action="${xauth.base_url}xauth/user/login.htm?next=${xauth.base_url}xauth/dashboard.htm" method="POST" role="form">
             <div class="input-group input-group-lg">
                 <span class="glyphicon glyphicon-user input-group-addon"></span>
-                <input id="name" name="name" type="text" class="form-control" placeholder="用户名" maxlength="20">
+                <input id="user.name" name="user.name" type="text" class="form-control" placeholder="用户名" maxlength="20">
             </div>
             <br/>
             <div class="input-group input-group-lg">
                 <span class="glyphicon glyphicon-lock input-group-addon"></span>
-                <input id="password" name="password" type="password" class="form-control" placeholder="密码" maxlength="20">
+                <input id="user.password" name="user.password" type="password" class="form-control" placeholder="密码" maxlength="20">
             </div>
             <br/>
             <input class="submit btn btn-primary btn-lg btn-block" type="submit" role="button" value="登 录"></input>

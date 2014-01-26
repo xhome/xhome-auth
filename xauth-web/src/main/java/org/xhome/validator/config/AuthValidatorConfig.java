@@ -59,6 +59,16 @@ public class AuthValidatorConfig implements Config {
 	public final static String CONFIG_VALUE_SIZE_MAX = "xauth_config_value_size_max";
 	public final static String CONFIG_VALUE_SIZE_MESSAGE = "xauth_config_value_size_message";
 
+	public final static String CONFIG_ITEM_EMPTY_MESSAGE = "xauth_config_item_empty_message";
+	public final static String CONFIG_ITEM_SIZE_MIN = "xauth_config_item_size_min";
+	public final static String CONFIG_ITEM_SIZE_MAX = "xauth_config_item_size_max";
+	public final static String CONFIG_ITEM_SIZE_MESSAGE = "xauth_config_item_size_message";
+
+	public final static String CONFIG_DISPLAY_EMPTY_MESSAGE = "xauth_config_display_empty_message";
+	public final static String CONFIG_DISPLAY_SIZE_MIN = "xauth_config_display_size_min";
+	public final static String CONFIG_DISPLAY_SIZE_MAX = "xauth_config_display_size_max";
+	public final static String CONFIG_DISPLAY_SIZE_MESSAGE = "xauth_config_display_size_message";
+
 	/**
 	 * @see org.xhome.validator.config.Config#validatorConfigs()
 	 */
@@ -81,12 +91,12 @@ public class AuthValidatorConfig implements Config {
 		configs.put(USER_NAME_PATTERN_REGEXP, "^[\\w-_]{4,20}$");
 		configs.put(USER_NAME_PATTERN_MESSAGE, "用户名只能包含字母、数字或-_");
 
-		configs.put(USER_METHOD_SIZE_MIN, "0");
+		configs.put(USER_METHOD_SIZE_MIN, "1");
 		configs.put(USER_METHOD_SIZE_MAX, "10");
 		configs.put(USER_METHOD_SIZE_MESSAGE, "认证方式不能超过10个字符");
 
 		configs.put(USER_NICK_EMPTY_MESSAGE, "用户昵称不能为空");
-		configs.put(USER_NICK_SIZE_MIN, "0");
+		configs.put(USER_NICK_SIZE_MIN, "1");
 		configs.put(USER_NICK_SIZE_MAX, "20");
 		configs.put(USER_NICK_SIZE_MESSAGE, "用户昵称不能超过20个字符");
 
@@ -98,7 +108,7 @@ public class AuthValidatorConfig implements Config {
 		configs.put(USER_PASSWORD_PATTERN_MESSAGE, "用户密码只能包含字母、数字或-_");
 
 		configs.put(USER_EMAIL_EMPTY_MESSAGE, "用户邮箱不能为空");
-		configs.put(USER_EMAIL_SIZE_MIN, "0");
+		configs.put(USER_EMAIL_SIZE_MIN, "1");
 		configs.put(USER_EMAIL_SIZE_MAX, "50");
 		configs.put(USER_EMAIL_SIZE_MESSAGE, "用户邮箱不能超过50个字符");
 		configs.put(
@@ -109,8 +119,18 @@ public class AuthValidatorConfig implements Config {
 		configs.put(USER_ROLES_EMPTY_MESSAGE, "用户角色不能为空");
 
 		// 配置项校验器配置项
+		configs.put(CONFIG_ITEM_EMPTY_MESSAGE, "配置项不能为空");
+		configs.put(CONFIG_ITEM_SIZE_MIN, "1");
+		configs.put(CONFIG_ITEM_SIZE_MAX, "30");
+		configs.put(CONFIG_ITEM_SIZE_MESSAGE, "配置项不能超过30个字符");
+
+		configs.put(CONFIG_DISPLAY_EMPTY_MESSAGE, "显示名称不能为空");
+		configs.put(CONFIG_DISPLAY_SIZE_MIN, "1");
+		configs.put(CONFIG_DISPLAY_SIZE_MAX, "30");
+		configs.put(CONFIG_DISPLAY_SIZE_MESSAGE, "显示名称不能超过30个字符");
+
 		configs.put(CONFIG_VALUE_EMPTY_MESSAGE, "配置值不能为空");
-		configs.put(CONFIG_VALUE_SIZE_MIN, "0");
+		configs.put(CONFIG_VALUE_SIZE_MIN, "1");
 		configs.put(CONFIG_VALUE_SIZE_MAX, "1000");
 		configs.put(CONFIG_VALUE_SIZE_MESSAGE, "配置值不能超过1000个字符");
 

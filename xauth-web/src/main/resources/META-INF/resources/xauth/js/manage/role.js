@@ -3,7 +3,7 @@
  * Date:     2013-12-24
  * Email:    cpf624@126.com
  * Home:     http://pfchen.org
- * Describe: 
+ * Describe: 角色管理面板
  */
 
 Ext.define('XHome.XAuth.Manage.Role', {
@@ -20,6 +20,24 @@ Ext.define('XHome.XAuth.Manage.Role', {
                 maxLength: 50,
                 regex: /^\w*$/,
             }],
+        });
+
+        // 角色名称输入框
+        Ext.define('XHome.XAuth.Manage.Role.NameField', {
+            extend: 'Ext.form.field.Text',
+            fieldLabel: '名称',
+            labelWidth: 30,
+            name: 'role.name',
+            itemId: 'role.name',
+            emptyText: '请输入角色名称',
+            allowBlank: false,
+            blankText: '角色名称不能为空',
+            minLength: 4,
+            minLengthText: '角色名称不能少于4个字符',
+            maxLength: 20,
+            maxLengthText: '角色名称不能超过20个字符',
+            regex: /^[\w-_]+$/,
+            regexText: '角色名称只能包含字母、数字和-_',
         });
 
         // 数据显示表格
@@ -39,7 +57,8 @@ Ext.define('XHome.XAuth.Manage.Role', {
                 dataIndex: 'modifiedStr',
             }],
             store: Ext.create('XHome.data.JsonStore', {
-                fields: ['id', 'name', 'createdStr', 'modifiedStr', 'owner', 'modifier', 'version', 'status'],
+                fields: ['id', 'name', 'createdStr', 'modifiedStr',
+                    'owner', 'modifier', 'version', 'status'],
                 url: 'xauth/role/query.json',
             }),
 
@@ -51,25 +70,14 @@ Ext.define('XHome.XAuth.Manage.Role', {
                 Ext.create('XHome.Dashboard.FormWindow', {
                     title: '添加角色',
                     height: 130,
-                    width: 300,
+                    width: 320,
                     url: 'xauth/role/add.json',
                     success: function(result) {
                         store.add(result.data);
                     },
-                    items: [{
-                        fieldLabel: '名称',
-                        name: 'role.name',
-                        itemId: 'role.name',
-                        emptyText: '请输入角色名称',
-                        allowBlank: false,
-                        blankText: '角色名称不能为空',
-                        minLength: 4,
-                        minLengthText: '角色名称不能少于4个字符',
-                        maxLength: 20,
-                        maxLengthText: '角色名称不能超过20个字符',
-                        regex: /^[\w-_]+$/,
-                        regexText: '角色名称只能包含字母、数字或-_',
-                    }],
+                    items: [
+                        Ext.create('XHome.XAuth.Manage.Role.NameField'), 
+                    ],
                 }).show();
             },
 
@@ -83,7 +91,7 @@ Ext.define('XHome.XAuth.Manage.Role', {
                 Ext.create('XHome.Dashboard.FormWindow', {
                     title: '修改角色',
                     height: 130,
-                    width: 300,
+                    width: 320,
                     url: 'xauth/role/update.json',
                     success: function(result) {
                         selection.data = result.data;
@@ -91,21 +99,11 @@ Ext.define('XHome.XAuth.Manage.Role', {
                         XHome.Msg.info(result.message);
                     },
                     hiddenParams: formRole,
-                    items: [{
-                        fieldLabel: '名称',
-                        name: 'role.name',
-                        itemId: 'role.name',
-                        emptyText: '请输入角色名称',
-                        allowBlank: false,
-                        blankText: '角色名称不能为空',
-                        minLength: 4,
-                        minLengthText: '角色名称不能少于4个字符',
-                        maxLength: 20,
-                        maxLengthText: '角色名称不能超过20个字符',
-                        regex: /^[\w-_]+$/,
-                        regexText: '角色名称只能包含字母、数字或-_',
-                        value: role.name,
-                    }],
+                    items: [
+                        Ext.create('XHome.XAuth.Manage.Role.NameField', {
+                            value: role.name,
+                        }), 
+                    ],
                 }).show();
             },
 
