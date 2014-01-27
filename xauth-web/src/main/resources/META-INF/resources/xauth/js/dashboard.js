@@ -26,14 +26,28 @@ Ext.onReady(function() {
                         leaf: true,
                         iconCls: 'icon-nav-manage-role',
                         showScript: 'xauth/js/manage/role.js',
-                        showClass: 'XHome.XAuth.Manage.Role'
+                        showClass: 'XHome.XAuth.Manage.Role',
                     },{
                         id: 'xauth_manage-user',
                         text: '用户管理',
                         leaf: true,
                         iconCls: 'icon-nav-manage-user',
                         showScript: 'xauth/js/manage/user.js',
-                        showClass: 'XHome.XAuth.Manage.User'
+                        showClass: 'XHome.XAuth.Manage.User',
+                    }, {
+                        id: 'xauth_manage-auth_log',
+                        text: '认证日志',
+                        leaf: true,
+                        iconCls: 'icon-nav-manage-auth_log',
+                        showScript: 'xauth/js/manage/auth_log.js',
+                        showClass: 'XHome.XAuth.Manage.AuthLog',
+                    }, {
+                        id: 'xauth_manage-manage_log',
+                        text: '管理日志',
+                        leaf: true,
+                        iconCls: 'icon-nav-manage-manage_log',
+                        showScript: 'xauth/js/manage/manage_log.js',
+                        showClass: 'XHome.XAuth.Manage.ManageLog',
                     }]
                 }, {
                     id: 'xauth_system',

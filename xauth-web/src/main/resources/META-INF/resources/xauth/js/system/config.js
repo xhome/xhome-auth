@@ -19,7 +19,7 @@ Ext.define('XHome.XAuth.System.Config', {
                 fieldLabel: '配置项',
                 labelWidth: 40,
                 maxLength: 50,
-                regex: /^\w*$/,
+                maxLengthText: '配置项不能超过50个字符',
             }, {
                 name: 'parameters["category"]',
                 hidden: true,

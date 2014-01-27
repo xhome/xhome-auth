@@ -17,8 +17,10 @@ Ext.define('XHome.XAuth.Manage.Role', {
             items: [{
                 name: 'parameters["name"]',
                 fieldLabel: '名称',
-                maxLength: 50,
-                regex: /^\w*$/,
+                maxLength: 20,
+                maxLengthText: '角色名称不能超过20个字符',
+                regex: /^[\w-_]+$/,
+                regexText: '角色名称格式错误',
             }],
         });
 

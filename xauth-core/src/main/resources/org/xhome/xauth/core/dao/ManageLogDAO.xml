@@ -13,28 +13,28 @@
 	<sql id="restriction_manageLogs">
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters != null">
-				<if test="parameters.category != null">
+				<if test="parameters.category != null and parameters.category != ''">
 					AND category = #{parameters.category}
 				</if>
-				<if test="parameters.content != null">
+				<if test="parameters.content != null and parameters.category != ''">
 					AND content LIKE CONCAT('%', #{parameters.content}, '%')
 				</if>
-				<if test="parameters.action != null">
+				<if test="parameters.action != null and parameters.action != ''">
 					AND action = #{parameters.action}
 				</if>
-				<if test="parameters.type != null">
+				<if test="parameters.type != null and parameters.type != ''">
 					AND type = #{parameters.type}
 				</if>
-				<if test="parameters.obj != null">
+				<if test="parameters.obj != null and parameters.obj != ''">
 					AND obj = #{parameters.obj}
 				</if>
-				<if test="parameters.owner != null">
+				<if test="parameters.owner != null and parameters.owner != ''">
 					AND owner = #{parameters.owner}
 				</if>
-				<if test="parameters.created != null">
+				<if test="parameters.created != null and parameters.created != ''">
 					AND created LIKE CONCAT(#{parameters.created}, '%')
 				</if>
-				<if test="parameters.status != null">
+				<if test="parameters.status != null and parameters.status != ''">
 					AND status = #{parameters.status}
 				</if>
 			</if>

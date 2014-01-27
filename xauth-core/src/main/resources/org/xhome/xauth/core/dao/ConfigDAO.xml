@@ -97,23 +97,23 @@
 	<sql id="restriction_configs">
 		<trim prefix="WHERE" prefixOverrides="AND">
 			<if test="parameters != null">
-				<if test="parameters.category != null">
+				<if test="parameters.category != null and parameters.category != ''">
 					AND category = #{parameters.category}
 				</if>
-				<if test="parameters.item != null">
+				<if test="parameters.item != null and parameters.item != ''">
 					AND item LIKE CONCAT('%',#{parameters.item},'%')
 				</if>
-				<if test="parameters.display != null">
+				<if test="parameters.display != null and parameters.display != ''">
 					AND display LIKE CONCAT('%',#{parameters.display},'%')
 				</if>
-				<if test="parameters.value != null">
+				<if test="parameters.value != null and parameters.value != ''">
 					AND value LIKE CONCAT('%',#{parameters.value},'%')
 				</if>
-				<if test="parameters.status != null">
+				<if test="parameters.status != null and parameters.status != ''">
 					AND status = #{parameters.status}
 				</if>
 			</if>
-			<if test="parameters == null or parameters.status == null">
+			<if test="parameters == null or parameters.status == null or parameters.status == ''">
 				AND status != 0
 			</if>
 		</trim>

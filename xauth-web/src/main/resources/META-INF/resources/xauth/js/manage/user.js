@@ -156,6 +156,10 @@ Ext.define('XHome.XAuth.Manage.User', {
             }, Ext.create('XHome.XAuth.Manage.User.RoleComboBox', {
                 name: 'parameters["role_name"]',
                 valueField: 'name',
+                maxLength: 20,
+                maxLengthText: '角色名称不能超过20个字符',
+                regex: /^[\w-_]+$/,
+                regexText: '角色名称格式错误',
                 anchor: '100%', 
                 width: 300,
                 labelWidth: 30,

@@ -19,7 +19,6 @@ public class UserMethodValidator extends Validator {
 
 	public final static String CODE_METHOD_EMPTY = "method.empty";
 	public final static String CODE_METHOD_SIZE = "method.size";
-	public final static String CODE_METHOD_PATTERN = "method.pattern";
 
 	@Override
 	public boolean validate(Object target, Errors errors) {

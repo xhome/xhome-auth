@@ -28,8 +28,8 @@ public class ManageLogAction extends AbstractAction {
 	@Autowired(required = false)
 	private ManageLogService manageLogService;
 
-	public final static String RM_MANAGE_LOG_QUERY = "xauth/manage_log/query.do";
-	public final static String RM_MANAGE_LOG_COUNT = "xauth/manage_log/count.do";
+	public final static String RM_MANAGE_LOG_QUERY = "xauth/manage_log/query";
+	public final static String RM_MANAGE_LOG_COUNT = "xauth/manage_log/count";
 
 	@RequestMapping(value = RM_MANAGE_LOG_QUERY, method = RequestMethod.GET)
 	public Object getManageLogs(QueryBase query, HttpServletRequest request) {

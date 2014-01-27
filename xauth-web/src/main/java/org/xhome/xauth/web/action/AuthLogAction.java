@@ -28,8 +28,8 @@ public class AuthLogAction extends AbstractAction {
 	@Autowired(required = false)
 	private AuthLogService authLogService;
 
-	public final static String RM_AUTH_LOG_QUERY = "xauth/auth_log/query.do";
-	public final static String RM_AUTH_LOG_COUNT = "xauth/auth_log/count.do";
+	public final static String RM_AUTH_LOG_QUERY = "xauth/auth_log/query";
+	public final static String RM_AUTH_LOG_COUNT = "xauth/auth_log/count";
 
 	@RequestMapping(value = RM_AUTH_LOG_QUERY, method = RequestMethod.GET)
 	public Object getAuthLogs(QueryBase query, HttpServletRequest request) {
