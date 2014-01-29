@@ -69,15 +69,13 @@
 	
 	<sql id="restriction_roles">
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.name != null and parameters.name != ''">
-					AND name LIKE CONCAT('%',#{parameters.name},'%')
-				</if>
-				<if test="parameters.status != null and parameters.status != ''">
-					AND status = #{parameters.status}
-				</if>
+			<if test="parameters.name != null and parameters.name != ''">
+				AND name LIKE CONCAT('%',#{parameters.name},'%')
 			</if>
-			<if test="parameters == null or parameters.status == null or parameters.status == ''">
+			<if test="parameters.status != null and parameters.status != ''">
+				AND status = #{parameters.status}
+			</if>
+			<if test="parameters.status == null or parameters.status == ''">
 				AND status != 0
 			</if>
 		</trim>
@@ -87,9 +85,7 @@
 		SELECT * FROM xhome_xauth_role
 		<include refid="restriction_roles"/>
 		ORDER BY name
-		<if test="_parameter != null">
-			LIMIT #{start}, #{limit}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countRoles" resultType="long" parameterType="org.xhome.db.query.QueryBase">

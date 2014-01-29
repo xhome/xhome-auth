@@ -15,8 +15,19 @@ import org.xhome.xauth.User;
  */
 public interface ConfigService {
 
+	String ITEM_BASE_URL = "base_url";
+
 	// public int addConfig(User oper, Config config);
 
+	/**
+	 * 更新配置项
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param config
+	 *            待更新的配置项
+	 * @return
+	 */
 	public int updateConfig(User oper, Config config);
 
 	// public int lockConfig(User oper, Config config);
@@ -31,6 +42,15 @@ public interface ConfigService {
 
 	// public int deleteConfigs(User oper, List<Config> configs);
 
+	/**
+	 * 判断配置项是否存在
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param config
+	 *            待判断的配置项
+	 * @return
+	 */
 	public boolean isConfigExists(User oper, Config config);
 
 	// public boolean isConfigUpdateable(User oper, Config config);
@@ -41,16 +61,55 @@ public interface ConfigService {
 
 	// public boolean isConfigDeleteable(User oper, Config config);
 
+	/**
+	 * 获取指定ID的配置项
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param id
+	 *            配置项ID
+	 * @return
+	 */
 	public Config getConfig(User oper, long id);
 
+	/**
+	 * 获取指定的配置项
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param item
+	 *            配置项
+	 * @return
+	 */
 	public Config getConfig(User oper, String item);
 
-	public List<Config> getConfigs(User oper);
-
+	/**
+	 * 查询配置项
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param query
+	 *            查询条件
+	 * @return
+	 */
 	public List<Config> getConfigs(User oper, QueryBase query);
 
-	public long countConfigs(User oper);
-
+	/**
+	 * 统计配置项
+	 * 
+	 * @param oper
+	 *            当前操作用户
+	 * @param query
+	 *            统计条件
+	 * @return
+	 */
 	public long countConfigs(User oper, QueryBase query);
+
+	/**
+	 * 获取系统基地址
+	 * 
+	 * @return
+	 */
+	public String getBaseURL();
 
 }

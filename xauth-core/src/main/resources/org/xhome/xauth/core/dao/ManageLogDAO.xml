@@ -12,31 +12,29 @@
 	
 	<sql id="restriction_manageLogs">
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.category != null and parameters.category != ''">
-					AND category = #{parameters.category}
-				</if>
-				<if test="parameters.content != null and parameters.category != ''">
-					AND content LIKE CONCAT('%', #{parameters.content}, '%')
-				</if>
-				<if test="parameters.action != null and parameters.action != ''">
-					AND action = #{parameters.action}
-				</if>
-				<if test="parameters.type != null and parameters.type != ''">
-					AND type = #{parameters.type}
-				</if>
-				<if test="parameters.obj != null and parameters.obj != ''">
-					AND obj = #{parameters.obj}
-				</if>
-				<if test="parameters.owner != null and parameters.owner != ''">
-					AND owner = #{parameters.owner}
-				</if>
-				<if test="parameters.created != null and parameters.created != ''">
-					AND created LIKE CONCAT(#{parameters.created}, '%')
-				</if>
-				<if test="parameters.status != null and parameters.status != ''">
-					AND status = #{parameters.status}
-				</if>
+			<if test="parameters.category != null and parameters.category != ''">
+				AND category = #{parameters.category}
+			</if>
+			<if test="parameters.content != null and parameters.content != ''">
+				AND content LIKE CONCAT('%', #{parameters.content}, '%')
+			</if>
+			<if test="parameters.action != null and parameters.action != ''">
+				AND action = #{parameters.action}
+			</if>
+			<if test="parameters.type != null and parameters.type != ''">
+				AND type = #{parameters.type}
+			</if>
+			<if test="parameters.obj != null and parameters.obj != ''">
+				AND obj = #{parameters.obj}
+			</if>
+			<if test="parameters.owner != null and parameters.owner != ''">
+				AND owner = #{parameters.owner}
+			</if>
+			<if test="parameters.created != null and parameters.created != ''">
+				AND created LIKE CONCAT(#{parameters.created}, '%')
+			</if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND status = #{parameters.status}
 			</if>
 		</trim>
 	</sql>
@@ -45,9 +43,7 @@
 		SELECT * FROM xhome_xauth_manage_log
 		<include refid="restriction_manageLogs"/>
 		ORDER BY created DESC, category, type, action
-		<if test="_parameter != null">
-			LIMIT #{start}, #{limit}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countManageLogs" resultType="long" parameterType="org.xhome.db.query.QueryBase">

@@ -18,7 +18,7 @@ import org.xhome.xauth.User;
 public interface UserService {
 
 	/**
-	 * 查询用户半个小时内的认证失败次数
+	 * 查询用户系统配置的时间(auth_lock_time)内的认证失败次数
 	 * 
 	 * @param user
 	 *            待查询的用户信息
@@ -86,11 +86,7 @@ public interface UserService {
 
 	public User getUser(User oper, String name);
 
-	public List<User> getUsers(User oper);
-
 	public List<User> getUsers(User oper, QueryBase query);
-
-	public long countUsers(User oper);
 
 	public long countUsers(User oper, QueryBase query);
 

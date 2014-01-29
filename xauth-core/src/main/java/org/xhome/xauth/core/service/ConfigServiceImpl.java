@@ -29,14 +29,15 @@ import org.xhome.xauth.core.listener.ConfigManageListener;
 @Service
 public class ConfigServiceImpl implements ConfigService {
 
-	@Autowired(required = false)
-	private ConfigDAO configDAO;
-	@Autowired(required = false)
-	private ManageLogService manageLogService;
-	@Autowired(required = false)
-	private List<ConfigManageListener> configManageListeners;
+	@Autowired
+	protected ConfigDAO configDAO;
+	@Autowired
+	protected ManageLogService manageLogService;
 
-	private Logger logger;
+	@Autowired(required = false)
+	protected List<ConfigManageListener> configManageListeners;
+
+	protected Logger logger;
 
 	public ConfigServiceImpl() {
 		logger = LoggerFactory.getLogger(ConfigService.class);
@@ -91,6 +92,10 @@ public class ConfigServiceImpl implements ConfigService {
 	// return r;
 	// }
 
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#updateConfig(org.xhome.xauth
+	 *      .User, org.xhome.xauth.Config)
+	 */
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
 	public int updateConfig(User oper, Config config) {
@@ -356,6 +361,10 @@ public class ConfigServiceImpl implements ConfigService {
 	// return r;
 	// }
 
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#isConfigExists(org.xhome.xauth
+	 *      .User, org.xhome.xauth.Config)
+	 */
 	@Override
 	public boolean isConfigExists(User oper, Config config) {
 		String item = config.getItem();
@@ -527,6 +536,10 @@ public class ConfigServiceImpl implements ConfigService {
 	// return e;
 	// }
 
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#getConfig(org.xhome.xauth
+	 *      .User, long)
+	 */
 	@Override
 	public Config getConfig(User oper, long id) {
 		if (!this.beforeConfigManage(oper, Action.GET, null, id)) {
@@ -556,6 +569,10 @@ public class ConfigServiceImpl implements ConfigService {
 		return config;
 	}
 
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#getConfig(org.xhome.xauth
+	 *      .User, String)
+	 */
 	@Override
 	public Config getConfig(User oper, String item) {
 		if (!this.beforeConfigManage(oper, Action.GET, null, item)) {
@@ -585,11 +602,10 @@ public class ConfigServiceImpl implements ConfigService {
 		return config;
 	}
 
-	@Override
-	public List<Config> getConfigs(User oper) {
-		return getConfigs(oper, null);
-	}
-
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#getConfigs(org.xhome.xauth
+	 *      .User, org.xhome.db.query.QueryBase)
+	 */
 	@Override
 	public List<Config> getConfigs(User oper, QueryBase query) {
 		if (!this.beforeConfigManage(oper, Action.QUERY, null, query)) {
@@ -624,11 +640,10 @@ public class ConfigServiceImpl implements ConfigService {
 		return results;
 	}
 
-	@Override
-	public long countConfigs(User oper) {
-		return countConfigs(oper, null);
-	}
-
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#countConfigs(org.xhome.xauth
+	 *      .User, org.xhome.db.query.QueryBase)
+	 */
 	@Override
 	public long countConfigs(User oper, QueryBase query) {
 		if (!this.beforeConfigManage(oper, Action.COUNT, null, query)) {
@@ -655,6 +670,15 @@ public class ConfigServiceImpl implements ConfigService {
 		this.logManage(null, Action.COUNT, null, Status.SUCCESS, oper);
 		this.afterConfigManage(oper, Action.COUNT, Status.SUCCESS, null, query);
 		return c;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.ConfigService#getBaseURL()
+	 */
+	@Override
+	public String getBaseURL() {
+		Config config = configDAO.queryConfigByItem(ITEM_BASE_URL);
+		return config != null ? config.getValue() : null;
 	}
 
 	private void logManage(String content, Short action, Long obj,

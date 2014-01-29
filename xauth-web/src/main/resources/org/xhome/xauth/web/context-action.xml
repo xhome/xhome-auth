@@ -20,6 +20,7 @@
   
   <bean id="userAction" class="org.xhome.xauth.web.action.UserAction" scope="singleton">
   	<property name="userService" ref="userService"/>
+  	<property name="authConfigService" ref="authConfigService"/>
   </bean>
   
   <bean id="configAction" class="org.xhome.xauth.web.action.ConfigAction" scope="singleton">

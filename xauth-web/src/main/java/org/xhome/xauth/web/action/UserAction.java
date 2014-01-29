@@ -27,6 +27,7 @@ import org.xhome.web.util.SessionUtils;
 import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
+import org.xhome.xauth.core.service.AuthConfigService;
 import org.xhome.xauth.core.service.UserService;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xauth.web.validator.UserPasswordNotEmptyValidator;
@@ -43,6 +44,8 @@ public class UserAction extends AbstractAction {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AuthConfigService authConfigService;
 
 	public final static String RM_USER_DASHBOARD = "xauth/dashboard";
 	public final static String RM_USER_AUTH_CODE = "xauth/user/authcode";
@@ -109,8 +112,7 @@ public class UserAction extends AbstractAction {
 	public Object login(
 			@Validated @RequestAttribute("user") User user,
 			@RequestParam(required = false, value = "rember_password") String remberPassword,
-			String next, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response) {
 		short status = 0;
 		String msg = null;
 
@@ -135,10 +137,13 @@ public class UserAction extends AbstractAction {
 		}
 		logger.info("[" + status + "]" + msg);
 
-		if (next != null && status == Status.SUCCESS) {
-			String accept = request.getHeader("Accept");
-			if (accept == null || !accept.startsWith("application/json")) {
-				return "redirect:" + next;
+		if (status == Status.SUCCESS) {
+			String next = authConfigService.getNextPage();
+			if (next != null) {
+				String accept = request.getHeader("Accept");
+				if (accept == null || !accept.startsWith("application/json")) {
+					return "redirect:" + next;
+				}
 			}
 		}
 		return new CommonResult(status, msg, user);
@@ -842,6 +847,21 @@ public class UserAction extends AbstractAction {
 
 	public UserService getUserService() {
 		return userService;
+	}
+
+	/**
+	 * @return the authConfigService
+	 */
+	public AuthConfigService getAuthConfigService() {
+		return authConfigService;
+	}
+
+	/**
+	 * @param authConfigService
+	 *            the authConfigService to set
+	 */
+	public void setAuthConfigService(AuthConfigService authConfigService) {
+		this.authConfigService = authConfigService;
 	}
 
 }

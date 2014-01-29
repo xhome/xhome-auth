@@ -6,46 +6,49 @@
  * Describe: 系统配置管理
  */
 
-Ext.define('XHome.XAuth.System.Config', {
+Ext.define('XHome.XAuth.Manage.AuthConfig', {
     extend: 'XHome.Dashboard.WorkPanel',
     constructor: function(config) {
         if (!config) {
             config = {};
         }
-        // 搜索面板
-        var spanel = Ext.create('XHome.Dashboard.SearchPanel', {
-            items: [{
-                name: 'parameters["display"]',
-                fieldLabel: '配置项',
-                labelWidth: 40,
-                maxLength: 50,
-                maxLengthText: '配置项不能超过50个字符',
-            }, {
-                name: 'parameters["category"]',
-                hidden: true,
-                value: 0,
-            }],
-        });
 
         // 数据显示表格
         var grid = Ext.create('XHome.Dashboard.EditorGridPanel', {
             autoSelModel: false,
+            autoPagingBar: false,
             columns: [{
                 text: '编号',
                 dataIndex: 'id',
                 width: 10,
+                hidden: true,
+            }, {
+                text: '配置项',
+                dataIndex: 'item',
+                hidden: true,
             }, {
                 text: '配置项',
                 dataIndex: 'display',
             }, {
                 text: '配置值',
                 dataIndex: 'value',
+                renderer: function(value, meta, record) {
+                    var config = record.getData();
+                    if (config.item == 'allow_auth_log'
+                        || config.item == 'allow_manage_log') {
+                        return {0: '关闭', 1: '开启'}[value]; 
+                    }
+                    return value; 
+                },
+                editor: {
+                    allowBlank: false,
+                }, 
             }],
             store: Ext.create('XHome.data.JsonStore', {
                 fields: ['id', 'category', 'item', 'display', 'value',
                     'createdStr', 'modifiedStr',
                     'owner', 'modifier', 'version', 'status'],
-                url: 'xauth/config/query.json',
+                url: 'xauth/config/query.json?parameters["category"]=1',
             }),
 
             /**
@@ -83,24 +86,20 @@ Ext.define('XHome.XAuth.System.Config', {
                     }],
                 }).show();
             },
-
-        });
-
-        // 右键菜单
-        var rightMenu = Ext.create('Ext.menu.Menu', {
-            items: [{
-                text: '修改配置项',
-                iconAlign: 'left',
-                iconCls: 'icon_edit',
-                handler: function(button, e) {
-                    grid.editConfig();
+            selType: 'cellmodel',
+            plugins: [new Ext.grid.plugin.CellEditing({
+                clicksToEdit: 1,
+            })],
+            /**
+            listeners: {
+                beforecellclick: function(gridView, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+                    return true;
                 },
-            }],
+            },
+            */
         });
 
-        XHome.utils.bindGridClick(grid, rightMenu, grid.editConfig);
-
-        config.items = [spanel, grid];
+        config.items = [grid];
         this.callParent([config]);
     },
 });

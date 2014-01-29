@@ -25,7 +25,7 @@ import org.xhome.xauth.web.util.AuthUtils;
 @Controller
 public class ManageLogAction extends AbstractAction {
 
-	@Autowired(required = false)
+	@Autowired
 	private ManageLogService manageLogService;
 
 	public final static String RM_MANAGE_LOG_QUERY = "xauth/manage_log/query";

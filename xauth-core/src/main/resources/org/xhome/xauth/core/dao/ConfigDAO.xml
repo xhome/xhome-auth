@@ -96,24 +96,22 @@
 	
 	<sql id="restriction_configs">
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.category != null and parameters.category != ''">
-					AND category = #{parameters.category}
-				</if>
-				<if test="parameters.item != null and parameters.item != ''">
-					AND item LIKE CONCAT('%',#{parameters.item},'%')
-				</if>
-				<if test="parameters.display != null and parameters.display != ''">
-					AND display LIKE CONCAT('%',#{parameters.display},'%')
-				</if>
-				<if test="parameters.value != null and parameters.value != ''">
-					AND value LIKE CONCAT('%',#{parameters.value},'%')
-				</if>
-				<if test="parameters.status != null and parameters.status != ''">
-					AND status = #{parameters.status}
-				</if>
+			<if test="parameters.category != null and parameters.category != ''">
+				AND category = #{parameters.category}
 			</if>
-			<if test="parameters == null or parameters.status == null or parameters.status == ''">
+			<if test="parameters.item != null and parameters.item != ''">
+				AND item LIKE CONCAT('%',#{parameters.item},'%')
+			</if>
+			<if test="parameters.display != null and parameters.display != ''">
+				AND display LIKE CONCAT('%',#{parameters.display},'%')
+			</if>
+			<if test="parameters.value != null and parameters.value != ''">
+				AND value LIKE CONCAT('%',#{parameters.value},'%')
+			</if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND status = #{parameters.status}
+			</if>
+			<if test="parameters.status == null or parameters.status == ''">
 				AND status != 0
 			</if>
 		</trim>
@@ -123,9 +121,7 @@
 		SELECT * FROM xhome_xauth_config
 		<include refid="restriction_configs"/>
 		ORDER BY category, item
-		<if test="_parameter != null">
-			LIMIT #{start}, #{limit}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countConfigs" resultType="long" parameterType="org.xhome.db.query.QueryBase">

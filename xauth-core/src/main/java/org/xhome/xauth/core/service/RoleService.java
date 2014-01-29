@@ -15,41 +15,37 @@ import org.xhome.xauth.User;
 public interface RoleService {
 
 	public int addRole(User oper, Role role);
-	
+
 	public int updateRole(User oper, Role role);
-	
+
 	public int lockRole(User oper, Role role);
-	
+
 	public int unlockRole(User oper, Role role);
 
 	public int removeRole(User oper, Role role);
-	
+
 	public int removeRoles(User oper, List<Role> roles);
-	
+
 	public int deleteRole(User oper, Role role);
-	
+
 	public int deleteRoles(User oper, List<Role> roles);
-	
+
 	public boolean isRoleExists(User oper, Role role);
-	
+
 	public boolean isRoleUpdateable(User oper, Role role);
 
 	public boolean isRoleLocked(User oper, Role role);
-	
+
 	public boolean isRoleRemoveable(User oper, Role role);
-	
+
 	public boolean isRoleDeleteable(User oper, Role role);
-	
+
 	public Role getRole(User oper, long id);
-	
+
 	public Role getRole(User oper, String name);
-	
-	public List<Role> getRoles(User oper);
-	
+
 	public List<Role> getRoles(User oper, QueryBase query);
-	
-	public long countRoles(User oper);
-	
+
 	public long countRoles(User oper, QueryBase query);
-	
+
 }

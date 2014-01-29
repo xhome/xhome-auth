@@ -25,7 +25,7 @@ import org.xhome.xauth.web.util.AuthUtils;
 @Controller
 public class AuthLogAction extends AbstractAction {
 
-	@Autowired(required = false)
+	@Autowired
 	private AuthLogService authLogService;
 
 	public final static String RM_AUTH_LOG_QUERY = "xauth/auth_log/query";

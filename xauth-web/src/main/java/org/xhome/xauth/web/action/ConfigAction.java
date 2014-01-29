@@ -31,7 +31,7 @@ import org.xhome.xauth.web.util.AuthUtils;
 @Controller
 public class ConfigAction extends AbstractAction {
 
-	@Autowired(required = false)
+	@Autowired
 	private ConfigService configService;
 
 	public final static String RM_CONFIG_UPDATE = "xauth/config/update";
@@ -66,7 +66,7 @@ public class ConfigAction extends AbstractAction {
 	@RequestMapping(value = RM_CONFIG_GET, method = RequestMethod.GET)
 	public Object getConfig(
 			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "item", required = false) String item,
 			HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
@@ -74,9 +74,9 @@ public class ConfigAction extends AbstractAction {
 		if (id != null) {
 			logger.info("用户" + uname + "按ID[" + id + "]查询配置项");
 			config = configService.getConfig(user, id);
-		} else if (StringUtils.isNotEmpty(name)) {
-			logger.info("用户" + uname + "按名称[" + name + "]查询配置项");
-			config = configService.getConfig(user, name);
+		} else if (StringUtils.isNotEmpty(item)) {
+			logger.info("用户" + uname + "按名称[" + item + "]查询配置项");
+			config = configService.getConfig(user, item);
 		}
 
 		String msg = null;

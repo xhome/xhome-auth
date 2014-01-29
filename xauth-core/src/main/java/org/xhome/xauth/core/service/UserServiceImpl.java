@@ -37,16 +37,19 @@ import org.xhome.xauth.core.listener.UserRoleManageListener;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired(required = false)
+	@Autowired
 	private UserDAO userDAO;
-	@Autowired(required = false)
+	@Autowired
 	private RoleDAO roleDAO;
-	@Autowired(required = false)
+	@Autowired
 	private ManageLogService manageLogService;
-	@Autowired(required = false)
+	@Autowired
 	private AuthLogService authLogService;
-	@Autowired(required = false)
+	@Autowired
+	private AuthConfigService authConfigService;
+	@Autowired
 	private UserCryptoService userCryptoService;
+
 	@Autowired(required = false)
 	private Map<String, UserAuth> userAuthMaps;
 
@@ -69,7 +72,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public long authFailureDetect(User user) {
 		long current = System.currentTimeMillis();
-		Timestamp time = new Timestamp(current - 1800000);
+		long lock = authConfigService.getAuthLockTime();
+		Timestamp time = new Timestamp(current - lock);
 		return this.authFailureDetect(user, time);
 	}
 
@@ -112,16 +116,20 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 检查用户认证失败次数，
-		// 如果半个小时内认证失败3次以上，将无法进行认证
+		// 如果设置的时间内，如果认证失败次数过多，将无法进行认证
+		// 如连续认证失败3次后讲被锁定3分钟
+		int limit = authConfigService.getAuthTryLimit();
 		long failureDetect = this.authFailureDetect(user);
-		if (failureDetect >= 3) {
+		if (failureDetect >= limit) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("try to auth user {}, but it's failed {}", name,
 						failureDetect);
 			}
+			long lock = authConfigService.getAuthLockTime() / 1000;
 			this.logAuth(user, address, agent, number, Status.BLOCKED);
 			this.afterUserAuth(user, user, Status.BLOCKED);
-			throw new AuthException(Status.BLOCKED, "认证尝失败次数过多，将被锁定半小时");
+			throw new AuthException(Status.BLOCKED, "认证失败超过" + limit + "次，请"
+					+ lock + "秒后重试");
 		}
 
 		// 查询认证方法，如果有，则按指定的认证方法对用户进行认证，否则使用默认的方法的用户进行认证
@@ -938,14 +946,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * @see org.xhome.xauth.core.service.UserService#getUsers(org.xhome.xauth.User)
-	 */
-	@Override
-	public List<User> getUsers(User oper) {
-		return this.getUsers(oper, null);
-	}
-
-	/**
 	 * @see org.xhome.xauth.core.service.UserService#getUsers(org.xhome.xauth.User,
 	 *      org.xhome.db.query.QueryBase)
 	 */
@@ -981,14 +981,6 @@ public class UserServiceImpl implements UserService {
 		this.logManageUser(null, Action.QUERY, null, Status.SUCCESS, oper);
 		this.afterUserManage(oper, Action.QUERY, Status.SUCCESS, null, query);
 		return users;
-	}
-
-	/**
-	 * @see org.xhome.xauth.core.service.UserService#countUsers(org.xhome.xauth.User)
-	 */
-	@Override
-	public long countUsers(User oper) {
-		return this.countUsers(oper, null);
 	}
 
 	/**
@@ -1882,6 +1874,14 @@ public class UserServiceImpl implements UserService {
 
 	public AuthLogService getAuthLogService() {
 		return authLogService;
+	}
+
+	public AuthConfigService getAuthConfigService() {
+		return authConfigService;
+	}
+
+	public void setAuthConfigService(AuthConfigService authConfigService) {
+		this.authConfigService = authConfigService;
 	}
 
 	public void setUserCryptoService(UserCryptoService userCryptoService) {

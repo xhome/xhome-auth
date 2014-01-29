@@ -32,7 +32,7 @@ import org.xhome.xauth.web.util.AuthUtils;
 @Controller
 public class RoleAction extends AbstractAction {
 
-	@Autowired(required = false)
+	@Autowired
 	private RoleService roleService;
 
 	public final static String RM_ROLE_ADD = "xauth/role/add";

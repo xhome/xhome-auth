@@ -43,10 +43,12 @@ Ext.define('XHome.XAuth.Manage.ManageLog', {
 
         // 数据显示表格
         var grid = Ext.create('XHome.Dashboard.EditorGridPanel', {
+            autoSelModel: false,
             columns: [{
                 text: '编号',
                 dataIndex: 'id',
                 width: 8,
+                hidden: true,
             }, {
                 text: '分类',
                 dataIndex: 'category',

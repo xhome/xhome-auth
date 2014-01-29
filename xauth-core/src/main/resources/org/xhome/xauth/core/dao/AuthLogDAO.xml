@@ -25,28 +25,26 @@
 	
 	<sql id="restriction_authLogs">
 		<trim prefix="WHERE" prefixOverrides="AND">
-			<if test="parameters != null">
-				<if test="parameters.user != null and parameters.user != ''">
-					AND user LIKE CONCAT('%', #{parameters.user}, '%')
-				</if>
-				<if test="parameters.method != null and parameters.method != ''">
-					AND method LIKE CONCAT('%', #{parameters.method}, '%')
-				</if>
-				<if test="parameters.address != null and parameters.address != ''">
-					AND address LIKE CONCAT(#{parameters.address}, '%')
-				</if>
-				<if test="parameters.agent != null and parameters.agent != ''">
-					AND agent = #{parameters.agent}
-				</if>
-				<if test="parameters.number != null and parameters.number != ''">
-					AND number LIKE CONCAT('%', #{parameters.number},'%')
-				</if>
-				<if test="parameters.created != null and parameters.created != ''">
-					AND created LIKE CONCAT(#{parameters.created},'%')
-				</if>
-				<if test="parameters.status != null and parameters.status != ''">
-					AND status = #{parameters.status}
-				</if>
+			<if test="parameters.user != null and parameters.user != ''">
+				AND user LIKE CONCAT('%', #{parameters.user}, '%')
+			</if>
+			<if test="parameters.method != null and parameters.method != ''">
+				AND method LIKE CONCAT('%', #{parameters.method}, '%')
+			</if>
+			<if test="parameters.address != null and parameters.address != ''">
+				AND address LIKE CONCAT(#{parameters.address}, '%')
+			</if>
+			<if test="parameters.agent != null and parameters.agent != ''">
+				AND agent = #{parameters.agent}
+			</if>
+			<if test="parameters.number != null and parameters.number != ''">
+				AND number LIKE CONCAT('%', #{parameters.number},'%')
+			</if>
+			<if test="parameters.created != null and parameters.created != ''">
+				AND created LIKE CONCAT(#{parameters.created},'%')
+			</if>
+			<if test="parameters.status != null and parameters.status != ''">
+				AND status = #{parameters.status}
 			</if>
 		</trim>
 	</sql>
@@ -55,9 +53,7 @@
 		SELECT * FROM xhome_xauth_auth_log
 		<include refid="restriction_authLogs"/>
 		ORDER BY created DESC
-		<if test="_parameter != null">
-			LIMIT #{start}, #{limit}
-		</if>
+		LIMIT #{start}, #{limit}
 	</select>
 	
 	<select id="countAuthLogs" resultType="long" parameterType="org.xhome.db.query.QueryBase">

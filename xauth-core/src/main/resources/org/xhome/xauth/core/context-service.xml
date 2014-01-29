@@ -8,11 +8,13 @@
   
   <bean id="manageLogService" class="org.xhome.xauth.core.service.ManageLogServiceImpl" scope="singleton">
   	<property name="manageLogDAO" ref="manageLogDAO"/>
+  	<property name="authConfigService" ref="authConfigService"/>
   </bean>
   
   <bean id="authLogService" class="org.xhome.xauth.core.service.AuthLogServiceImpl" scope="singleton">
   	<property name="authLogDAO" ref="authLogDAO"/>
   	<property name="manageLogService" ref="manageLogService"/>
+  	<property name="authConfigService" ref="authConfigService"/>
   </bean>
   
   <bean id="roleService" class="org.xhome.xauth.core.service.RoleServiceImpl" scope="singleton">
@@ -28,10 +30,16 @@
   	
   	<property name="manageLogService" ref="manageLogService"/>
   	<property name="authLogService" ref="authLogService"/>
+  	<property name="authConfigService" ref="authConfigService"/>
   	<property name="userCryptoService" ref="userCryptoService"/>
   </bean>
   
   <bean id="configService" class="org.xhome.xauth.core.service.ConfigServiceImpl" scope="singleton">
+  	<property name="configDAO" ref="configDAO"/>
+  	<property name="manageLogService" ref="manageLogService"/>
+  </bean>
+  
+  <bean id="authConfigService" class="org.xhome.xauth.core.service.AuthConfigServiceImpl" scope="singleton">
   	<property name="configDAO" ref="configDAO"/>
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>

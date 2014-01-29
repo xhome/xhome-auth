@@ -30,10 +30,11 @@ body {
             <div id="error_msg" class="alert alert-danger" style="display: none;">
             </div>
         </#if>
-        <form id="login_form" action="${xauth.base_url}xauth/user/login.htm?next=${xauth.base_url}xauth/dashboard.htm" method="POST" role="form">
+        <form id="login_form" action="${xauth.base_url}xauth/user/login.htm" method="POST" role="form">
             <div class="input-group input-group-lg">
                 <span class="glyphicon glyphicon-user input-group-addon"></span>
-                <input id="user.name" name="user.name" type="text" class="form-control" placeholder="用户名" maxlength="20">
+                <input id="user.name" name="user.name" type="text" class="form-control" placeholder="用户名" maxlength="20"
+                <#if commonResult?? && commonResult.data??>value="${commonResult.data.name}"</#if>>
             </div>
             <br/>
             <div class="input-group input-group-lg">

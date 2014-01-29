@@ -48,6 +48,13 @@ Ext.onReady(function() {
                         iconCls: 'icon-nav-manage-manage_log',
                         showScript: 'xauth/js/manage/manage_log.js',
                         showClass: 'XHome.XAuth.Manage.ManageLog',
+                    }, {
+                        id: 'xauth_manage-auth_config',
+                        text: '认证配置',
+                        leaf: true,
+                        iconCls: 'icon-nav-manage-auth_config',
+                        showScript: 'xauth/js/manage/auth_config.js',
+                        showClass: 'XHome.XAuth.Manage.AuthConfig',
                     }]
                 }, {
                     id: 'xauth_system',
