@@ -53,7 +53,7 @@ public interface ConfigService {
 	 */
 	public boolean isConfigExists(User oper, Config config);
 
-	// public boolean isConfigUpdateable(User oper, Config config);
+	public boolean isConfigUpdateable(User oper, Config config);
 
 	// public boolean isConfigLocked(User oper, Config config);
 

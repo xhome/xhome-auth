@@ -398,40 +398,40 @@ public class ConfigServiceImpl implements ConfigService {
 		return e;
 	}
 
-	// @Override
-	// public boolean isConfigUpdateable(User oper, Config config) {
-	// String item = config.getItem();
-	// Long id = config.getId();
-	//
-	// if (!this.beforeConfigManage(oper, Action.IS_UPDATEABLE, config)) {
-	// if (logger.isDebugEnabled()) {
-	// logger.debug(
-	// "try to juge updateable of config {}[{}], but it's blocked",
-	// item, id);
-	// }
-	//
-	// this.logManage(item, Action.IS_UPDATEABLE, null, Status.BLOCKED,
-	// oper);
-	// this.afterConfigManage(oper, Action.IS_UPDATEABLE, Status.BLOCKED,
-	// config);
-	// return false;
-	// }
-	//
-	// boolean e = configDAO.isConfigUpdateable(config);
-	//
-	// if (logger.isDebugEnabled()) {
-	// if (e) {
-	// logger.debug("config {}[{}] is updateable", item, id);
-	// } else {
-	// logger.debug("config {}[{}] isn't updateable", item, id);
-	// }
-	// }
-	//
-	// this.logManage(item, Action.IS_UPDATEABLE, id, Status.SUCCESS, oper);
-	// this.afterConfigManage(oper, Action.IS_UPDATEABLE, Status.SUCCESS,
-	// config);
-	// return e;
-	// }
+	@Override
+	public boolean isConfigUpdateable(User oper, Config config) {
+		String item = config.getItem();
+		Long id = config.getId();
+
+		if (!this.beforeConfigManage(oper, Action.IS_UPDATEABLE, config)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to juge updateable of config {}[{}], but it's blocked",
+						item, id);
+			}
+
+			this.logManage(item, Action.IS_UPDATEABLE, null, Status.BLOCKED,
+					oper);
+			this.afterConfigManage(oper, Action.IS_UPDATEABLE, Status.BLOCKED,
+					config);
+			return false;
+		}
+
+		boolean e = configDAO.isConfigUpdateable(config);
+
+		if (logger.isDebugEnabled()) {
+			if (e) {
+				logger.debug("config {}[{}] is updateable", item, id);
+			} else {
+				logger.debug("config {}[{}] isn't updateable", item, id);
+			}
+		}
+
+		this.logManage(item, Action.IS_UPDATEABLE, id, Status.SUCCESS, oper);
+		this.afterConfigManage(oper, Action.IS_UPDATEABLE, Status.SUCCESS,
+				config);
+		return e;
+	}
 
 	// @Override
 	// public boolean isConfigLocked(User oper, Config config) {

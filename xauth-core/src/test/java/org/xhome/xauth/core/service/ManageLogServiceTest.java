@@ -1,6 +1,7 @@
 package org.xhome.xauth.core.service;
 
 import java.util.List;
+
 import org.junit.Test;
 import org.xhome.common.constant.Action;
 import org.xhome.db.query.QueryBase;
@@ -15,31 +16,31 @@ import org.xhome.xauth.core.listener.TestManageLogManageListener;
  * @date Feb 1, 201310:49:01 AM
  */
 public class ManageLogServiceTest extends AbstractTest {
-	
-	private ManageLogService	manageLogService;
-	
+
+	private ManageLogService manageLogService;
+
 	public ManageLogServiceTest() {
 		manageLogService = context.getBean(ManageLogServiceImpl.class);
 		oper.setId(104L);
-		
-		((ManageLogServiceImpl)manageLogService).registerManageLogManageListener(new TestManageLogManageListener());
+
+		((ManageLogServiceImpl) manageLogService)
+				.registerManageLogManageListener(new TestManageLogManageListener());
 	}
-	
+
 	@Test
 	public void testAddManageLog() {
-		ManageLog manageLog = new ManageLog(ManageLog.MANAGE_LOG_XAUTH, Action.ADD, ManageLog.TYPE_AUTH_LOG, 10L, 1L);
+		ManageLog manageLog = new ManageLog(ManageLog.MANAGE_LOG_XAUTH,
+				Action.ADD, ManageLog.TYPE_AUTH_LOG, 10L, 1L);
 		manageLogService.logManage(manageLog);
 	}
-	
+
 	@Test
 	public void testGetManageLogs() {
-		List<ManageLog> manageLogs = manageLogService.getManageLogs(oper);
-		printManageLog(manageLogs);
-		
 		QueryBase query = new QueryBase();
-//		query.addParameter("status", "0");
-		manageLogs = manageLogService.getManageLogs(oper, query);
+		// query.addParameter("status", "0");
+		List<ManageLog> manageLogs = manageLogService
+				.getManageLogs(oper, query);
 		printManageLog(manageLogs);
 	}
-	
+
 }

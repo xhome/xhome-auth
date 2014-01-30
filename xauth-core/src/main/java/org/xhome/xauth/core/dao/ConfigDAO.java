@@ -84,7 +84,7 @@ public interface ConfigDAO {
 	 *            待判断的配置项
 	 * @return
 	 */
-	// public boolean isConfigUpdateable(Config config);
+	public boolean isConfigUpdateable(Config config);
 
 	/**
 	 * 判断配置项是否被锁定

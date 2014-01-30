@@ -62,11 +62,9 @@
 		SELECT COUNT(*) FROM xhome_xauth_config WHERE item = #{item} AND status != 0
 	</select>
 	
-	<!-- 
 	<select id="isConfigUpdateable" resultType="boolean" parameterType="org.xhome.xauth.Config">
 		SELECT COUNT(*) FROM xhome_xauth_config WHERE id = #{id} AND status != 0 AND status != 4
 	</select>
-	 -->
 	
 	<!-- 
 	<select id="isConfigLocked" resultType="boolean" parameterType="org.xhome.xauth.Config">

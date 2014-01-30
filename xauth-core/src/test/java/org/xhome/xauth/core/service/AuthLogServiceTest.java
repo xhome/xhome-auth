@@ -18,37 +18,36 @@ import org.xhome.xauth.core.listener.TestAuthLogManageListener;
  * @date Feb 1, 201310:49:01 AM
  */
 public class AuthLogServiceTest extends AbstractTest {
-	
-	private AuthLogService	authLogService;
-	
+
+	private AuthLogService authLogService;
+
 	public AuthLogServiceTest() {
 		authLogService = context.getBean(AuthLogServiceImpl.class);
 		oper.setId(103L);
-		
-		((AuthLogServiceImpl)authLogService).registerAuthLogManageListener(new TestAuthLogManageListener());
+
+		((AuthLogServiceImpl) authLogService)
+				.registerAuthLogManageListener(new TestAuthLogManageListener());
 	}
-	
+
 	@Test
 	public void testAddAuthLog() {
 		User user = new User("jhat");
-		AuthLog authLog = new AuthLog(user, "MD5", "fe80ca3a35fffecf", Agent.CHROME, "chrome 20.01 ubuntu 64bit");
+		AuthLog authLog = new AuthLog(user, "MD5", "fe80ca3a35fffecf",
+				Agent.CHROME, "chrome 20.01 ubuntu 64bit");
 		authLog.setCreated(new Timestamp(System.currentTimeMillis()));
 		authLogService.logAuth(authLog);
 	}
-	
+
 	@Test
 	public void testGetAuthLogs() {
-		List<AuthLog> authLogs = authLogService.getAuthLogs(oper);
-		printAuthLog(authLogs);
-		
 		QueryBase query = new QueryBase();
 		query.addParameter("user", "jhat");
 		query.addParameter("auth", "2013-");
 		query.addParameter("address", "192");
 		query.addParameter("type", "0");
 		query.addParameter("status", "0");
-		authLogs = authLogService.getAuthLogs(oper, query);
+		List<AuthLog> authLogs = authLogService.getAuthLogs(oper, query);
 		printAuthLog(authLogs);
 	}
-	
+
 }
