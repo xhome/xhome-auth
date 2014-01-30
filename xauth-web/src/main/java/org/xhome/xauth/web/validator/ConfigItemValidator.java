@@ -24,7 +24,7 @@ public class ConfigItemValidator extends Validator {
 	@Override
 	public boolean validate(Object target, Errors errors) {
 		Config config = (Config) target;
-		String item = config == null ? null : config.getValue();
+		String item = config == null ? null : config.getItem();
 		if (StringUtils.isEmpty(item)) {
 			errors.rejectValue(FIELD_ITEM, CODE_ITEM_EMPTY, validationConfig
 					.getConfig(AuthValidatorConfig.CONFIG_ITEM_EMPTY_MESSAGE));

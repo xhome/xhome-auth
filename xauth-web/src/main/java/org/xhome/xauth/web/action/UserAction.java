@@ -237,7 +237,7 @@ public class UserAction extends AbstractAction {
 			@RequestParam(value = "cpasswd") String confirmPassword,
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
-		Object r = null;
+		CommonResult result = null;
 		short status = 0;
 		String msg = null;
 		User cuser = AuthUtils.getCurrentUser(request);
@@ -250,11 +250,10 @@ public class UserAction extends AbstractAction {
 		BindException be = new BindException(up, "user");
 		validator.validate(up, be);
 		if (be.hasErrors()) {
-			CommonResult re = errorResult(be);
-			status = re.getStatus();
-			msg = "新" + re.getMessage();
-			re.setMessage(msg);
-			r = re;
+			result = errorResult(be);
+			status = result.getStatus();
+			msg = "新" + result.getMessage();
+			result.setMessage(msg);
 		} else {
 			if (!newPassword.equals(confirmPassword)) {
 				status = Status.PASSWD_NOT_MATCH;
@@ -272,14 +271,14 @@ public class UserAction extends AbstractAction {
 							+ "修改密码失败";
 				}
 			}
-			r = new CommonResult(status, msg);
+			result = new CommonResult(status, msg);
 		}
 
 		if (logger.isInfoEnabled()) {
 			logger.info("[" + status + "]" + cuser.getName() + msg);
 		}
 
-		return r;
+		return result;
 	}
 
 	@RequestMapping(value = RM_USER_LOCK, method = RequestMethod.POST)

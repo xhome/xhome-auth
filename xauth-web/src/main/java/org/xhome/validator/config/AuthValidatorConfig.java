@@ -54,11 +54,6 @@ public class AuthValidatorConfig implements Config {
 	public final static String USER_ROLES_EMPTY_MESSAGE = "xauth_user_roles_empty_message";
 
 	// 配置项校验器配置项
-	public final static String CONFIG_VALUE_EMPTY_MESSAGE = "xauth_config_value_empty_message";
-	public final static String CONFIG_VALUE_SIZE_MIN = "xauth_config_value_size_min";
-	public final static String CONFIG_VALUE_SIZE_MAX = "xauth_config_value_size_max";
-	public final static String CONFIG_VALUE_SIZE_MESSAGE = "xauth_config_value_size_message";
-
 	public final static String CONFIG_ITEM_EMPTY_MESSAGE = "xauth_config_item_empty_message";
 	public final static String CONFIG_ITEM_SIZE_MIN = "xauth_config_item_size_min";
 	public final static String CONFIG_ITEM_SIZE_MAX = "xauth_config_item_size_max";
@@ -68,6 +63,13 @@ public class AuthValidatorConfig implements Config {
 	public final static String CONFIG_DISPLAY_SIZE_MIN = "xauth_config_display_size_min";
 	public final static String CONFIG_DISPLAY_SIZE_MAX = "xauth_config_display_size_max";
 	public final static String CONFIG_DISPLAY_SIZE_MESSAGE = "xauth_config_display_size_message";
+
+	public final static String CONFIG_VALUE_EMPTY_MESSAGE = "xauth_config_value_empty_message";
+	public final static String CONFIG_VALUE_SIZE_MIN = "xauth_config_value_size_min";
+	public final static String CONFIG_VALUE_SIZE_MAX = "xauth_config_value_size_max";
+	public final static String CONFIG_VALUE_SIZE_MESSAGE = "xauth_config_value_size_message";
+	public final static String CONFIG_VALUE_SWITCH_MESSAGE = "xauth_config_value_switch_message";
+	public final static String CONFIG_VALUE_NUMBER_MESSAGE = "xauth_config_value_number_message";
 
 	/**
 	 * @see org.xhome.validator.config.Config#validatorConfigs()
@@ -133,6 +135,8 @@ public class AuthValidatorConfig implements Config {
 		configs.put(CONFIG_VALUE_SIZE_MIN, "1");
 		configs.put(CONFIG_VALUE_SIZE_MAX, "1000");
 		configs.put(CONFIG_VALUE_SIZE_MESSAGE, "配置值不能超过1000个字符");
+		configs.put(CONFIG_VALUE_SWITCH_MESSAGE, "开关配置项格式错误，只能是0或1");
+		configs.put(CONFIG_VALUE_NUMBER_MESSAGE, "数字配置项格式错误");
 
 		return configs;
 	}

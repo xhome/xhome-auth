@@ -24,7 +24,7 @@ public class ConfigDisplayValidator extends Validator {
 	@Override
 	public boolean validate(Object target, Errors errors) {
 		Config config = (Config) target;
-		String display = config == null ? null : config.getValue();
+		String display = config == null ? null : config.getDisplay();
 		if (StringUtils.isEmpty(display)) {
 			errors.rejectValue(
 					FIELD_DISPLAY,
