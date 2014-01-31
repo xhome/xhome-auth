@@ -28,6 +28,8 @@
 	<!-- 
 	<context:component-scan base-package="org.xhome.xauth" />
 	 -->
+	 
+	<bean class="org.xhome.web.action.DashboardAction"/>
 
 	<tx:annotation-driven />
 	<mvc:annotation-driven>
@@ -43,7 +45,7 @@
     	<property name="location" value="classpath:freemarker.properties"/>
 	</bean>
 	 -->
-
+	 
 	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
 
 	<!-- 配置freeMarker的模板路径 -->

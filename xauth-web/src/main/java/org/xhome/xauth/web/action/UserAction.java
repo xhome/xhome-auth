@@ -47,7 +47,6 @@ public class UserAction extends AbstractAction {
 	@Autowired
 	private AuthConfigService authConfigService;
 
-	public final static String RM_USER_DASHBOARD = "xauth/dashboard";
 	public final static String RM_USER_AUTH_CODE = "xauth/user/authcode";
 	public final static String RM_USER_LOGIN = "xauth/user/login";
 	public final static String RM_USER_LOGOUT = "xauth/user/logout";
@@ -164,16 +163,6 @@ public class UserAction extends AbstractAction {
 		logger.info("[{}] 用户{}退出登录", status, uname);
 
 		return new CommonResult(status, msg, user);
-	}
-
-	/**
-	 * 用户后台管理界面
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = RM_USER_DASHBOARD, method = RequestMethod.GET)
-	public Object dashboard() {
-		return RM_USER_DASHBOARD;
 	}
 
 	@RequestMapping(value = RM_USER_ADD, method = RequestMethod.POST)

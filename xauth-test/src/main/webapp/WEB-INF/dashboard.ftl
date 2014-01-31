@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<#import "xauth.ftl" as xauth />
+<#import "xauth/xauth.ftl" as xauth />
 <html lang="zh_CN">
 <@xauth.head title="后台管理" description="XAuth" keywords="XHome, XAuth, 后台管理">
 <link href="xlibs/ext/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
