@@ -345,33 +345,35 @@ public class UserServiceImpl implements UserService {
 			r = Status.ERROR;
 		}
 
-		// 更新用户角色信息
-		List<Role> oldRoles = old.getRoles();
-		List<Role> newRoles = user.getRoles();
-		// 为用户添加新角色
-		for (Role role : newRoles) {
-			boolean has = false;
-			for (Role oldRole : oldRoles) {
-				if (oldRole.getId().equals(role.getId())) {
-					has = true;
-					break;
+		if (r == Status.SUCCESS) {
+			// 更新用户角色信息
+			List<Role> oldRoles = old.getRoles();
+			List<Role> newRoles = user.getRoles();
+			// 为用户添加新角色
+			for (Role role : newRoles) {
+				boolean has = false;
+				for (Role oldRole : oldRoles) {
+					if (oldRole.getId().equals(role.getId())) {
+						has = true;
+						break;
+					}
+				}
+				if (!has) {
+					this.addUserRole(oper, user, role);
 				}
 			}
-			if (!has) {
-				this.addUserRole(oper, user, role);
-			}
-		}
-		// 删除用户已有角色
-		for (Role role : oldRoles) {
-			boolean has = false;
-			for (Role newRole : newRoles) {
-				if (role.getId().equals(newRole.getId())) {
-					has = true;
-					break;
+			// 删除用户已有角色
+			for (Role role : oldRoles) {
+				boolean has = false;
+				for (Role newRole : newRoles) {
+					if (role.getId().equals(newRole.getId())) {
+						has = true;
+						break;
+					}
 				}
-			}
-			if (!has) {
-				this.deleteUserRole(oper, user, role);
+				if (!has) {
+					this.deleteUserRole(oper, user, role);
+				}
 			}
 		}
 

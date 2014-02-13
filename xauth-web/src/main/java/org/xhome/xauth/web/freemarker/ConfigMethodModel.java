@@ -22,7 +22,7 @@ import freemarker.template.TemplateScalarModel;
  * @author jhat
  * @email cpf624@126.com
  * @date Nov 21, 20139:46:21 PM
- * @describe
+ * @describe 配置项查询函数，按item查询，返回查询值
  */
 @Component
 public class ConfigMethodModel implements TemplateMethodModelEx {
@@ -34,7 +34,7 @@ public class ConfigMethodModel implements TemplateMethodModelEx {
 	@Override
 	public Object exec(List arguments) throws TemplateModelException {
 		if (arguments.size() == 0) {
-			throw new TemplateModelException("Missing parameters.");
+			throw new TemplateModelException("missing config item");
 		}
 		String item = ((TemplateScalarModel) arguments.get(0)).getAsString();
 		Environment env = Environment.getCurrentEnvironment();

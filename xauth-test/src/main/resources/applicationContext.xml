@@ -63,6 +63,7 @@
 			<map>
 				<entry key="xml_escape" value-ref="fmXmlEscape" />
 				<entry key="xconfig" value-ref="configMethodModel"/>
+				<entry key="include" value-ref="includeDirectiveModel"/>
 			</map>
 		</property>
 		<property name="freemarkerSettings">

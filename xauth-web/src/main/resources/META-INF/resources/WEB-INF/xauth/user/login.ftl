@@ -16,10 +16,16 @@ body {
 .glyphicon {
     top: 0px;
 }
+#footer {
+    position: absolute;
+    text-align: center;
+    bottom: 0px;
+    width: 100%;
+}
 </style>
 </@xauth.head>
 <body>
-<div id="form-wapper" class="panel panel-primary">
+<div id="wapper" class="panel panel-primary">
     <div class="panel-heading">用户登录</div>
     <div class="panel-body">
         <#if commonResult??>
@@ -54,12 +60,14 @@ body {
         </form>
     </div>
 </div>
-<@xauth.copyright />
+<div id="footer">
+    <@include file="copyright.ftl" />
+</div>
 <script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
 <script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
 <script>
 // Form表单上下居中
-$('#form-wapper').css({
+$('#wapper').css({
     'margin-top': function () {
         return ($(this).height() / 2);
     }

@@ -10,6 +10,12 @@ body {
     width: 400px;
     margin: auto;
 }
+#footer {
+    position: absolute;
+    text-align: center;
+    bottom: 0px;
+    width: 100%;
+}
 </style>
 </@xauth.head>
 <body>
@@ -20,7 +26,9 @@ ${result.data.name}
 </#if>
 ...
 </div>
-<@xauth.copyright />
+<div id="footer">
+    <@include file="copyright.ftl" />
+</div>
 <script>
 // 内容上下居中
 $('#wapper').css({

@@ -1,13 +1,5 @@
 <#assign base_url = "${xconfig('base_url')}" />
 
-<#-- Start of copyright -->
-<#macro copyright>
-<div class="copyright" style="position: absolute; bottom: 0px; width: 100%; text-align: center;">
-    <p>©<a href="http://www.xhomestudio.org" target="__blank">XHome Studio</a> 2012-2013</p>
-</div>
-</#macro>
-<#-- End of copyright -->
-
 <#-- Start of head -->
 <#macro head title description = "" keywords = "" charset = "UTF-8">
 <head>
