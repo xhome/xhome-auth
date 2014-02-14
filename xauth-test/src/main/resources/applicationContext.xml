@@ -14,6 +14,7 @@
 	<!--
 	<import resource="classpath:context-db.xml"/>
 	 -->
+	<import resource="classpath*:org/xhome/web/context-freemarker.xml" />
 	<import resource="classpath*:org/xhome/xauth/web/context-action.xml" />
 	<import resource="classpath*:org/xhome/xauth/web/context-freemarker.xml" />
 

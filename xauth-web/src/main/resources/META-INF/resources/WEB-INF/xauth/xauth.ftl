@@ -1,4 +1,7 @@
 <#assign base_url = "${xconfig('base_url')}" />
+<#assign user_base_url = base_url + "xauth/user" />
+<#assign user_login_url = user_base_url + "/login.htm" />
+<#assign user_logout_url = user_base_url + "/logout.htm" />
 
 <#-- Start of head -->
 <#macro head title description = "" keywords = "" charset = "UTF-8">

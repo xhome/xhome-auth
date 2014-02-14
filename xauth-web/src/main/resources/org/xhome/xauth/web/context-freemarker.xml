@@ -10,6 +10,4 @@
   	<property name="configService" ref="configService"/>
   </bean>
   
-  <bean id="includeDirectiveModel" class="org.xhome.xauth.web.freemarker.IncludeDirectiveModel" />
-  
 </beans>
