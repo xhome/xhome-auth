@@ -240,51 +240,83 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
+	/**
+	 * 修改用户密码
+	 * 
+	 * @param oldPassword
+	 *            用户旧密码
+	 * @param newPassword
+	 *            用户新密码
+	 * @param confirmPassword
+	 *            确认新密码，需要与新密码一致
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = RM_USER_CHPASSWD, method = RequestMethod.POST)
 	public Object changePassword(
-			@RequestParam(value = "npasswd") String newPassword,
-			@RequestParam(value = "cpasswd") String confirmPassword,
-			@Validated @RequestAttribute("user") User user,
+			@RequestParam(value = "password_old") String oldPassword,
+			@RequestParam(value = "password_new") String newPassword,
+			@RequestParam(value = "password_confirm") String confirmPassword,
 			HttpServletRequest request) {
 		CommonResult result = null;
-		short status = 0;
+		short status = -1;
 		String msg = null;
-		User cuser = AuthUtils.getCurrentUser(request);
 
-		Validator validator = validatorMapping
-				.getValidatorByName(UserPasswordNotEmptyValidator.class
-						.getName());
-		User up = new User();
-		up.setPassword(newPassword);
-		BindException be = new BindException(up, "user");
-		validator.validate(up, be);
-		if (be.hasErrors()) {
-			result = errorResult(be);
-			status = result.getStatus();
-			msg = "新" + result.getMessage();
-			result.setMessage(msg);
+		User user = AuthUtils.getCurrentUser(request);
+
+		// 校验用户是否已登录
+		if (AuthUtils.isAnonymousUser(user)) {
+			status = Status.NOT_EXISTS;
+			msg = "用户尚未登录，不能修改密码";
 		} else {
-			if (!newPassword.equals(confirmPassword)) {
-				status = Status.PASSWD_NOT_MATCH;
-				msg = "新密码确认错误";
+			Validator validator = validatorMapping
+					.getValidatorByName(UserPasswordNotEmptyValidator.class
+							.getName());
+			User vuser = new User();
+			BindException be = new BindException(vuser, "user");
+
+			// 校验用户旧密码的合法性
+			vuser.setPassword(oldPassword);
+			validator.validate(vuser, be);
+			if (be.hasErrors()) {
+				result = errorResult(be);
+				status = result.getStatus();
+				msg = "旧" + result.getMessage();
+				result.setMessage(msg);
 			} else {
-				AuthUtils.setModifier(request, cuser);
-				cuser.setPassword(user.getPassword());
-				status = (short) userService.changePassword(cuser, cuser,
-						newPassword);
-				if (status == Status.SUCCESS) {
-					msg = "用户[" + cuser.getId() + "]" + cuser.getName()
-							+ "修改密码成功";
+				// 校验用户新密码的合法性
+				vuser.setPassword(newPassword);
+				validator.validate(vuser, be);
+				if (be.hasErrors()) {
+					result = errorResult(be);
+					status = result.getStatus();
+					msg = "新" + result.getMessage();
+					result.setMessage(msg);
 				} else {
-					msg = "用户[" + cuser.getId() + "]" + cuser.getName()
-							+ "修改密码失败";
+					// 校验确认密码是否与新密码一致
+					if (!newPassword.equals(confirmPassword)) {
+						status = Status.PASSWD_NOT_MATCH;
+						msg = "新密码确认错误";
+					} else {
+						AuthUtils.setModifier(request, user);
+						user.setPassword(oldPassword);
+						status = (short) userService.changePassword(user, user,
+								newPassword);
+						if (status == Status.SUCCESS) {
+							msg = "用户[" + user.getId() + "]" + user.getName()
+									+ "修改密码成功";
+						} else {
+							msg = "用户[" + user.getId() + "]" + user.getName()
+									+ "修改密码失败";
+						}
+					}
+					result = new CommonResult(status, msg);
 				}
 			}
-			result = new CommonResult(status, msg);
 		}
 
 		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + cuser.getName() + msg);
+			logger.info("[" + status + "]" + user.getName() + msg);
 		}
 
 		return result;

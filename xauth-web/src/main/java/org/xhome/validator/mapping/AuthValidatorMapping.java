@@ -76,7 +76,6 @@ public class AuthValidatorMapping implements Mapping {
 		mappings.put(UserAction.RM_USER_UPDATE, baseValidator + ","
 				+ userNameValidator + "," + userPasswordValidator + ","
 				+ userValidator);
-		mappings.put(UserAction.RM_USER_CHPASSWD, userPasswordNotEmptyValidator);
 		mappings.put(UserAction.RM_USER_LOCK, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_UNLOCK, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_REMOVE, userIdNameValidator);

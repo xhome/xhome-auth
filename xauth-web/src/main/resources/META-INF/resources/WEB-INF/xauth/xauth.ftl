@@ -12,7 +12,7 @@
     <meta name="Keywords" content="${keywords}"/>
     <base href="${base_url}"/>
     <link href="xlibs/css/bootstrap.css" rel="stylesheet" media="screen"/>
-    <link rel="shortcut icon" type="image/x-icon" href="http://www.xhomestudio.org/favicon.ico"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
     <script type="text/javascript" src="xlibs/js/jquery-v2x.js"></script>
     <script type="text/javascript" src="xlibs/js/bootstrap.js"></script>
     <#nested>

@@ -28,12 +28,12 @@ body {
 <div id="wapper" class="panel panel-primary">
     <div class="panel-heading">用户登录</div>
     <div class="panel-body">
-        <#if commonResult?? && (commonResult.status != 0)>
-            <div id="error_msg" class="alert alert-danger">
+        <#if commonResult?? && (commonResult.message?length > 0)>
+            <div id="user_login_error_msg" class="alert alert-danger">
                 ${commonResult.message}
             </div>
         <#else>
-            <div id="error_msg" class="alert alert-danger" style="display: none;">
+            <div id="user_login_error_msg" class="alert alert-danger" style="display: none;">
             </div>
         </#if>
         <#if commonResult?? && commonResult.data?? && commonResult.data.next_page??>
@@ -41,7 +41,7 @@ body {
         <#else>
             <#assign next_page = '' />
         </#if>
-        <form id="login_form" action="${xauth.user_login_url}?next_page=${next_page}" method="POST" role="form">
+        <form id="user_login_form" action="${xauth.user_login_url}?next_page=${next_page}" method="POST" role="form">
             <div class="input-group input-group-lg">
                 <span class="glyphicon glyphicon-user input-group-addon"></span>
                 <input id="user.name" name="user.name" type="text" class="form-control" placeholder="用户名" maxlength="20"
@@ -70,6 +70,7 @@ body {
 </div>
 <script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
 <script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
+<script type="text/javascript" src="xauth/js/user/validate.js"></script>
 <script type="text/javascript" src="xauth/js/user/login.js"></script>
 </body>
 </html>
