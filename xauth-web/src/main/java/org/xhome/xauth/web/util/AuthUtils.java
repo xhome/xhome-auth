@@ -33,15 +33,17 @@ public class AuthUtils {
 
 	/**
 	 * 获取当前HttpServletRequest对象
+	 * 
 	 * @return
 	 */
 	public static HttpServletRequest getServletRequest() {
 		return ((ServletRequestAttributes) RequestContextHolder
 				.getRequestAttributes()).getRequest();
 	}
-	
+
 	/**
 	 * 获取当前登录用户
+	 * 
 	 * @return
 	 */
 	public static User getCurrentUser() {
@@ -50,6 +52,7 @@ public class AuthUtils {
 
 	/**
 	 * 获取已登录用户
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -58,82 +61,103 @@ public class AuthUtils {
 				USER_SESSION_KEY);
 		return user == null ? anonymousUser : user;
 	}
-	
+
 	/**
 	 * 设置当前登录用户
+	 * 
 	 * @param user
 	 */
 	public static void setCurrentUser(User user) {
-		SessionUtils.setSessionAttribute(getServletRequest(), USER_SESSION_KEY, user);
+		SessionUtils.setSessionAttribute(getServletRequest(), USER_SESSION_KEY,
+				user);
 	}
 
 	/**
 	 * 设置已登录用户
+	 * 
 	 * @param request
 	 * @param user
 	 */
 	public static void setCurrentUser(HttpServletRequest request, User user) {
 		SessionUtils.setSessionAttribute(request, USER_SESSION_KEY, user);
 	}
-	
+
 	/**
 	 * 在Cookie中记录用户信息； 有效期为90天；Cookie路径为： /
+	 * 
 	 * @param response
-	 * @param user 用户信息
+	 * @param user
+	 *            用户信息
 	 */
 	public static void setCookieUser(HttpServletResponse response, User user) {
 		setCookieUser(response, user, 7776000);
 	}
-	
+
 	/**
 	 * 在Cookie中记录用户信息； Cookie路径为： /
+	 * 
 	 * @param response
-	 * @param user 用户信息
-	 * @param maxAge Cookie 有效期
+	 * @param user
+	 *            用户信息
+	 * @param maxAge
+	 *            Cookie 有效期
 	 */
-	public static void setCookieUser(HttpServletResponse response, User user, int maxAge) {
+	public static void setCookieUser(HttpServletResponse response, User user,
+			int maxAge) {
 		setCookieUser(response, user, maxAge, "/");
 	}
-	
+
 	/**
 	 * 在Cookie中记录用户信息
+	 * 
 	 * @param response
-	 * @param user 用户信息
-	 * @param maxAge Cookie 有效期
-	 * @param path Cookie 路径
+	 * @param user
+	 *            用户信息
+	 * @param maxAge
+	 *            Cookie 有效期
+	 * @param path
+	 *            Cookie 路径
 	 */
-	public static void setCookieUser(HttpServletResponse response, User user, int maxAge, String path) {
+	public static void setCookieUser(HttpServletResponse response, User user,
+			int maxAge, String path) {
 		Cookie cookie = new Cookie(AuthUtils.USER_COOKIE_NAME, user.getName());
 		cookie.setMaxAge(maxAge);
 		cookie.setPath(path);
 		response.addCookie(cookie);
-		cookie=new Cookie(AuthUtils.USER_COOKIE_PASSWORD, user.getPassword());
+		cookie = new Cookie(AuthUtils.USER_COOKIE_PASSWORD, user.getPassword());
 		cookie.setMaxAge(maxAge);
 		cookie.setPath(path);
 		response.addCookie(cookie);
 	}
-	
+
 	/**
 	 * 在Cookie中删除用户信息； Cookie路径为： /
+	 * 
 	 * @param response
-	 * @param user 用户信息
+	 * @param user
+	 *            用户信息
 	 */
 	public static void removeCookieUser(HttpServletResponse response, User user) {
 		removeCookieUser(response, user, "/");
 	}
-	
+
 	/**
 	 * 在Cookie中删除用户信息
+	 * 
 	 * @param response
-	 * @param user 用户信息
-	 * @param path Cookie 路径
+	 * @param user
+	 *            用户信息
+	 * @param path
+	 *            Cookie 路径
 	 */
-	public static void removeCookieUser(HttpServletResponse response, User user, String path) {
+	public static void removeCookieUser(HttpServletResponse response,
+			User user, String path) {
 		setCookieUser(response, user, 0, path);
 	}
 
 	/**
 	 * 判断是否为匿名用户
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -142,7 +166,17 @@ public class AuthUtils {
 	}
 
 	/**
+	 * 判断当前用户是否为匿名用户
+	 * 
+	 * @return
+	 */
+	public static boolean isAnonymousUser() {
+		return isAnonymousUser(getCurrentUser());
+	}
+
+	/**
 	 * 获取匿名用户
+	 * 
 	 * @return
 	 */
 	public static User getAnonymousUser() {
@@ -155,17 +189,19 @@ public class AuthUtils {
 	public static void removeCurrentUser() {
 		removeCurrentUser(getServletRequest());
 	}
-	
+
 	/**
 	 * 从Session中移除登录用户
+	 * 
 	 * @param request
 	 */
 	public static void removeCurrentUser(HttpServletRequest request) {
 		SessionUtils.removeSessionAttribute(request, USER_SESSION_KEY);
 	}
-	
+
 	/**
 	 * 设置对象的所有者为当前登录用户
+	 * 
 	 * @param obj
 	 */
 	public static void setOwner(Base obj) {
@@ -174,6 +210,7 @@ public class AuthUtils {
 
 	/**
 	 * 设置对象的所有者
+	 * 
 	 * @param obj
 	 */
 	public static void setOwner(HttpServletRequest request, Base obj) {
@@ -181,9 +218,10 @@ public class AuthUtils {
 		obj.setOwner(user.getId());
 		obj.setModifier(user.getId());
 	}
-	
+
 	/**
 	 * 设置对象的修改者为当前登录用户
+	 * 
 	 * @param obj
 	 */
 	public static void setModifier(Base obj) {
@@ -192,6 +230,7 @@ public class AuthUtils {
 
 	/**
 	 * 设置对象的修改者
+	 * 
 	 * @param obj
 	 */
 	public static void setModifier(HttpServletRequest request, Base obj) {

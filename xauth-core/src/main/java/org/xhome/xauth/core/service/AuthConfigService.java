@@ -1,6 +1,5 @@
 package org.xhome.xauth.core.service;
 
-
 /**
  * @project xauth-core
  * @author jhat
@@ -11,7 +10,7 @@ package org.xhome.xauth.core.service;
  */
 public interface AuthConfigService extends ConfigService {
 
-	String ITEM_AUTH_NEXT_PAGE = "next_page"; // 认证跳转地址
+	String ITEM_AUTH_NEXT_PAGE = "auth_next_page"; // 认证跳转地址
 
 	String ITEM_AUTH_TRY_LIMIT = "auth_try_limit"; // 认证尝试次数
 

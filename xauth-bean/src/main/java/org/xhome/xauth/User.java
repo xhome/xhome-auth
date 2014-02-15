@@ -21,7 +21,6 @@ public class User extends Base {
 	private String email; // 邮箱
 	private String password; // 密码
 	private String method = "DEFAULT"; // 认证方式
-	private String website; // 个人主页
 	private List<Role> roles; // 用户角色
 
 	public User() {
@@ -77,21 +76,6 @@ public class User extends Base {
 
 	public String getMethod() {
 		return method;
-	}
-
-	/**
-	 * @return the website
-	 */
-	public String getWebsite() {
-		return website;
-	}
-
-	/**
-	 * @param website
-	 *            the website to set
-	 */
-	public void setWebsite(String website) {
-		this.website = website;
 	}
 
 	public void setRoles(List<Role> roles) {

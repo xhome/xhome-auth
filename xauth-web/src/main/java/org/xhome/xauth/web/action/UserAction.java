@@ -1,7 +1,9 @@
 package org.xhome.xauth.web.action;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,14 +85,20 @@ public class UserAction extends AbstractAction {
 	public final static String RM_USER_LOGIN_QUERY = "xauth/user/login/query";
 	public final static String RM_USER_LOGIN_COUNT = "xauth/user/login/count";
 
+	public final static String LOGIN_NEXT_PAGE = "next_page";
+
 	/**
 	 * 用户登录页面获取请求
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = RM_USER_LOGIN, method = RequestMethod.GET)
-	public Object login_get() {
-		return RM_USER_LOGIN;
+	public Object login_get(HttpServletRequest request) {
+		// 将Referer作为next_page，用于登录成功后跳转
+		String referer = request.getHeader("Referer");
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put(LOGIN_NEXT_PAGE, referer);
+		return new CommonResult(Status.SUCCESS, "", data);
 	}
 
 	/**
@@ -137,10 +145,22 @@ public class UserAction extends AbstractAction {
 		logger.info("[" + status + "]" + msg);
 
 		if (status == Status.SUCCESS) {
-			String next = authConfigService.getNextPage();
-			if (next != null) {
-				String accept = request.getHeader("Accept");
-				if (accept == null || !accept.startsWith("application/json")) {
+			String accept = request.getHeader("Accept");
+			// 认证成功后，如果不是JSON请求方式，需要进行页面跳转
+			// 需要next_page是BASE_URL开头的，且不是RM_USER_LOGIN或RM_USER_LOGOUT
+			// 否则跳转至系统配置的登录跳转地址
+			if (accept == null || !accept.startsWith("application/json")) {
+				String nextPage = request.getParameter(LOGIN_NEXT_PAGE), baseUrl = authConfigService
+						.getBaseURL(), next = null;
+				if (StringUtils.isNotEmpty(nextPage)
+						&& nextPage.startsWith(baseUrl)
+						&& !(nextPage.startsWith(baseUrl + RM_USER_LOGIN) || nextPage
+								.startsWith(baseUrl + RM_USER_LOGOUT))) {
+					next = nextPage;
+				} else {
+					next = authConfigService.getNextPage();
+				}
+				if (StringUtils.isNotEmpty(next)) {
 					return "redirect:" + next;
 				}
 			}
