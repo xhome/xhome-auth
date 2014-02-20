@@ -13,7 +13,7 @@ INSERT INTO xhome_xauth_user_role VALUES(1, 1, 1, 1, 1, NOW(), NOW(), 0, 2);
 
 DELETE FROM xhome_xauth_config;
 /* 系统配置项 */
-INSERT INTO xhome_xauth_config VALUES(1, 0, 'base_url', '系统基地址', 'http://127.0.0.1:8081/xauth-test/', 1, 1, NOW(), NOW(), 0, 2);
+INSERT INTO xhome_xauth_config VALUES(1, 0, 'base_url', '系统基地址', 'http://127.0.0.1:8081/xauth-test', 1, 1, NOW(), NOW(), 0, 2);
 
 /* 认证管理配置项 */
 INSERT INTO xhome_xauth_config VALUES(2, 1, 'auth_next_page', '登录跳转地址', 'http://127.0.0.1:8081/xauth-test/dashboard.htm', 1, 1, NOW(), NOW(), 0, 2);

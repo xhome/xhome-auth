@@ -1,5 +1,5 @@
 <#assign base_url = "${xconfig('base_url')}" />
-<#assign user_base_url = base_url + "xauth/user" />
+<#assign user_base_url = base_url + "/xauth/user" />
 <#assign user_login_url = user_base_url + "/login.htm" />
 <#assign user_logout_url = user_base_url + "/logout.htm" />
 
@@ -7,14 +7,13 @@
 <#macro head title description = "" keywords = "" charset = "UTF-8">
 <head>
     <title>${title}</title>
-    <meta http-equiv="Content-type" content="text/html; charset=${charset}">
-    <meta name="Description" content="${description}"/>
-    <meta name="Keywords" content="${keywords}"/>
-    <base href="${base_url}"/>
-    <link href="xlibs/css/bootstrap.css" rel="stylesheet" media="screen"/>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
-    <script type="text/javascript" src="xlibs/js/jquery-v2x.js"></script>
-    <script type="text/javascript" src="xlibs/js/bootstrap.js"></script>
+    <meta http-equiv="Content-type" content="text/html; charset=${charset}" />
+    <meta name="Description" content="${description}" />
+    <meta name="Keywords" content="${keywords}" />
+    <link href="${base_url}/xlibs/css/bootstrap.css" rel="stylesheet" media="screen" />
+    <link rel="shortcut icon" type="image/x-icon" href="${base_url}/favicon.ico" />
+    <script type="text/javascript" src="${base_url}/xlibs/js/jquery-v2x.js"></script>
+    <script type="text/javascript" src="${base_url}/xlibs/js/bootstrap.js"></script>
     <#nested>
 </head>
 </#macro>

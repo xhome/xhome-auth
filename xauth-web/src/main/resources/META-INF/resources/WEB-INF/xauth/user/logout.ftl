@@ -4,7 +4,7 @@
 <@xauth.head title="用户登出" description="XAuth" keywords="XHome, XAuth, 用户登出">
 <style>
 body {
-    background: url('xauth/images/user/login_backgroud.png');
+    background: url('${xauth.base_url}/xauth/images/user/login_backgroud.png');
 }
 .alert {
     width: 400px;

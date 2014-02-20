@@ -4,7 +4,7 @@
 <@xauth.head title="用户登录" description="XAuth" keywords="XHome, XAuth, 用户登录">
 <style>
 body {
-    background: url('xauth/images/user/login_backgroud.png');
+    background: url('${xauth.base_url}/xauth/images/user/login_backgroud.png');
 }
 .panel {
     width: 400px;
@@ -68,9 +68,9 @@ body {
 <div id="footer">
     <@include file="copyright.ftl" />
 </div>
-<script type="text/javascript" src="xlibs/js/jquery-validate.js"></script>
-<script type="text/javascript" src="xlibs/js/jquery-xvalidate.js"></script>
-<script type="text/javascript" src="xauth/js/user/validate.js"></script>
-<script type="text/javascript" src="xauth/js/user/login.js"></script>
+<script type="text/javascript" src="${xauth.base_url}/xlibs/js/jquery-validate.js"></script>
+<script type="text/javascript" src="${xauth.base_url}/xlibs/js/jquery-xvalidate.js"></script>
+<script type="text/javascript" src="${xauth.base_url}/xauth/js/user/validate.js"></script>
+<script type="text/javascript" src="${xauth.base_url}/xauth/js/user/login.js"></script>
 </body>
 </html>
