@@ -57,7 +57,7 @@ public class AuthLogAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_AUTH_LOG_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_AUTH_LOG_COUNT, method = RequestMethod.GET)
 	public Object countAuthLogs(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

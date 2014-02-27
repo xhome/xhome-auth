@@ -57,7 +57,7 @@ public class ManageLogAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_MANAGE_LOG_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_MANAGE_LOG_COUNT, method = RequestMethod.GET)
 	public Object countManageLogs(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();

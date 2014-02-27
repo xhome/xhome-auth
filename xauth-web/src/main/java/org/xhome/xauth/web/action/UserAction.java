@@ -322,7 +322,7 @@ public class UserAction extends AbstractAction {
 		return result;
 	}
 
-	@RequestMapping(value = RM_USER_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_LOCK, method = RequestMethod.POST)
 	public Object lockUser(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = 0;
@@ -344,7 +344,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_UNLOCK, method = RequestMethod.POST)
 	public Object unlockUser(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = 0;
@@ -395,7 +395,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, users);
 	}
 
-	@RequestMapping(value = RM_USER_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_DELETE, method = RequestMethod.POST)
 	public Object deleteUser(
 			@Validated @RequestAttribute("users") List<User> users,
 			HttpServletRequest request) {
@@ -421,7 +421,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, users);
 	}
 
-	@RequestMapping(value = RM_USER_EXISTS, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_EXISTS, method = RequestMethod.GET)
 	public Object isUserExists(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -442,7 +442,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, exists);
 	}
 
-	@RequestMapping(value = RM_USER_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_UPDATEABLE, method = RequestMethod.GET)
 	public Object isUserUpdateable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -464,7 +464,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_USER_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_LOCKED, method = RequestMethod.GET)
 	public Object isUserLocked(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = Status.SUCCESS;
@@ -485,7 +485,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_USER_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_REMOVEABLE, method = RequestMethod.GET)
 	public Object isUserRemoveable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -507,7 +507,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_USER_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_DELETEABLE, method = RequestMethod.GET)
 	public Object isUserDeleteable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -529,7 +529,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, deleteable);
 	}
 
-	@RequestMapping(value = RM_USER_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_GET, method = RequestMethod.GET)
 	public Object getUser(
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "name", required = false) String name,
@@ -588,7 +588,7 @@ public class UserAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_USER_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_COUNT, method = RequestMethod.GET)
 	public Object countUsers(QueryBase query, HttpServletRequest request) {
 		User cuser = AuthUtils.getCurrentUser(request);
 		String uname = cuser.getName();
@@ -613,7 +613,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, count);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_ADD, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_ROLE_ADD, method = RequestMethod.POST)
 	public Object addUserRole(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = 0;
@@ -642,7 +642,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_LOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_ROLE_LOCK, method = RequestMethod.POST)
 	public Object lockUserRole(@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
 		short status = 0;
@@ -664,7 +664,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_UNLOCK, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_ROLE_UNLOCK, method = RequestMethod.POST)
 	public Object unlockUserRole(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -688,7 +688,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_REMOVE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_ROLE_REMOVE, method = RequestMethod.POST)
 	public Object removeUserRole(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -712,7 +712,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_DELETE, method = RequestMethod.POST)
+	// @RequestMapping(value = RM_USER_ROLE_DELETE, method = RequestMethod.POST)
 	public Object deleteUserRole(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -735,7 +735,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_EXISTS, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_ROLE_EXISTS, method = RequestMethod.GET)
 	public Object isUserRoleExists(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -761,7 +761,8 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, has);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_UPDATEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_ROLE_UPDATEABLE, method =
+	// RequestMethod.GET)
 	public Object isUserRoleUpdateable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -788,7 +789,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, updateable);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_LOCKED, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_ROLE_LOCKED, method = RequestMethod.GET)
 	public Object isUserRoleLocked(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -814,7 +815,8 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, locked);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_REMOVEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_ROLE_REMOVEABLE, method =
+	// RequestMethod.GET)
 	public Object isUserRoleRemoveable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -841,7 +843,8 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, removeable);
 	}
 
-	@RequestMapping(value = RM_USER_ROLE_DELETEABLE, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_USER_ROLE_DELETEABLE, method =
+	// RequestMethod.GET)
 	public Object isUserRoleDeleteable(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {

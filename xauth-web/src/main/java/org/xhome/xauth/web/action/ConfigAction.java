@@ -102,7 +102,7 @@ public class ConfigAction extends AbstractAction {
 		return result;
 	}
 
-	@RequestMapping(value = RM_CONFIG_GET, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CONFIG_GET, method = RequestMethod.GET)
 	public Object getConfig(
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "item", required = false) String item,
@@ -161,7 +161,7 @@ public class ConfigAction extends AbstractAction {
 		return new DataResult(status, msg, query);
 	}
 
-	@RequestMapping(value = RM_CONFIG_COUNT, method = RequestMethod.GET)
+	// @RequestMapping(value = RM_CONFIG_COUNT, method = RequestMethod.GET)
 	public Object countConfigs(QueryBase query, HttpServletRequest request) {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
