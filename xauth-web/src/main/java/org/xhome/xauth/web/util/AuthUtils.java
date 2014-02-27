@@ -131,6 +131,47 @@ public class AuthUtils {
 	}
 
 	/**
+	 * 获取Cookie中的用户信息； Cookie路径为： /
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static User getCookieUser(HttpServletRequest request) {
+		return getCookieUser(request, "/");
+	}
+
+	/**
+	 * 获取Cookie中的用户信息
+	 * 
+	 * @param request
+	 * @param path
+	 *            Cookie路径
+	 * @return
+	 */
+	public static User getCookieUser(HttpServletRequest request, String path) {
+		Cookie[] cookies = request.getCookies();
+		String cookieName = null;
+		User user = new User();
+		boolean findName = false, findPassword = false;
+		for (Cookie cookie : cookies) {
+			if (cookie.getPath().equals(path)) {
+				cookieName = cookie.getName();
+				if (AuthUtils.USER_COOKIE_NAME.equals(cookieName)) {
+					user.setName(cookie.getValue());
+					findName = true;
+				} else if (AuthUtils.USER_COOKIE_PASSWORD.equals(cookieName)) {
+					user.setPassword(cookie.getValue());
+					findPassword = true;
+				}
+				if (findName && findPassword) {
+					break;
+				}
+			}
+		}
+		return (findName && findPassword) ? user : null;
+	}
+
+	/**
 	 * 在Cookie中删除用户信息； Cookie路径为： /
 	 * 
 	 * @param response

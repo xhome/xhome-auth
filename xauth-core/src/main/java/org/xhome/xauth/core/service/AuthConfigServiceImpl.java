@@ -20,7 +20,7 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 	 */
 	@Override
 	public String getNextPage() {
-		Config config = configDAO.queryConfigByItem(ITEM_AUTH_NEXT_PAGE);
+		Config config = configDAO.queryConfigByItem(ITEM_NEXT_PAGE);
 		return config != null ? config.getValue() : null;
 	}
 
@@ -29,7 +29,7 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 	 */
 	@Override
 	public int getAuthTryLimit() {
-		Config config = configDAO.queryConfigByItem(ITEM_AUTH_TRY_LIMIT);
+		Config config = configDAO.queryConfigByItem(ITEM_TRY_LIMIT);
 		return config != null ? Integer.parseInt(config.getValue()) : null;
 	}
 
@@ -38,7 +38,7 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 	 */
 	@Override
 	public long getAuthLockTime() {
-		Config config = configDAO.queryConfigByItem(ITEM_AUTH_LOCK_TIME);
+		Config config = configDAO.queryConfigByItem(ITEM_LOCK_TIME);
 		return config != null ? Long.parseLong(config.getValue()) : null;
 	}
 
@@ -47,7 +47,7 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 	 */
 	@Override
 	public boolean allowAuthLog() {
-		Config config = configDAO.queryConfigByItem(ITEM_AUTH_LOG);
+		Config config = configDAO.queryConfigByItem(ITEM_ALLOW_AUTH_LOG);
 		return config != null ? !"0".equals(config.getValue()) : false;
 	}
 
@@ -56,7 +56,7 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 	 */
 	@Override
 	public boolean allowManageLog() {
-		Config config = configDAO.queryConfigByItem(ITEM_MANAGE_LOG);
+		Config config = configDAO.queryConfigByItem(ITEM_ALLOW_MANAGE_LOG);
 		return config != null ? !"0".equals(config.getValue()) : false;
 	}
 

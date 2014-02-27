@@ -20,6 +20,9 @@
 <#-- End of head -->
 
 <#-- 获取当前登录用户 -->
+<#--
+${Session["org.xhome.xauth.session.user"]}
+-->
 <#if statics?? && !statics["org.xhome.xauth.web.util.AuthUtils"].isAnonymousUser()>
     <#assign user = statics["org.xhome.xauth.web.util.AuthUtils"].getCurrentUser() />
 </#if>

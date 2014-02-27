@@ -3,7 +3,7 @@
  * Date:     2014-01-24
  * Email:    cpf624@126.com
  * Home:     http://pfchen.org
- * Describe: 系统配置管理
+ * Describe: 认证配置管理
  */
 
 Ext.define('XHome.XAuth.Manage.AuthConfig', {
@@ -34,8 +34,8 @@ Ext.define('XHome.XAuth.Manage.AuthConfig', {
                 dataIndex: 'value',
                 renderer: function(value, meta, record) {
                     var config = record.getData();
-                    if (config.item == 'allow_auth_log'
-                        || config.item == 'allow_manage_log') {
+                    if (config.item == 'xauth_allow_auth_log'
+                        || config.item == 'xauth_allow_manage_log') {
                         return {0: '关闭', 1: '开启'}[value]; 
                     }
                     return value; 

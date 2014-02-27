@@ -6,19 +6,19 @@ package org.xhome.xauth.core.service;
  * @email cpf624@126.com
  * @homepage http://pfchen.org
  * @date Jan 28, 2014
- * @describe 认证管理参数查询
+ * @describe 认证管理参数
  */
 public interface AuthConfigService extends ConfigService {
 
-	String ITEM_AUTH_NEXT_PAGE = "auth_next_page"; // 认证跳转地址
+	String ITEM_NEXT_PAGE = "xauth_next_page"; // 认证跳转地址
 
-	String ITEM_AUTH_TRY_LIMIT = "auth_try_limit"; // 认证尝试次数
+	String ITEM_TRY_LIMIT = "xauth_try_limit"; // 认证尝试次数
 
-	String ITEM_AUTH_LOCK_TIME = "auth_lock_time"; // 认证锁定时间
+	String ITEM_LOCK_TIME = "xauth_lock_time"; // 认证锁定时间
 
-	String ITEM_AUTH_LOG = "allow_auth_log"; // 认证日志
+	String ITEM_ALLOW_AUTH_LOG = "xauth_allow_auth_log"; // 认证日志
 
-	String ITEM_MANAGE_LOG = "allow_manage_log"; // 管理日志
+	String ITEM_ALLOW_MANAGE_LOG = "xauth_allow_manage_log"; // 管理日志
 
 	/**
 	 * 获取认证成功后的跳转地址
