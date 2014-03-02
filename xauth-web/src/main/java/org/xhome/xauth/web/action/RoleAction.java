@@ -341,14 +341,11 @@ public class RoleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "查询角色信息");
-			} else {
-				query = new QueryBase();
-				logger.info("用户" + uname + "查询角色信息");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "查询角色信息");
 		}
 		roleService.getRoles(user, query);
 
@@ -367,13 +364,11 @@ public class RoleAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "统计角色信息");
-			} else {
-				logger.info("用户" + uname + "统计角色信息");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "统计角色信息");
 		}
 		long count = roleService.countRoles(user, query);
 

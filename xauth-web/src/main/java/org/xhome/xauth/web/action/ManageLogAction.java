@@ -36,14 +36,11 @@ public class ManageLogAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "查询管理日志");
-			} else {
-				query = new QueryBase();
-				logger.info("用户" + uname + "查询管理日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "查询管理日志");
 		}
 		manageLogService.getManageLogs(user, query);
 
@@ -62,13 +59,11 @@ public class ManageLogAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "统计管理日志");
-			} else {
-				logger.info("用户" + uname + "统计管理日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "统计管理日志");
 		}
 		long count = manageLogService.countManageLogs(user, query);
 

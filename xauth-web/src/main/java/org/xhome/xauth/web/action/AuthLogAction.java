@@ -36,14 +36,11 @@ public class AuthLogAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "查询认证日志");
-			} else {
-				query = new QueryBase();
-				logger.info("用户" + uname + "查询认证日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "查询认证日志");
 		}
 		authLogService.getAuthLogs(user, query);
 
@@ -62,13 +59,11 @@ public class AuthLogAction extends AbstractAction {
 		User user = AuthUtils.getCurrentUser(request);
 		String uname = user.getName();
 
+		if (query == null) {
+			query = new QueryBase();
+		}
 		if (logger.isInfoEnabled()) {
-			if (query != null) {
-				logger.info("用户" + uname + "按条件" + query.getParameters()
-						+ "统计认证日志");
-			} else {
-				logger.info("用户" + uname + "统计认证日志");
-			}
+			logger.info("用户" + uname + "按条件" + query.getParameters() + "统计认证日志");
 		}
 		long count = authLogService.countAuthLogs(user, query);
 
