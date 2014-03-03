@@ -117,6 +117,8 @@
 		<property name="exposeSessionAttributes" value="true" />
 		<!-- FTL definition -->
 		<property name="exposeSpringMacroHelpers" value="true" />
+		<!-- HTTPServletRequest对象 -->
+		<property name="requestContextAttribute" value="request" />
 	</bean>
 
 	<!-- 
