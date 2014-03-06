@@ -118,6 +118,8 @@ public class RoleServiceImpl implements RoleService {
 			this.afterRoleManage(oper, Action.UPDATE, Status.NOT_EXISTS, role);
 			return Status.NOT_EXISTS;
 		}
+		role.setOwner(old.getOwner());
+		role.setCreated(old.getCreated());
 
 		String oldName = old.getName();
 
@@ -158,8 +160,6 @@ public class RoleServiceImpl implements RoleService {
 			return Status.EXISTS;
 		}
 
-		role.setOwner(old.getOwner());
-		role.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		role.setModified(t);
 

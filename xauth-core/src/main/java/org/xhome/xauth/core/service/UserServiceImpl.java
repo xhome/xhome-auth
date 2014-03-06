@@ -295,6 +295,8 @@ public class UserServiceImpl implements UserService {
 			this.afterUserManage(oper, Action.UPDATE, Status.NOT_EXISTS, user);
 			return Status.NOT_EXISTS;
 		}
+		user.setOwner(old.getOwner());
+		user.setCreated(old.getCreated());
 
 		String oldName = old.getName();
 
@@ -324,8 +326,6 @@ public class UserServiceImpl implements UserService {
 			return status;
 		}
 
-		user.setOwner(old.getOwner());
-		user.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		user.setModified(t);
 

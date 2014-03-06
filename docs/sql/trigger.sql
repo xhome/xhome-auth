@@ -2,8 +2,8 @@ use xauth;
 
 DELIMITER //
 
-DROP TRIGGER IF EXISTS jat_update_role;//
-CREATE TRIGGER jat_update_role AFTER UPDATE ON xhome_xauth_role
+DROP TRIGGER IF EXISTS txauth_update_role;//
+CREATE TRIGGER txauth_update_role AFTER UPDATE ON xhome_xauth_role
 FOR EACH ROW BEGIN
     IF old.id!=new.id OR old.status!=new.status THEN
         -- 更新对应的用户角色信息
@@ -30,8 +30,8 @@ FOR EACH ROW BEGIN
 
 END;//
 
-DROP TRIGGER IF EXISTS jat_update_user;//
-CREATE TRIGGER jat_update_user AFTER UPDATE ON xhome_xauth_user
+DROP TRIGGER IF EXISTS txauth_update_user;//
+CREATE TRIGGER txauth_update_user AFTER UPDATE ON xhome_xauth_user
 FOR EACH ROW BEGIN
     -- 更新用户角色信息
     IF old.id!=new.id OR old.status!=new.status THEN
@@ -44,8 +44,8 @@ FOR EACH ROW BEGIN
     END IF;
 END;//
 
-DROP TRIGGER IF EXISTS jat_delete_role;//
-CREATE TRIGGER jat_delete_role AFTER DELETE ON xhome_xauth_role
+DROP TRIGGER IF EXISTS txauth_delete_role;//
+CREATE TRIGGER txauth_delete_role AFTER DELETE ON xhome_xauth_role
 FOR EACH ROW BEGIN
     -- 删除用户角色信息
     DELETE FROM xhome_xauth_user_role WHERE role=old.id;
@@ -59,8 +59,8 @@ FOR EACH ROW BEGIN
     DELETE FROM xhome_xauth_temp_user;
 END;//
 
-DROP TRIGGER IF EXISTS jat_delete_user;//
-CREATE TRIGGER jat_delete_user AFTER DELETE ON xhome_xauth_user
+DROP TRIGGER IF EXISTS txauth_delete_user;//
+CREATE TRIGGER txauth_delete_user AFTER DELETE ON xhome_xauth_user
 FOR EACH ROW BEGIN
     -- 删除用户角色信息
     DELETE FROM xhome_xauth_user_role WHERE user=old.id;

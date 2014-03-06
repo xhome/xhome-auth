@@ -127,6 +127,8 @@ public class ConfigServiceImpl implements ConfigService {
 					config);
 			return Status.NOT_EXISTS;
 		}
+		config.setOwner(old.getOwner());
+		config.setCreated(old.getCreated());
 
 		String oldName = old.getItem();
 
@@ -167,8 +169,6 @@ public class ConfigServiceImpl implements ConfigService {
 			return Status.EXISTS;
 		}
 
-		config.setOwner(old.getOwner());
-		config.setCreated(old.getCreated());
 		Timestamp t = new Timestamp(System.currentTimeMillis());
 		config.setModified(t);
 
