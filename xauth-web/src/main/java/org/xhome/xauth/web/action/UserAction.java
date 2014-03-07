@@ -124,10 +124,10 @@ public class UserAction extends AbstractAction {
 		String msg = null;
 
 		try {
-			String userAgent = request.getHeader("User-Agent");
 			User u = userService.auth(user,
 					RequestUtils.getRequestAddress(request),
-					RequestUtils.getRequestAgent(request), userAgent);
+					RequestUtils.getRequestUserAgent(request),
+					RequestUtils.getRequestUserAgentName(request));
 			AuthUtils.setCurrentUser(request, u);
 			status = Status.SUCCESS;
 			msg = "用户" + user.getName() + "登录成功";
@@ -175,9 +175,6 @@ public class UserAction extends AbstractAction {
 		AuthUtils.removeCurrentUser(request);
 		String uname = user.getName();
 		String msg = null;
-
-		// 从Cookie中删除用户信息
-		AuthUtils.removeCookieUser(response, user);
 
 		short status = Status.SUCCESS;
 		logger.info("[{}] 用户{}退出登录", status, uname);

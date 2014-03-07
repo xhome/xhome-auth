@@ -100,7 +100,28 @@ public class User extends Base {
 	}
 
 	public boolean hasRole(Role role) {
-		return roles != null ? roles.contains(role) : false;
+		if (roles == null) {
+			return false;
+		}
+		String roleName = role.getName();
+		for (Role r : roles) {
+			if (r.getName().equalsIgnoreCase(roleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasRole(String roleName) {
+		if (roles == null) {
+			return false;
+		}
+		for (Role r : roles) {
+			if (r.getName().equalsIgnoreCase(roleName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// @Override

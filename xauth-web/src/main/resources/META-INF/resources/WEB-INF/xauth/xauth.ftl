@@ -1,4 +1,4 @@
-<#assign base_url = "${request.contextPath}" />
+<#assign base_url = "${xconfig('base_url')}" />
 <#assign user_base_url = base_url + "/xauth/user" />
 <#assign user_login_url = user_base_url + "/login.htm" />
 <#assign user_logout_url = user_base_url + "/logout.htm" />

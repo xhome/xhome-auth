@@ -27,4 +27,9 @@
   	<property name="configService" ref="configService"/>
   </bean>
   
+  <bean id="authFilter" class="org.xhome.xauth.web.filter.AuthFilter" scope="singleton">
+  	<property name="userService" ref="userService"/>
+  	<property name="authLogService" ref="authLogService"/>
+  </bean>
+  
 </beans>
