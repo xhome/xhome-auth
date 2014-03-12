@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xhome.common.constant.Status;
+import org.xhome.crypto.AES;
 import org.xhome.db.query.QueryBase;
 import org.xhome.spring.mvc.extend.bind.annotation.RequestAttribute;
+import org.xhome.util.RandomUtils;
 import org.xhome.util.StringUtils;
 import org.xhome.validator.Validator;
 import org.xhome.web.action.AbstractAction;
@@ -30,6 +33,7 @@ import org.xhome.xauth.AuthException;
 import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 import org.xhome.xauth.core.service.AuthConfigService;
+import org.xhome.xauth.core.service.EmailService;
 import org.xhome.xauth.core.service.UserService;
 import org.xhome.xauth.web.util.AuthUtils;
 import org.xhome.xauth.web.validator.UserPasswordNotEmptyValidator;
@@ -47,11 +51,15 @@ public class UserAction extends AbstractAction {
 	@Autowired
 	private UserService userService;
 	@Autowired
+	private EmailService emailService;
+	@Autowired
 	private AuthConfigService authConfigService;
 
 	public final static String RM_USER_AUTH_CODE = "xauth/user/authcode";
 	public final static String RM_USER_LOGIN = "xauth/user/login";
 	public final static String RM_USER_LOGOUT = "xauth/user/logout";
+	public final static String RM_USER_FORGET = "xauth/user/forget";
+	public final static String RM_USER_RESET = "xauth/user/reset";
 
 	public final static String RM_USER_ADD = "xauth/user/add";
 	public final static String RM_USER_UPDATE = "xauth/user/update";
@@ -142,7 +150,10 @@ public class UserAction extends AbstractAction {
 			status = e.getStatus();
 			msg = e.getMessage();
 		}
-		logger.info("[" + status + "]" + msg);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("[" + status + "]" + msg);
+		}
 
 		if (status == Status.SUCCESS) {
 			String accept = request.getHeader("Accept");
@@ -154,8 +165,10 @@ public class UserAction extends AbstractAction {
 						.getBaseURL(), next = null;
 				if (StringUtils.isNotEmpty(nextPage)
 						&& nextPage.startsWith(baseUrl)
-						&& !(nextPage.startsWith(baseUrl + RM_USER_LOGIN) || nextPage
-								.startsWith(baseUrl + RM_USER_LOGOUT))) {
+						&& !(nextPage.startsWith(baseUrl + RM_USER_LOGIN)
+								|| nextPage
+										.startsWith(baseUrl + RM_USER_LOGOUT) || nextPage
+									.contains(RM_USER_RESET))) {
 					next = nextPage;
 				} else {
 					next = authConfigService.getNextPage();
@@ -177,7 +190,167 @@ public class UserAction extends AbstractAction {
 		String msg = null;
 
 		short status = Status.SUCCESS;
-		logger.info("[{}] 用户{}退出登录", status, uname);
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] 用户{}退出登录", status, uname);
+		}
+
+		return new CommonResult(status, msg, user);
+	}
+
+	/**
+	 * 用户忘记密码页面获取请求
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = RM_USER_FORGET, method = RequestMethod.GET)
+	public Object forget_get(HttpServletRequest request) {
+		return new CommonResult(Status.SUCCESS, "", null);
+	}
+
+	/**
+	 * 处理用户忘记密码请求，将密码重置链接发送至用户邮箱
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = RM_USER_FORGET, method = RequestMethod.POST)
+	public Object forget(@Validated @RequestAttribute("user") User user,
+			HttpServletRequest request) {
+		String userName = user.getName();
+		User duser = userService.getUser(user, userName);
+		short status = Status.ERROR;
+		String msg = null;
+
+		if (duser != null) {
+			String email = duser.getEmail();
+			try {
+				String key = RandomUtils.randomString(16);
+				AES aes = new AES(key);
+				String hash = aes.encrypt(userName);
+				String uri = request.getRequestURI(), suffix = ".htm";
+				int pos = uri.lastIndexOf('.');
+				if (pos > 0) {
+					suffix = uri.substring(pos);
+				}
+				String url = authConfigService.getBaseURL() + "/"
+						+ RM_USER_RESET + suffix + "?hash=" + hash;
+				String subject = authConfigService.getResetPasswordSubject();
+				String template = authConfigService.getResetPasswordTemplate();
+				String body = template.replaceAll("\\$\\{user.name\\}",
+						userName).replaceAll("\\$\\{reset.url\\}", url);
+				emailService.sendEmail(email, subject, body);
+				msg = "密码重置链接已经发送值邮箱: " + email;
+				status = Status.SUCCESS;
+
+				ServletContext context = request.getSession()
+						.getServletContext();
+				context.setAttribute(hash, duser);
+			} catch (Exception e) {
+				msg = "密码重置邮件发送失败";
+				logger.error(msg, e);
+			}
+		} else {
+			status = Status.NOT_EXISTS;
+			msg = "用户名" + userName + "不存在";
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] 用户{}尝试找回密码,{}", status, userName, msg);
+		}
+
+		return new CommonResult(status, msg, duser);
+	}
+
+	/**
+	 * 用户重置密码页面获取请求
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = RM_USER_RESET, method = RequestMethod.GET)
+	public Object reset_get(@RequestParam("hash") String hash,
+			HttpServletRequest request) {
+		String msg = null;
+		short status = Status.ERROR;
+		User user = null;
+		String userName = "";
+
+		ServletContext context = request.getSession().getServletContext();
+		Object obj = context.getAttribute(hash);
+		if (obj != null && obj instanceof User) {
+			user = (User) obj;
+		} else {
+			user = AuthUtils.getResetPasswordUser(request);
+		}
+
+		if (user != null) {
+			AuthUtils.setResetPasswordUser(request, user);
+			userName = user.getName();
+			status = Status.SUCCESS;
+		} else {
+			msg = "密码重置链接已过期~";
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info("[{}] 用户尝试重置密码,{}", status, userName, msg);
+		}
+
+		return new CommonResult(status, msg, null);
+	}
+
+	/**
+	 * 用户重置密码请求
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = RM_USER_RESET, method = RequestMethod.POST)
+	public Object reset(
+			@RequestParam(value = "password_new") String newPassword,
+			@RequestParam(value = "password_confirm") String confirmPassword,
+			HttpServletRequest request) {
+		CommonResult result = null;
+		short status = Status.ERROR;
+		String msg = null;
+
+		User user = AuthUtils.getResetPasswordUser(request);
+		if (user != null) {
+			Validator validator = validatorMapping
+					.getValidatorByName(UserPasswordNotEmptyValidator.class
+							.getName());
+			User vuser = new User();
+			BindException be = new BindException(vuser, "user");
+
+			// 校验用户新密码的合法性
+			vuser.setPassword(newPassword);
+			validator.validate(vuser, be);
+			if (be.hasErrors()) {
+				result = errorResult(be);
+				status = result.getStatus();
+				msg = "新" + result.getMessage();
+				result.setMessage(msg);
+			} else {
+				// 校验确认密码是否与新密码一致
+				if (!newPassword.equals(confirmPassword)) {
+					status = Status.PASSWD_NOT_MATCH;
+					msg = "新密码确认错误";
+				} else {
+					user.setPassword(newPassword);
+					status = (short) userService.resetPassword(user, user);
+					if (status == Status.SUCCESS) {
+						msg = "用户[" + user.getId() + "]" + user.getName()
+								+ "重置密码成功";
+					} else {
+						msg = "用户[" + user.getId() + "]" + user.getName()
+								+ "重置密码失败";
+					}
+				}
+			}
+		} else {
+			status = Status.NOT_EXISTS;
+			msg = "密码重置链接已过期~";
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info("[" + status + "]" + msg);
+		}
 
 		return new CommonResult(status, msg, user);
 	}
@@ -897,6 +1070,21 @@ public class UserAction extends AbstractAction {
 	 */
 	public void setAuthConfigService(AuthConfigService authConfigService) {
 		this.authConfigService = authConfigService;
+	}
+
+	/**
+	 * @return the emailService
+	 */
+	public EmailService getEmailService() {
+		return emailService;
+	}
+
+	/**
+	 * @param emailService
+	 *            the emailService to set
+	 */
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
 	}
 
 }

@@ -60,6 +60,17 @@ public interface UserService {
 
 	public int changePassword(User oper, User user, String newPassword);
 
+	/**
+	 * 重置用户密码
+	 * 
+	 * @param oper
+	 *            执行该操作的用户
+	 * @param user
+	 *            待重置密码的用户
+	 * @return
+	 */
+	public int resetPassword(User oper, User user);
+
 	public int lockUser(User oper, User user);
 
 	public int unlockUser(User oper, User user);

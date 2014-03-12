@@ -20,6 +20,22 @@ public interface AuthConfigService extends ConfigService {
 
 	String ITEM_ALLOW_MANAGE_LOG = "xauth_allow_manage_log"; // 管理日志
 
+	String ITEM_SMTP_HOST = "xauth_smtp_host"; // 邮件发送服务器地址
+
+	String ITEM_SMTP_PORT = "xauth_smtp_port"; // 邮件发送服务器端口
+
+	String ITEM_SMTP_USERNAME = "xauth_smtp_username"; // 邮件发送服务器用户名
+
+	String ITEM_SMTP_PASSWORD = "xauth_smtp_password"; // 邮件发送服务器密码
+
+	String ITEM_SMTP_FROM = "xauth_smtp_from"; // 邮件发送源地址
+
+	String ITEM_SMTP_SSL = "xauth_smtp_starttls"; // 邮件发送服务器是否需要SSL加密
+
+	String ITEM_RESET_PASSWORD_SUBJECT = "xauth_reset_password_subject"; // 重置密码邮件主题
+
+	String ITEM_RESET_PASSWORD_TEMPLATE = "xauth_reset_password_template"; // 重置密码邮件模板
+
 	/**
 	 * 获取认证成功后的跳转地址
 	 * 
@@ -54,5 +70,61 @@ public interface AuthConfigService extends ConfigService {
 	 * @return
 	 */
 	public boolean allowManageLog();
+
+	/**
+	 * 获取邮件发送服务器地址
+	 * 
+	 * @return
+	 */
+	public String getSMTPHost();
+
+	/**
+	 * 获取邮件发送服务器端口
+	 * 
+	 * @return
+	 */
+	public int getSMTPPort();
+
+	/**
+	 * 获取邮件发送服务器用户名
+	 * 
+	 * @return
+	 */
+	public String getSMTPUserName();
+
+	/**
+	 * 获取邮件发送服务器密码
+	 * 
+	 * @return
+	 */
+	public String getSMTPPassword();
+
+	/**
+	 * 获取邮件发送源地址
+	 * 
+	 * @return
+	 */
+	public String getSMTPFrom();
+
+	/**
+	 * 获取邮件发送服务器是否需要SSL加密
+	 * 
+	 * @return
+	 */
+	public boolean enableSMTPSSL();
+
+	/**
+	 * 获取重置密码邮件主题
+	 * 
+	 * @return
+	 */
+	public String getResetPasswordSubject();
+
+	/**
+	 * 获取重置密码邮件模板
+	 * 
+	 * @return
+	 */
+	public String getResetPasswordTemplate();
 
 }

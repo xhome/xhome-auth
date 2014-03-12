@@ -71,6 +71,8 @@ public class AuthValidatorMapping implements Mapping {
 		String userValidator = userNickEmailValidator + ","
 				+ userRolesValidator + "," + userMethodValidator;
 		mappings.put(UserAction.RM_USER_LOGIN, userNamePasswordValidator);
+		mappings.put(UserAction.RM_USER_FORGET, userNameValidator);
+		mappings.put(UserAction.RM_USER_RESET, userPasswordValidator);
 		mappings.put(UserAction.RM_USER_ADD, userNamePasswordValidator + ","
 				+ userValidator);
 		mappings.put(UserAction.RM_USER_UPDATE, baseValidator + ","

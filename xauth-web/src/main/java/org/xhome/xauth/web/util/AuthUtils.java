@@ -22,6 +22,7 @@ public class AuthUtils {
 	public final static String AUTHCODE_SESSION_KEY = "org.xhome.xauth.session.authcode";
 	public final static String USER_SESSION_KEY = "org.xhome.xauth.session.user";
 	public final static String USER_LOGOUT_SESSION_KEY = "org.xhome.xauth.session.user.logout";
+	public final static String USER_RESET_PASSWORD_SESSION_KEY = "org.xhome.xauth.session.user.reset.password";
 
 	public final static String USER_COOKIE_PATH = "/";
 	public final static String USER_COOKIE_NAME = "org.xhome.xuth.cookie.user.name";
@@ -262,6 +263,32 @@ public class AuthUtils {
 	public static void removeCookieUser(HttpServletResponse response,
 			User user, String path) {
 		setCookieUser(response, user, 0, path);
+	}
+
+	/**
+	 * 在Session中缓存准备重置密码的用户信息
+	 * 
+	 * @param request
+	 * @param user
+	 */
+	public static void setResetPasswordUser(HttpServletRequest request,
+			User user) {
+		SessionUtils.setSessionAttribute(request,
+				USER_RESET_PASSWORD_SESSION_KEY, user);
+	}
+
+	/**
+	 * 获取准备重置密码的用户信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static User getResetPasswordUser(HttpServletRequest request) {
+		User user = (User) SessionUtils.getSessionAttribute(request,
+				USER_RESET_PASSWORD_SESSION_KEY);
+		SessionUtils.removeSessionAttribute(request,
+				USER_RESET_PASSWORD_SESSION_KEY);
+		return user;
 	}
 
 	/**

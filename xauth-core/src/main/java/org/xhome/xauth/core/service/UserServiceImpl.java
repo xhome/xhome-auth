@@ -407,7 +407,8 @@ public class UserServiceImpl implements UserService {
 						name, id);
 			}
 
-			this.logManageUser(name, Action.UPDATE, null, Status.BLOCKED, oper);
+			this.logManageUser(name + "#PASSWORD", Action.UPDATE, null,
+					Status.BLOCKED, oper);
 			this.afterUserManage(oper, Action.UPDATE, Status.BLOCKED, user);
 			return Status.BLOCKED;
 		}
@@ -501,6 +502,106 @@ public class UserServiceImpl implements UserService {
 
 		this.logManageUser(name + "#PASSWORD", Action.UPDATE, id, (short) r,
 				oper);
+		this.afterUserManage(oper, Action.UPDATE, (short) r, user);
+		return r;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.UserService#resetPassword(org.xhome.xauth.User,
+	 *      org.xhome.xauth.User)
+	 */
+	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
+	@Override
+	public int resetPassword(User oper, User user) {
+		String name = user.getName();
+		Long id = user.getId();
+
+		if (!this.beforeUserManage(oper, Action.UPDATE, user)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to reset password of user {}[{}], but it's blocked",
+						name, id);
+			}
+
+			this.logManageUser(name + "#RESET_PASSWORD", Action.UPDATE, null,
+					Status.BLOCKED, oper);
+			this.afterUserManage(oper, Action.UPDATE, Status.BLOCKED, user);
+			return Status.BLOCKED;
+		}
+
+		User old = userDAO.queryUserById(id);
+
+		if (old == null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to reset password for user {}[{}], but it's not exists",
+						name, id);
+			}
+
+			this.logManageUser(name + "#RESET_PASSWORD", Action.UPDATE, id,
+					Status.NOT_EXISTS, oper);
+			this.afterUserManage(oper, Action.UPDATE, Status.NOT_EXISTS, user);
+			return Status.NOT_EXISTS;
+		}
+
+		String oldName = old.getName();
+
+		if (!old.getVersion().equals(user.getVersion())) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"try to reset password for user {}[{}], but version not match",
+						oldName, id);
+			}
+
+			this.logManageUser(name + "#RESET_PASSWORD", Action.UPDATE, id,
+					Status.VERSION_NOT_MATCH, oper);
+			this.afterUserManage(oper, Action.UPDATE, Status.VERSION_NOT_MATCH,
+					user);
+			return Status.VERSION_NOT_MATCH;
+		}
+
+		short status = old.getStatus();
+		if (status == Status.NO_UPDATE || status == Status.LOCK) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("it's not allowed to update user {}[{}]", oldName,
+						id);
+			}
+
+			this.logManageUser(name + "#RESET_PASSWORD", Action.UPDATE, id,
+					status, oper);
+			this.afterUserManage(oper, Action.UPDATE, status, user);
+			return status;
+		}
+
+		userCryptoService.crypto(user);
+		old.setPassword(user.getPassword());
+		user.setOwner(old.getOwner());
+		user.setCreated(old.getCreated());
+		Timestamp t = new Timestamp(System.currentTimeMillis());
+		user.setModified(t);
+		old.setModified(t);
+
+		int r = userDAO.updateUser(old);
+
+		if (r == 1) {
+			user.incrementVersion();
+			r = Status.SUCCESS;
+		} else {
+			r = Status.ERROR;
+		}
+
+		if (logger.isDebugEnabled()) {
+			if (r == Status.SUCCESS) {
+				logger.debug("success to reset password for user {}[{}]",
+						oldName, id);
+			} else {
+				logger.debug("fail to reset password for user {}[{}]", oldName,
+						id);
+			}
+		}
+
+		this.logManageUser(name + "#RESET_PASSWORD", Action.UPDATE, id,
+				(short) r, oper);
 		this.afterUserManage(oper, Action.UPDATE, (short) r, user);
 		return r;
 	}

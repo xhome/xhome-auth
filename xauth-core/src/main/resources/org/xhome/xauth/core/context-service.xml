@@ -44,4 +44,8 @@
   	<property name="manageLogService" ref="manageLogService"/>
   </bean>
   
+  <bean id="emailService" class="org.xhome.xauth.core.service.EmailServiceImpl" scope="singleton">
+  	<property name="authConfigService" ref="authConfigService"/>
+  </bean>
+  
 </beans>

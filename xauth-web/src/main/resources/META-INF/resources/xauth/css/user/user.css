@@ -1,0 +1,27 @@
+/**
+ * Author:   jhat
+ * Date:     2014-03-10
+ * Email:    cpf624@126.com
+ * Home:     http://pfchen.org
+ * Describe: 用户页面CSS 
+ */
+
+body {
+    background: url('../../images/user/backgroud.png');
+}
+#wapper {
+    width: 500px;
+    margin: auto;
+}
+.panel-heading {
+    font-size: 18px;
+}
+.glyphicon {
+    top: 0px;
+}
+#footer {
+    position: absolute;
+    text-align: center;
+    bottom: 0px;
+    width: 100%;
+}

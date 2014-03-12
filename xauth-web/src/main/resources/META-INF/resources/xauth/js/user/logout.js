@@ -3,7 +3,7 @@
  * Date:     2014-03-10
  * Email:    cpf624@126.com
  * Home:     http://pfchen.org
- * Describe: 登录页面JS 
+ * Describe: 用户推出页面JS 
  */
 
 $(document).ready(function() {
@@ -13,7 +13,4 @@ $(document).ready(function() {
             return (($(window).height() - $(this).height()) / 2);
         }
     });
-    
-    // Form表单验证
-    validateUserLoginForm();
 });

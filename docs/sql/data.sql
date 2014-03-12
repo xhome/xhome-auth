@@ -25,4 +25,12 @@ INSERT INTO xhome_xauth_config (category, item, display, value, owner, modifier,
     /* 1 开启， 0 关闭 */
     (1, 'xauth_allow_auth_log', '认证日志', '1', 1, 1, NOW(), NOW(), 0, 2),
     /* 1 开启， 0 关闭 */
-    (1, 'xauth_allow_manage_log', '管理日志', '0', 1, 1, NOW(), NOW(), 0, 2);
+    (1, 'xauth_allow_manage_log', '管理日志', '0', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_host', 'SMTP服务器地址', '127.0.0.1', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_port', 'SMTP服务器端口', '25', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_username', 'SMTP服务器账号', '', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_password', 'SMTP服务器密码', '', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_from', '邮件发送源地址', 'no-reply@xhomestudio.org', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_smtp_ssl', 'SMTP服务器SSL加密', '0', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_reset_password_subject', '重置密码邮件主题', '重置密码', 1, 1, NOW(), NOW(), 0, 2),
+    (1, 'xauth_reset_password_template', '重置密码邮件模板', '${user.name}, 您好！<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;请在30分钟内访问 <a href="${reset.url}">${reset.url}</a> 以重置密码!<br/><br/><a href="http://www.xhomestudio.org">启梦工作室<a>', 1, 1, NOW(), NOW(), 0, 2);

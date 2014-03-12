@@ -1,6 +1,9 @@
 <#assign base_url = "${xconfig('base_url')}" />
-<#assign user_base_url = base_url + "/xauth/user" />
+<#assign xauth_base_url = base_url + "/xauth" />
+<#assign user_base_url = xauth_base_url + "/user" />
 <#assign user_login_url = user_base_url + "/login.htm" />
+<#assign user_forget_url = user_base_url + "/forget.htm" />
+<#assign user_reset_url = user_base_url + "/reset.htm" />
 <#assign user_logout_url = user_base_url + "/logout.htm" />
 
 <#-- Start of head -->

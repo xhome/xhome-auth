@@ -60,4 +60,78 @@ public class AuthConfigServiceImpl extends ConfigServiceImpl implements
 		return config != null ? !"0".equals(config.getValue()) : false;
 	}
 
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getSMTPHost()
+	 */
+	@Override
+	public String getSMTPHost() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_HOST);
+		return config != null ? config.getValue() : null;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getSMTPPort()
+	 */
+	@Override
+	public int getSMTPPort() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_PORT);
+		return config != null ? Integer.parseInt(config.getValue()) : -1;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getSMTPUserName()
+	 */
+	@Override
+	public String getSMTPUserName() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_USERNAME);
+		return config != null ? config.getValue() : null;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getSMTPPassword()
+	 */
+	@Override
+	public String getSMTPPassword() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_PASSWORD);
+		return config != null ? config.getValue() : null;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getSMTPFrom()
+	 */
+	@Override
+	public String getSMTPFrom() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_FROM);
+		return config != null ? config.getValue() : null;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#enableSMTPSSL()
+	 */
+	@Override
+	public boolean enableSMTPSSL() {
+		Config config = configDAO.queryConfigByItem(ITEM_SMTP_SSL);
+		return config != null ? !"0".equals(config.getValue()) : false;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getResetPasswordSubject()
+	 */
+	@Override
+	public String getResetPasswordSubject() {
+		Config config = configDAO
+				.queryConfigByItem(ITEM_RESET_PASSWORD_SUBJECT);
+		return config != null ? config.getValue() : null;
+	}
+
+	/**
+	 * @see org.xhome.xauth.core.service.AuthConfigService#getResetPasswordTemplate()
+	 */
+	@Override
+	public String getResetPasswordTemplate() {
+		Config config = configDAO
+				.queryConfigByItem(ITEM_RESET_PASSWORD_TEMPLATE);
+		return config != null ? config.getValue() : null;
+	}
+
 }

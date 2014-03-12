@@ -154,10 +154,10 @@ public class AuthFilter implements Filter {
 		}
 
 		if (allow) {
-			logger.debug("允许用户" + user.getName() + "访问：" + uri);
+			logger.info("允许用户" + user.getName() + "访问：" + uri);
 			chain.doFilter(req, res);
 		} else {
-			logger.debug("拒绝用户" + user.getName() + "访问：" + uri);
+			logger.info("拒绝用户" + user.getName() + "访问：" + uri);
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 	}

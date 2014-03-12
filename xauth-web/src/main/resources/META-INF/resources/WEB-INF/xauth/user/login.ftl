@@ -2,27 +2,7 @@
 <#import "../xauth.ftl" as xauth />
 <html lang="zh_CN">
 <@xauth.head title="用户登录" description="XAuth" keywords="XHome, XAuth, 用户登录">
-<style>
-body {
-    background: url('${xauth.base_url}/xauth/images/user/login_backgroud.png');
-}
-.panel {
-    width: 400px;
-    margin: auto;
-}
-.panel-heading {
-    font-size: 18px;
-}
-.glyphicon {
-    top: 0px;
-}
-#footer {
-    position: absolute;
-    text-align: center;
-    bottom: 0px;
-    width: 100%;
-}
-</style>
+    <link href="${xauth.xauth_base_url}/css/user/user.css" rel="stylesheet" media="screen" />
 </@xauth.head>
 <body>
 <div id="wapper" class="panel panel-primary">
@@ -59,7 +39,7 @@ body {
                     <label>
                         <input name="rember_password" type="checkbox" checked="on"/> 记住密码
                     </label>
-                    <a class="pull-right" href="#">忘记密码</a>
+                    <a class="pull-right" href="${xauth.user_forget_url}">忘记密码</a>
                 </div>
             </p>
         </form>
@@ -70,7 +50,7 @@ body {
 </div>
 <script type="text/javascript" src="${xauth.base_url}/xlibs/js/jquery-validate.js"></script>
 <script type="text/javascript" src="${xauth.base_url}/xlibs/js/jquery-xvalidate.js"></script>
-<script type="text/javascript" src="${xauth.base_url}/xauth/js/user/validate.js"></script>
-<script type="text/javascript" src="${xauth.base_url}/xauth/js/user/login.js"></script>
+<script type="text/javascript" src="${xauth.xauth_base_url}/js/user/validate.js"></script>
+<script type="text/javascript" src="${xauth.xauth_base_url}/js/user/login.js"></script>
 </body>
 </html>
