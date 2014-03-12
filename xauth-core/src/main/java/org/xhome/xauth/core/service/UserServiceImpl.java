@@ -679,64 +679,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * @see org.xhome.xauth.core.service.UserService#removeUser(org.xhome.xauth.User,
-	 *      org.xhome.xauth.User)
-	 */
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeUser(User oper, User user) {
-		String name = user.getName();
-		Long id = user.getId();
-
-		if (!this.beforeUserManage(oper, Action.REMOVE, user)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("try to remove user {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManageUser(name, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterUserManage(oper, Action.REMOVE, Status.BLOCKED, user);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (userDAO.isUserDeleteable(user)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove user {}[{}]", name, id);
-			}
-			userDAO.removeUser(user);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("user {}[{}] isn't removeable", name, id);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManageUser(name, Action.REMOVE, id, r, oper);
-		this.afterUserManage(oper, Action.REMOVE, r, user);
-		return Status.SUCCESS;
-	}
-
-	/**
-	 * @see 
-	 *      org.xhome.xauth.core.service.UserService#removeUsers(org.xhome.xauth.
-	 *      User, java.util.List<org.xhome.xauth.User>)
-	 */
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeUsers(User oper, List<User> users) {
-		int r = Status.SUCCESS;
-		for (User user : users) {
-			r = this.removeUser(oper, user);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove user ["
-						+ user.getId() + "]" + user.getName());
-			}
-		}
-		return r;
-	}
-
-	/**
 	 * @see org.xhome.xauth.core.service.UserService#deleteUser(org.xhome.xauth.User,
 	 *      org.xhome.xauth.User)
 	 */
@@ -903,44 +845,6 @@ public class UserServiceImpl implements UserService {
 
 		this.logManageUser(name, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterUserManage(oper, Action.IS_LOCKED, Status.SUCCESS, user);
-		return e;
-	}
-
-	/**
-	 * @see org.xhome.xauth.core.service.UserService#isUserRemoveable(org.xhome.xauth.User,
-	 *      org.xhome.xauth.User)
-	 */
-	@Override
-	public boolean isUserRemoveable(User oper, User user) {
-		String name = user.getName();
-		Long id = user.getId();
-
-		if (!this.beforeUserManage(oper, Action.IS_REMOVEABLE, user)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to judge removeable of user {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManageUser(name, Action.IS_REMOVEABLE, null,
-					Status.BLOCKED, oper);
-			this.afterUserManage(oper, Action.IS_REMOVEABLE, Status.BLOCKED,
-					user);
-			return false;
-		}
-
-		boolean e = userDAO.isUserRemoveable(user);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("user {}[{}] is removeable", name, id);
-			} else {
-				logger.debug("user {}[{}] isn't removeable", name, id);
-			}
-		}
-
-		this.logManageUser(name, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterUserManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS, user);
 		return e;
 	}
 
@@ -1406,81 +1310,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	/**
-	 * @see org.xhome.xauth.core.service.UserService#removeUserRole(org.xhome.xauth.User,
-	 *      org.xhome.xauth.User, org.xhome.xauth.Role)
-	 */
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeUserRole(User oper, User user, Role role) {
-		Long roleId = role.getId(), userId = user.getId();
-		String roleName = role.getName(), userName = user.getName();
-
-		if (!this.beforeUserRoleManage(oper, Action.REMOVE, user, role)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to remove role {}[{}] for user {}[{}], but it's blocked",
-						roleName, roleId, userName, userId);
-			}
-
-			this.logManageUserRole(userName + "#" + roleName, Action.REMOVE,
-					null, Status.BLOCKED, oper);
-			this.afterUserRoleManage(oper, Action.REMOVE, Status.BLOCKED, user,
-					role);
-			return Status.BLOCKED;
-		}
-
-		Map<String, Object> userRole = new HashMap<String, Object>();
-		userRole.put("user", user);
-		userRole.put("role", role);
-
-		short r = Status.SUCCESS;
-		if (userDAO.isUserRoleDeleteable(userRole)) {
-			userRole.put("modifier",
-					oper != null ? oper.getId() : user.getModifier());
-			userDAO.removeUserRole(userRole);
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove role {}[{}] from user {}[{}]", roleName,
-						roleId, userName, userId);
-			}
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("user {}[{}]'s role {}[{}] isn't removeable",
-						userName, userId, roleName, roleId);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManageUserRole(userName + "#" + roleName, Action.REMOVE, null,
-				r, oper);
-		this.afterUserRoleManage(oper, Action.REMOVE, r, user, role);
-		return r;
-	}
-
-	/**
-	 * @see org.xhome.xauth.core.service.UserService#removeUserRole(org.xhome.xauth.User,
-	 *      org.xhome.xauth.User, java.util.List)
-	 */
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeUserRole(User oper, User user, List<Role> roles) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("remove roles for user {}[{}]", user.getName(),
-					user.getId());
-		}
-
-		if (roles != null) {
-			int r = Status.ERROR;
-			for (Role role : roles) {
-				r = this.removeUserRole(oper, user, role);
-				if (r != Status.SUCCESS)
-					return r;
-			}
-		}
-
-		return Status.SUCCESS;
-	}
-
-	/**
 	 * @see org.xhome.xauth.core.service.UserService#deleteUserRole(org.xhome.xauth.User,
 	 *      org.xhome.xauth.User, org.xhome.xauth.Role)
 	 */
@@ -1688,52 +1517,6 @@ public class UserServiceImpl implements UserService {
 				null, Status.SUCCESS, oper);
 		this.afterUserRoleManage(oper, Action.IS_LOCKED, Status.SUCCESS, user,
 				role);
-		return e;
-	}
-
-	/**
-	 * @see org.xhome.xauth.core.service.UserService#isUserRoleRemoveable(org.xhome.xauth.User,
-	 *      org.xhome.xauth.User, org.xhome.xauth.Role)
-	 */
-	@Override
-	public boolean isUserRoleRemoveable(User oper, User user, Role role) {
-		Long roleId = role.getId(), userId = user.getId();
-		String roleName = role.getName(), userName = user.getName();
-
-		if (!this.beforeUserRoleManage(oper, Action.IS_REMOVEABLE, user, role)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to judge removeable of role {}[{}] for user {}[{}], but it's blocked",
-						roleName, roleId, userName, userId);
-			}
-
-			this.logManageUserRole(userName + "#" + roleName,
-					Action.IS_REMOVEABLE, null, Status.BLOCKED, oper);
-			this.afterUserRoleManage(oper, Action.IS_REMOVEABLE,
-					Status.BLOCKED, user, role);
-			return false;
-		}
-
-		Map<String, Object> userRole = new HashMap<String, Object>();
-		userRole.put("user", user);
-		userRole.put("role", role);
-
-		boolean e = userDAO.isUserRoleRemoveable(userRole);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("user {}[{}]'s role {}[{}] is removeable",
-						userName, userId, roleName, roleId);
-			} else {
-				logger.debug("user {}[{}]'s role {}[{}] isn't removeable",
-						userName, userId, roleName, roleId);
-			}
-		}
-
-		this.logManageUserRole(userName + "#" + roleName, Action.IS_REMOVEABLE,
-				null, Status.SUCCESS, oper);
-		this.afterUserRoleManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS,
-				user, role);
 		return e;
 	}
 

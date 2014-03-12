@@ -22,10 +22,6 @@ public interface RoleService {
 
 	public int unlockRole(User oper, Role role);
 
-	public int removeRole(User oper, Role role);
-
-	public int removeRoles(User oper, List<Role> roles);
-
 	public int deleteRole(User oper, Role role);
 
 	public int deleteRoles(User oper, List<Role> roles);
@@ -35,8 +31,6 @@ public interface RoleService {
 	public boolean isRoleUpdateable(User oper, Role role);
 
 	public boolean isRoleLocked(User oper, Role role);
-
-	public boolean isRoleRemoveable(User oper, Role role);
 
 	public boolean isRoleDeleteable(User oper, Role role);
 

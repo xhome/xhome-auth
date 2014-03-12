@@ -21,16 +21,17 @@ import org.xhome.xauth.User;
  * @date Jan 3, 20131:16:49 PM
  */
 public abstract class AbstractTest {
-	
-	protected ApplicationContext	context	= null;
-	protected Logger				logger	= LoggerFactory.getLogger(this.getClass());
+
+	protected ApplicationContext context = null;
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected User oper;
-	
+
 	public AbstractTest() {
-		context = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+		context = new ClassPathXmlApplicationContext(
+				"classpath:applicationContext.xml");
 		oper = new User("jhat");
 	}
-	
+
 	protected void printUser(List<User> users) {
 		if (users != null) {
 			for (User user : users) {
@@ -38,7 +39,7 @@ public abstract class AbstractTest {
 			}
 		}
 	}
-	
+
 	protected void printUser(User user) {
 		if (user == null) {
 			return;
@@ -49,7 +50,7 @@ public abstract class AbstractTest {
 		List<Role> roles = user.getRoles();
 		printRole(roles);
 	}
-	
+
 	protected void printRole(List<Role> roles) {
 		if (roles != null) {
 			for (Role role : roles) {
@@ -57,14 +58,14 @@ public abstract class AbstractTest {
 			}
 		}
 	}
-	
+
 	protected void printRole(Role role) {
 		if (role == null) {
 			return;
 		}
 		logger.debug("Id:" + role.getId() + "\tName:" + role.getName());
 	}
-	
+
 	protected void printConfig(List<Config> configs) {
 		if (configs != null) {
 			for (Config config : configs) {
@@ -72,16 +73,17 @@ public abstract class AbstractTest {
 			}
 		}
 	}
-	
+
 	protected void printConfig(Config config) {
 		if (config == null) {
 			return;
 		}
-		logger.debug("Id:" + config.getId() + "\tCategory:" + config.getCategory()
-				+ "\tItem:" + config.getItem() + "\tDisplay:" + config.getDisplay()
-				+ "\tValue:" + config.getValue());
+		logger.debug("Id:" + config.getId() + "\tCategory:"
+				+ config.getCategory() + "\tItem:" + config.getItem()
+				+ "\tDisplay:" + config.getDisplay() + "\tValue:"
+				+ config.getValue());
 	}
-	
+
 	protected void printAuthLog(List<AuthLog> authLogs) {
 		if (authLogs != null) {
 			for (AuthLog authLog : authLogs) {
@@ -89,22 +91,20 @@ public abstract class AbstractTest {
 			}
 		}
 	}
-	
+
 	protected void printAuthLog(AuthLog authLog) {
-		if (authLog== null) {
+		if (authLog == null) {
 			return;
 		}
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		logger.debug("Id:" + authLog.getId()
-				+ "\tUser:" + authLog.getUser().getName()
-				+ "\tTime:" + format.format(authLog.getCreated())
-				+ "\tMethod:" + authLog.getMethod()
-				+ "\tAddress:" + authLog.getAddress()
-				+ "\tAgent:" + authLog.getAgent()
-				+ "\tNumber:" + authLog.getNumber()
-				+ "\tStatus:" + authLog.getStatus());
+		logger.debug("Id:" + authLog.getId() + "\tUser:"
+				+ authLog.getUser().getName() + "\tTime:"
+				+ format.format(authLog.getCreated()) + "\tMethod:"
+				+ authLog.getMethod() + "\tAddress:" + authLog.getAddress()
+				+ "\tAgent:" + authLog.getAgent() + "\tNumber:"
+				+ authLog.getNumber() + "\tStatus:" + authLog.getStatus());
 	}
-	
+
 	protected void printManageLog(List<ManageLog> manageLogs) {
 		if (manageLogs != null) {
 			for (ManageLog manageLog : manageLogs) {
@@ -112,18 +112,17 @@ public abstract class AbstractTest {
 			}
 		}
 	}
-	
+
 	protected void printManageLog(ManageLog manageLog) {
 		if (manageLog == null) {
 			return;
 		}
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		logger.debug("Id:" + manageLog.getId()
-				+ "\tAction:" + manageLog.getAction()
-				+ "\tType:" + manageLog.getType()
-				+ "\tObj:" + manageLog.getObj()
-				+ "\tTime:" + format.format(manageLog.getCreated())
-				+ "\tStatus:" + manageLog.getStatus());
+		logger.debug("Id:" + manageLog.getId() + "\tAction:"
+				+ manageLog.getAction() + "\tType:" + manageLog.getType()
+				+ "\tObj:" + manageLog.getObj() + "\tTime:"
+				+ format.format(manageLog.getCreated()) + "\tStatus:"
+				+ manageLog.getStatus());
 	}
-	
+
 }

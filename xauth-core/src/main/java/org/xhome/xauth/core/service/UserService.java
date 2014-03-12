@@ -75,10 +75,6 @@ public interface UserService {
 
 	public int unlockUser(User oper, User user);
 
-	public int removeUser(User oper, User user);
-
-	public int removeUsers(User oper, List<User> users);
-
 	public int deleteUser(User oper, User user);
 
 	public int deleteUsers(User oper, List<User> users);
@@ -88,8 +84,6 @@ public interface UserService {
 	public boolean isUserUpdateable(User oper, User user);
 
 	public boolean isUserLocked(User oper, User user);
-
-	public boolean isUserRemoveable(User oper, User user);
 
 	public boolean isUserDeleteable(User oper, User user);
 
@@ -115,10 +109,6 @@ public interface UserService {
 
 	public int unlockUserRole(User oper, User user, List<Role> roles);
 
-	public int removeUserRole(User oper, User user, Role role);
-
-	public int removeUserRole(User oper, User user, List<Role> roles);
-
 	public int deleteUserRole(User oper, User user, Role role);
 
 	public int deleteUserRole(User oper, User user, List<Role> roles);
@@ -128,8 +118,6 @@ public interface UserService {
 	public boolean isUserRoleUpdateable(User oper, User user, Role role);
 
 	public boolean isUserRoleLocked(User oper, User user, Role role);
-
-	public boolean isUserRoleRemoveable(User oper, User user, Role role);
 
 	public boolean isUserRoleDeleteable(User oper, User user, Role role);
 

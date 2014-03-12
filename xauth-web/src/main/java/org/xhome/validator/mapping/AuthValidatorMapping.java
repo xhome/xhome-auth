@@ -47,12 +47,10 @@ public class AuthValidatorMapping implements Mapping {
 		mappings.put(RoleAction.RM_ROLE_UPDATE, roleValidator);
 		mappings.put(RoleAction.RM_ROLE_LOCK, roleValidator);
 		mappings.put(RoleAction.RM_ROLE_UNLOCK, roleValidator);
-		mappings.put(RoleAction.RM_ROLE_REMOVE, roleValidator);
 		mappings.put(RoleAction.RM_ROLE_DELETE, roleValidator);
 		mappings.put(RoleAction.RM_ROLE_EXISTS, roleNameValidator);
 		mappings.put(RoleAction.RM_ROLE_UPDATEABLE, roleIdNameValidator);
 		mappings.put(RoleAction.RM_ROLE_LOCKED, roleIdNameValidator);
-		mappings.put(RoleAction.RM_ROLE_REMOVEABLE, roleIdNameValidator);
 		mappings.put(RoleAction.RM_ROLE_DELETEABLE, roleIdNameValidator);
 
 		String userNameValidator = UserNameValidator.class.getName();
@@ -80,12 +78,10 @@ public class AuthValidatorMapping implements Mapping {
 				+ userValidator);
 		mappings.put(UserAction.RM_USER_LOCK, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_UNLOCK, userIdNameValidator);
-		mappings.put(UserAction.RM_USER_REMOVE, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_DELETE, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_EXISTS, userNameValidator);
 		mappings.put(UserAction.RM_USER_UPDATEABLE, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_LOCKED, userIdNameValidator);
-		mappings.put(UserAction.RM_USER_REMOVEABLE, userIdNameValidator);
 		mappings.put(UserAction.RM_USER_DELETEABLE, userIdNameValidator);
 
 		String userRoleValidator = userIdNameValidator + ","
@@ -93,12 +89,10 @@ public class AuthValidatorMapping implements Mapping {
 		mappings.put(UserAction.RM_USER_ROLE_ADD, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_LOCK, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_UNLOCK, userRoleValidator);
-		mappings.put(UserAction.RM_USER_ROLE_REMOVE, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_DELETE, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_EXISTS, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_UPDATEABLE, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_LOCKED, userRoleValidator);
-		mappings.put(UserAction.RM_USER_ROLE_REMOVEABLE, userRoleValidator);
 		mappings.put(UserAction.RM_USER_ROLE_DELETEABLE, userRoleValidator);
 
 		String configValidator = baseValidator + ","

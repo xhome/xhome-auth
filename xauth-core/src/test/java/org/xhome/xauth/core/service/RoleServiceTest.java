@@ -102,11 +102,4 @@ public class RoleServiceTest extends AbstractTest {
 		logger.info("{}", roleService.isRoleExists(oper, new Role("TestRole")));
 	}
 
-	@Test
-	public void testRemoveRole() {
-		Role role = roleService.getRole(oper, "TestRole");
-		roleService.removeRole(oper, role);
-		roleService.deleteRole(oper, role);
-	}
-
 }

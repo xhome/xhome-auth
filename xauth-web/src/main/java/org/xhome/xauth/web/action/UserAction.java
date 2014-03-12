@@ -66,13 +66,11 @@ public class UserAction extends AbstractAction {
 	public final static String RM_USER_CHPASSWD = "xauth/user/chpasswd";
 	public final static String RM_USER_LOCK = "xauth/user/lock";
 	public final static String RM_USER_UNLOCK = "xauth/user/unlock";
-	public final static String RM_USER_REMOVE = "xauth/user/remove";
 	public final static String RM_USER_DELETE = "xauth/user/delete";
 
 	public final static String RM_USER_EXISTS = "xauth/user/exists";
 	public final static String RM_USER_UPDATEABLE = "xauth/user/updateable";
 	public final static String RM_USER_LOCKED = "xauth/user/locked";
-	public final static String RM_USER_REMOVEABLE = "xauth/user/removeable";
 	public final static String RM_USER_DELETEABLE = "xauth/user/deleteable";
 	public final static String RM_USER_GET = "xauth/user/get";
 	public final static String RM_USER_QUERY = "xauth/user/query";
@@ -81,13 +79,11 @@ public class UserAction extends AbstractAction {
 	public final static String RM_USER_ROLE_ADD = "xauth/user/role/add";
 	public final static String RM_USER_ROLE_LOCK = "xauth/user/role/lock";
 	public final static String RM_USER_ROLE_UNLOCK = "xauth/user/role/unlock";
-	public final static String RM_USER_ROLE_REMOVE = "xauth/user/role/remove";
 	public final static String RM_USER_ROLE_DELETE = "xauth/user/role/delete";
 
 	public final static String RM_USER_ROLE_EXISTS = "xauth/user/role/exists";
 	public final static String RM_USER_ROLE_UPDATEABLE = "xauth/user/role/updateable";
 	public final static String RM_USER_ROLE_LOCKED = "xauth/user/role/locked";
-	public final static String RM_USER_ROLE_REMOVEABLE = "xauth/user/role/removeable";
 	public final static String RM_USER_ROLE_DELETEABLE = "xauth/user/role/deleteable";
 
 	public final static String RM_USER_LOGIN_QUERY = "xauth/user/login/query";
@@ -536,36 +532,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	@RequestMapping(value = RM_USER_REMOVE, method = RequestMethod.POST)
-	public Object removeUser(
-			@Validated @RequestAttribute("users") List<User> users,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		for (User user : users) {
-			AuthUtils.setModifier(request, user);
-		}
-		try {
-			status = (short) userService.removeUsers(cuser, users);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "用户移除成功";
-		} else {
-			msg = "用户移除失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + cuser.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, users);
-	}
-
-	// @RequestMapping(value = RM_USER_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_USER_DELETE, method = RequestMethod.POST)
 	public Object deleteUser(
 			@Validated @RequestAttribute("users") List<User> users,
 			HttpServletRequest request) {
@@ -653,28 +620,6 @@ public class UserAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_USER_REMOVEABLE, method = RequestMethod.GET)
-	public Object isUserRemoveable(
-			@Validated @RequestAttribute("user") User user,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		boolean removeable = userService.isUserRemoveable(cuser, user);
-		if (removeable) {
-			msg = "查询到用户[" + user.getId() + "]" + user.getName() + "可以移除";
-		} else {
-			msg = "查询到用户[" + user.getId() + "]" + user.getName() + "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + cuser.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_USER_DELETEABLE, method = RequestMethod.GET)
@@ -853,31 +798,7 @@ public class UserAction extends AbstractAction {
 		return new CommonResult(status, msg, user);
 	}
 
-	// @RequestMapping(value = RM_USER_ROLE_REMOVE, method = RequestMethod.POST)
-	public Object removeUserRole(
-			@Validated @RequestAttribute("user") User user,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		AuthUtils.setModifier(request, user);
-		status = (short) userService.removeUserRole(cuser, user,
-				user.getRoles());
-		if (status == Status.SUCCESS) {
-			msg = "移除用户[" + user.getId() + "]" + user.getName() + "角色成功";
-		} else {
-			msg = "移除用户[" + user.getId() + "]" + user.getName() + "角色失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + cuser.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, user);
-	}
-
-	// @RequestMapping(value = RM_USER_ROLE_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_USER_ROLE_DELETE, method = RequestMethod.POST)
 	public Object deleteUserRole(
 			@Validated @RequestAttribute("user") User user,
 			HttpServletRequest request) {
@@ -978,34 +899,6 @@ public class UserAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_USER_ROLE_REMOVEABLE, method =
-	// RequestMethod.GET)
-	public Object isUserRoleRemoveable(
-			@Validated @RequestAttribute("user") User user,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User cuser = AuthUtils.getCurrentUser(request);
-		List<Role> roles = user.getRoles();
-		Role role = roles.get(0);
-		boolean removeable = userService
-				.isUserRoleRemoveable(cuser, user, role);
-		if (removeable) {
-			msg = "查询到用户[" + user.getId() + "]" + user.getName() + "角色["
-					+ role.getId() + "]" + role.getName() + "可以移除";
-		} else {
-			msg = "查询到用户[" + user.getId() + "]" + user.getName() + "角色["
-					+ role.getId() + "]" + role.getName() + "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + cuser.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_USER_ROLE_DELETEABLE, method =

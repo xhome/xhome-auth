@@ -247,55 +247,6 @@ public class RoleServiceImpl implements RoleService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
 	@Override
-	public int removeRole(User oper, Role role) {
-		String name = role.getName();
-		Long id = role.getId();
-
-		if (!this.beforeRoleManage(oper, Action.REMOVE, role)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("try to remove role {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.REMOVE, null, Status.BLOCKED, oper);
-			this.afterRoleManage(oper, Action.REMOVE, Status.BLOCKED, role);
-			return Status.BLOCKED;
-		}
-
-		short r = Status.SUCCESS;
-		if (roleDAO.isRoleRemoveable(role)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("remove role {}[{}]", name, id);
-			}
-			roleDAO.removeRole(role);
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("role {}[{}] isn't removeable", name, id);
-			}
-			r = Status.NO_REMOVE;
-		}
-
-		this.logManage(name, Action.REMOVE, id, r, oper);
-		this.afterRoleManage(oper, Action.REMOVE, r, role);
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
-	public int removeRoles(User oper, List<Role> roles) {
-		int r = Status.SUCCESS;
-		for (Role role : roles) {
-			r = this.removeRole(oper, role);
-			if (r != Status.SUCCESS) {
-				throw new RuntimeException("fail to remove role ["
-						+ role.getId() + "]" + role.getName());
-			}
-		}
-		return r;
-	}
-
-	@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Throwable.class)
-	@Override
 	public int deleteRole(User oper, Role role) {
 		String name = role.getName();
 		Long id = role.getId();
@@ -437,40 +388,6 @@ public class RoleServiceImpl implements RoleService {
 
 		this.logManage(name, Action.IS_LOCKED, id, Status.SUCCESS, oper);
 		this.afterRoleManage(oper, Action.IS_LOCKED, Status.SUCCESS, role);
-		return e;
-	}
-
-	@Override
-	public boolean isRoleRemoveable(User oper, Role role) {
-		String name = role.getName();
-		Long id = role.getId();
-
-		if (!this.beforeRoleManage(oper, Action.IS_REMOVEABLE, role)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"try to juge removeable of role {}[{}], but it's blocked",
-						name, id);
-			}
-
-			this.logManage(name, Action.IS_REMOVEABLE, null, Status.BLOCKED,
-					oper);
-			this.afterRoleManage(oper, Action.IS_REMOVEABLE, Status.BLOCKED,
-					role);
-			return false;
-		}
-
-		boolean e = roleDAO.isRoleRemoveable(role);
-
-		if (logger.isDebugEnabled()) {
-			if (e) {
-				logger.debug("role {}[{}] is removeable", name, id);
-			} else {
-				logger.debug("role {}[{}] isn't removeable", name, id);
-			}
-		}
-
-		this.logManage(name, Action.IS_REMOVEABLE, id, Status.SUCCESS, oper);
-		this.afterRoleManage(oper, Action.IS_REMOVEABLE, Status.SUCCESS, role);
 		return e;
 	}
 

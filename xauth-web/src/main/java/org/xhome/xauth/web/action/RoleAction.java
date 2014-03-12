@@ -39,13 +39,11 @@ public class RoleAction extends AbstractAction {
 	public final static String RM_ROLE_UPDATE = "xauth/role/update";
 	public final static String RM_ROLE_LOCK = "xauth/role/lock";
 	public final static String RM_ROLE_UNLOCK = "xauth/role/unlock";
-	public final static String RM_ROLE_REMOVE = "xauth/role/remove";
 	public final static String RM_ROLE_DELETE = "xauth/role/delete";
 
 	public final static String RM_ROLE_EXISTS = "xauth/role/exists";
 	public final static String RM_ROLE_UPDATEABLE = "xauth/role/updateable";
 	public final static String RM_ROLE_LOCKED = "xauth/role/locked";
-	public final static String RM_ROLE_REMOVEABLE = "xauth/role/removeable";
 	public final static String RM_ROLE_DELETEABLE = "xauth/role/deleteable";
 	public final static String RM_ROLE_GET = "xauth/role/get";
 	public final static String RM_ROLE_QUERY = "xauth/role/query";
@@ -140,36 +138,7 @@ public class RoleAction extends AbstractAction {
 		return new CommonResult(status, msg, role);
 	}
 
-	@RequestMapping(value = RM_ROLE_REMOVE, method = RequestMethod.POST)
-	public Object removeRole(
-			@Validated @RequestAttribute("roles") List<Role> roles,
-			HttpServletRequest request) {
-		short status = 0;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		for (Role role : roles) {
-			AuthUtils.setModifier(request, role);
-		}
-		try {
-			status = (short) roleService.removeRoles(user, roles);
-		} catch (RuntimeException e) {
-			status = Status.ERROR;
-		}
-		if (status == Status.SUCCESS) {
-			msg = "角色移除成功";
-		} else {
-			msg = "角色移除失败";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, roles);
-	}
-
-	// @RequestMapping(value = RM_ROLE_DELETE, method = RequestMethod.POST)
+	@RequestMapping(value = RM_ROLE_DELETE, method = RequestMethod.POST)
 	public Object deleteRole(
 			@Validated @RequestAttribute("roles") List<Role> roles,
 			HttpServletRequest request) {
@@ -257,28 +226,6 @@ public class RoleAction extends AbstractAction {
 		}
 
 		return new CommonResult(status, msg, locked);
-	}
-
-	// @RequestMapping(value = RM_ROLE_REMOVEABLE, method = RequestMethod.GET)
-	public Object isRoleRemoveable(
-			@Validated @RequestAttribute("role") Role role,
-			HttpServletRequest request) {
-		short status = Status.SUCCESS;
-		String msg = null;
-
-		User user = AuthUtils.getCurrentUser(request);
-		boolean removeable = roleService.isRoleRemoveable(user, role);
-		if (removeable) {
-			msg = "查询到角色[" + role.getId() + "]" + role.getName() + "可以移除";
-		} else {
-			msg = "查询到角色[" + role.getId() + "]" + role.getName() + "不可以移除";
-		}
-
-		if (logger.isInfoEnabled()) {
-			logger.info("[" + status + "]" + user.getName() + msg);
-		}
-
-		return new CommonResult(status, msg, removeable);
 	}
 
 	// @RequestMapping(value = RM_ROLE_DELETEABLE, method = RequestMethod.GET)

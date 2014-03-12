@@ -55,40 +55,30 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeUser" parameterType="org.xhome.xauth.User">
-		UPDATE xhome_xauth_user
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteUser" parameterType="org.xhome.xauth.User">
 		DELETE FROM xhome_xauth_user WHERE id = #{id}
 	</delete>
 	
 	<select id="isUserExists" resultType="boolean" parameterType="org.xhome.xauth.User">
-		SELECT COUNT(*) FROM xhome_xauth_user WHERE name = #{name} AND status != 0
+		SELECT COUNT(*) FROM xhome_xauth_user WHERE name = #{name}
 	</select>
 	
 	<select id="isUserUpdateable" resultType="boolean" parameterType="org.xhome.xauth.User">
-		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 10
 	</select>
 	
 	<select id="isUserLocked" resultType="boolean" parameterType="org.xhome.xauth.User">
-		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isUserRemoveable" resultType="boolean" parameterType="org.xhome.xauth.User">
-		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isUserDeleteable" resultType="boolean" parameterType="org.xhome.xauth.User">
-		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<sql id="fromUser">
 		FROM xhome_xauth_user AS u
-		LEFT JOIN xhome_xauth_user_role AS ur ON ur.user = u.id AND ur.status != 0
-		LEFT JOIN xhome_xauth_role AS r ON ur.role = r.id AND r.status != 0
+		LEFT JOIN xhome_xauth_user_role AS ur ON ur.user = u.id
+		LEFT JOIN xhome_xauth_role AS r ON ur.role = r.id
 	</sql>
 	
 	<sql id="queryUser">
@@ -105,7 +95,7 @@
 	
 	<select id="queryUserByName" resultMap="userResultMap" parameterType="String">
 		<include refid="queryUser"/>
-		WHERE u.name = #{name} AND u.status != 0
+		WHERE u.name = #{name}
 	</select>
 	
 	<sql id="queryUserId">
@@ -132,9 +122,6 @@
 			</if>
 			<if test="parameters.role_name != null and parameters.role_name != ''">
 				AND r.name LIKE CONCAT('%',#{parameters.role_name},'%')
-			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND u.status != 0
 			</if>
 		</trim>
 		GROUP BY u.id
@@ -171,37 +158,27 @@
 	<update id="unlockUserRole" parameterType="Map">
 		UPDATE xhome_xauth_user_role
 		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 1
-		WHERE status != 0 AND user = #{user.id} AND role = #{role.id}
-	</update>
-	
-	<update id="removeUserRole" parameterType="Map">
-		UPDATE xhome_xauth_user_role
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE status != 0 AND user = #{user.id} AND role = #{role.id}
+		WHERE role = #{role.id} AND user = #{user.id}
 	</update>
 	
 	<delete id="deleteUserRole" parameterType="Map">
-		DELETE FROM xhome_xauth_user_role WHERE user = #{user.id} AND role = #{role.id}
+		DELETE FROM xhome_xauth_user_role WHERE role = #{role.id} AND user = #{user.id}
 	</delete>
 	
 	<select id="hasUserRole" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id}
+		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE AND role = #{role.id} user = #{user.id}
 	</select>
 	
 	<select id="isUserRoleUpdateable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id} AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE role = #{role.id} AND user = #{user.id} AND status != 10
 	</select>
 	
 	<select id="isUserRoleLocked" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id} AND status = 5
-	</select>
-	
-	<select id="isUserRoleRemoveable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE role = #{role.id} AND user = #{user.id} AND status = 5
 	</select>
 	
 	<select id="isUserRoleDeleteable" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE status != 0 AND user = #{user.id} AND role = #{role.id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE role = #{role.id} AND user = #{user.id} AND status != 10 AND status != 15
 	</select>
 	
 </mapper>

@@ -132,7 +132,7 @@ Ext.define('XHome.XAuth.Manage.Role', {
                 XHome.utils.request({
                     confirmMsg: '确认删除角色: ' + msg + ' ?',
                     progressMsg: '正在删除角色: ' + msg + '......',
-                    url: 'xauth/role/remove.json',
+                    url: 'xauth/role/delete.json',
                     params: XHome.utils.formEncode(roles, 'roles'),
                     success: function(result) {
                         store.remove(selections);

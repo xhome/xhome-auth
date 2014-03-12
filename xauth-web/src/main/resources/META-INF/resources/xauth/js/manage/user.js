@@ -319,7 +319,7 @@ Ext.define('XHome.XAuth.Manage.User', {
                 XHome.utils.request({
                     confirmMsg: '确认删除用户: ' + msg + ' ?',
                     progressMsg: '正在删除用户: ' + msg + '......',
-                    url: 'xauth/user/remove.json',
+                    url: 'xauth/user/delete.json',
                     params: XHome.utils.formEncode(users, 'users'),
                     success: function(result) {
                         store.remove(selections);

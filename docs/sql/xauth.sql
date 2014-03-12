@@ -107,7 +107,8 @@ CREATE TABLE xhome_xauth_config
     modified    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
     version     TINYINT NOT NULL DEFAULT 0 COMMENT '数据版本',
     status      TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态标记',
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    INDEX IN_CONFIG (category, item)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = UTF8

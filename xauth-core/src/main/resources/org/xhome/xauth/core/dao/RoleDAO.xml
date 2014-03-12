@@ -29,34 +29,24 @@
 		WHERE id = #{id}
 	</update>
 	
-	<update id="removeRole" parameterType="org.xhome.xauth.Role">
-		UPDATE xhome_xauth_role
-		SET modifier = #{modifier}, modified = NOW(), version = version + 1, status = 0
-		WHERE id = #{id}
-	</update>
-	
 	<delete id="deleteRole" parameterType="org.xhome.xauth.Role">
 		DELETE FROM xhome_xauth_role WHERE id = #{id}
 	</delete>
 	
 	<select id="isRoleExists" resultType="boolean" parameterType="org.xhome.xauth.Role">
-		SELECT COUNT(*) FROM xhome_xauth_role WHERE name = #{name} AND status != 0
+		SELECT COUNT(*) FROM xhome_xauth_role WHERE name = #{name}
 	</select>
 	
 	<select id="isRoleUpdateable" resultType="boolean" parameterType="org.xhome.xauth.Role">
-		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status != 0 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} status != 10
 	</select>
 	
 	<select id="isRoleLocked" resultType="boolean" parameterType="org.xhome.xauth.Role">
-		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status != 0 AND status = 5
-	</select>
-	
-	<select id="isRoleRemoveable" resultType="boolean" parameterType="org.xhome.xauth.Role">
-		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status != 2 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status = 5
 	</select>
 	
 	<select id="isRoleDeleteable" resultType="boolean" parameterType="org.xhome.xauth.Role">
-		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status != 3 AND status != 4
+		SELECT COUNT(*) FROM xhome_xauth_role WHERE id = #{id} AND status != 10 AND status != 15
 	</select>
 	
 	<select id="queryRoleById" resultType="org.xhome.xauth.Role" parameterType="long">
@@ -64,7 +54,7 @@
 	</select>
 	
 	<select id="queryRoleByName" resultType="org.xhome.xauth.Role" parameterType="String">
-		SELECT * FROM xhome_xauth_role WHERE name = #{name} AND status != 0 LIMIT 1
+		SELECT * FROM xhome_xauth_role WHERE name = #{name} LIMIT 1
 	</select>
 	
 	<sql id="restriction_roles">
@@ -74,9 +64,6 @@
 			</if>
 			<if test="parameters.status != null and parameters.status != ''">
 				AND status = #{parameters.status}
-			</if>
-			<if test="parameters.status == null or parameters.status == ''">
-				AND status != 0
 			</if>
 		</trim>
 	</sql>
