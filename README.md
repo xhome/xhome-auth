@@ -1,12 +1,13 @@
-认证管理组件
+# 认证管理组件
 
-1 管理日志分类
-    1   xhome-auth管理日志
-    2   xhome-blog管理日志
-    3   xhome-sms管理日志
-    4   xhome-statistics管理日志
+## 1. 管理日志分类
+    1   xhome-auth 管理日志
+    2   xhome-blog 管理日志
+    3   xhome-fileupload 文件上传管理日志 
+    4   xhome-sms 管理日志
+    5   xhome-statistics 管理日志
 
-1.1 xhome-auth管理日志
+### 1.1 xhome-auth管理日志
     0   配置项管理日志
     1   角色管理日志
     2   用户管理日志
@@ -14,7 +15,7 @@
     4   认证管理日志
     5   管理日志管理日志
 
-1.2 xhome-blog管理日志
+### 1.2 xhome-blog管理日志
     1   分类管理日志
     2   文章管理日志
     3   标签管理日志
@@ -29,15 +30,16 @@
     12  标签用户访问权限管理日志
 
 
-2 配置项分类
+## 2. 配置项分类
     配置项item必须唯一，各项目（组件）配置项以其项目名称开头加以区分。
 
     各配置项分类：
     0   通用配置项
-    1   xhome-auth配置项
-    2   xhome-blog配置项
-    3   xhome-sms配置项
-    4   xhome-statistics配置项
+    1   xhome-auth 配置项
+    2   xhome-blog 配置项
+    3   xhome-fileupload 文件上传配置项 
+    4   xhome-sms 配置项
+    5   xhome-statistics 配置项
 
-2.1 通用配置
+### 2.1 通用配置
     base_url    系统基地址

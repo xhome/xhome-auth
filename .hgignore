@@ -6,6 +6,7 @@ syntax:glob
 .settings
 .myeclipse
 .*.swp
+.DS_Store
 target
 
 syntax:regexp
