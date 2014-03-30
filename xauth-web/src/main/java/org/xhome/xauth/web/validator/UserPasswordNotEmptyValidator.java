@@ -1,7 +1,7 @@
 package org.xhome.xauth.web.validator;
 
 import org.springframework.validation.Errors;
-import org.xhome.util.StringUtils;
+import org.xhome.common.util.StringUtils;
 import org.xhome.validator.config.AuthValidatorConfig;
 import org.xhome.xauth.User;
 

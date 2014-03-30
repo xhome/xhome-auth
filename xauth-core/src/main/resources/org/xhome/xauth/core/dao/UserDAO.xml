@@ -166,7 +166,7 @@
 	</delete>
 	
 	<select id="hasUserRole" resultType="boolean" parameterType="Map">
-		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE AND role = #{role.id} user = #{user.id}
+		SELECT COUNT(*) FROM xhome_xauth_user_role WHERE role = #{role.id} AND user = #{user.id}
 	</select>
 	
 	<select id="isUserRoleUpdateable" resultType="boolean" parameterType="Map">

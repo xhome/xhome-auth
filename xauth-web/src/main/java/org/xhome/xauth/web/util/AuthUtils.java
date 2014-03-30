@@ -11,6 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.xhome.common.Base;
 import org.xhome.web.util.ServletContextUtils;
 import org.xhome.web.util.SessionUtils;
+import org.xhome.xauth.Role;
 import org.xhome.xauth.User;
 
 /**
@@ -45,6 +46,7 @@ public class AuthUtils {
 
     static {
         anonymousUser.setId(0L);
+        anonymousUser.addRole(new Role("anonymous"));
     }
 
     /**

@@ -3,7 +3,7 @@ package org.xhome.xauth.web.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xhome.common.constant.Status;
-import org.xhome.util.StringUtils;
+import org.xhome.common.util.LinkedProperties;
+import org.xhome.common.util.StringUtils;
 import org.xhome.web.util.RequestUtils;
 import org.xhome.xauth.AuthLog;
 import org.xhome.xauth.User;
@@ -50,7 +51,7 @@ public class AuthFilter implements Filter {
     private AuthLogService        authLogService;
 
     private Logger                logger      = LoggerFactory.getLogger(AuthFilter.class);
-    private Map<String, String[]> authorities = new HashMap<String, String[]>();
+    private Map<String, String[]> authorities = new LinkedHashMap<String, String[]>();
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -58,7 +59,7 @@ public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         try {
-            Properties properties = new Properties();
+            Properties properties = new LinkedProperties();
             InputStream resource = Thread.currentThread()
                             .getContextClassLoader()
                             .getResourceAsStream("authority.properties");
@@ -146,12 +147,9 @@ public class AuthFilter implements Filter {
             for (Entry<String, String[]> entry : authorities.entrySet()) {
                 if (uri.matches(entry.getKey())) {
                     allow = false;
-                    // 拒绝匿名用户访问
-                    if (AuthUtils.isAnonymousUser(user)) {
-                        break;
-                    }
                     for (String roleName : entry.getValue()) {
-                        if (user.hasRole(roleName)) {
+                        if ("all".equalsIgnoreCase(roleName)
+                                        || user.hasRole(roleName)) {
                             allow = true;
                             break;
                         }
