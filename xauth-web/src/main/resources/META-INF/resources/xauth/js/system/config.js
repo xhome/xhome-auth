@@ -12,6 +12,7 @@ Ext.define('XHome.XAuth.System.Config', {
         if (!config) {
             config = {};
         }
+        
         // 搜索面板
         var spanel = Ext.create('XHome.Dashboard.SearchPanel', {
             items: [{
@@ -83,7 +84,6 @@ Ext.define('XHome.XAuth.System.Config', {
                     }],
                 }).show();
             },
-
         });
 
         // 右键菜单
