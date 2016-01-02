@@ -183,6 +183,7 @@ public class UserAction extends AbstractAction {
         AuthUtils.cleanResetPasswordHash(request);
         User user = AuthUtils.getCurrentUser(request);
         AuthUtils.removeCurrentUser(request);
+        AuthUtils.removeCookieUser(response, user);
         String uname = user.getName();
         String msg = null;
 

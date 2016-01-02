@@ -24,7 +24,9 @@ public class UserPasswordValidator extends Validator {
 	public boolean validate(Object target, Errors errors) {
 		User user = (User) target;
 		String password = user == null ? null : user.getPassword();
-		if (StringUtils.isNotEmpty(password)) {
+		if (StringUtils.isEmpty(password)) {
+            return true;
+        } else {
 			int size = password.length();
 			int min = Integer.parseInt(validationConfig
 					.getConfig(AuthValidatorConfig.USER_PASSWORD_SIZE_MIN)), max = Integer
@@ -50,7 +52,7 @@ public class UserPasswordValidator extends Validator {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 }
